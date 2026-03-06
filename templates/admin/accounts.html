@@ -1,0 +1,287 @@
+{% extends "admin/admin_base.html" %}
+{% block body %}
+
+<style>
+  /* ================================================================
+     IDENTITY GOVERNANCE HUB: ACCOUNT MODERATION (v11.5)
+     THEME: #f7f0e8 (Luxury Cream) | PALETTE: Slate, Sage & Gold
+     REFINEMENT: Supreme Rounding & High-Fidelity Breathing Room
+     ================================================================ */
+
+  :root {
+    --g-bg: #f7f0e8;
+    --g-surface: #fdfaf7;
+    --g-card: #ffffff;
+    --g-primary: #1a202c;
+    --g-emerald: #004d39;
+    --g-sage: #006a4e; 
+    --g-gold: #b28e45;
+    --g-border: rgba(172, 186, 196, 0.25);
+    --g-shadow: 0 40px 100px -20px rgba(0,0,0,0.05);
+    --g-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* --- Hide redundant Base Dashboard Title --- */
+  .super-topbar { display: none !important; }
+
+  /* --- Balanced Outer Wrapper --- */
+  .gov-wrap { 
+    padding: 20px 15px 60px; 
+    font-family: 'Inter', sans-serif; 
+    background-color: var(--g-bg);
+  }
+
+  /* --- Cinematic Header --- */
+  .gov-header {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-end;
+    margin-bottom: 35px; 
+    border-bottom: 2px solid var(--g-border); 
+    padding-bottom: 25px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .gov-h1 { font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 950; letter-spacing: -1.5px; color: var(--g-primary); }
+
+  /* --- Advanced Search Surface (Enhanced Rounding) --- */
+  .search-surface {
+    background: var(--g-card); 
+    padding: 30px 45px; 
+    border-radius: 30px;
+    border: 1px solid var(--g-border); 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+    margin-bottom: 30px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  .search-grid { display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap; }
+  
+  .field-group { display: flex; flex-direction: column; gap: 10px; }
+  .field-label { font-weight: 950; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #94a3b8; padding-left: 5px; }
+  
+  .in-lux {
+    height: 48px; 
+    border: 2.5px solid #eef2f6; 
+    border-radius: 14px; 
+    padding: 0 20px;
+    font-size: 14px; 
+    font-weight: 700; 
+    color: var(--g-primary); 
+    outline: none;
+    transition: 0.4s var(--g-ease); 
+    background: var(--g-surface); 
+    min-width: 260px;
+  }
+  .in-lux:focus { 
+    border-color: var(--g-gold); 
+    background: #fff; 
+    box-shadow: 0 12px 25px rgba(178, 142, 69, 0.05); 
+    transform: translateY(-2px);
+  }
+
+  /* --- Action Buttons --- */
+  .btn-lux {
+    height: 48px; 
+    padding: 0 30px; 
+    border-radius: 14px; 
+    font-weight: 950; 
+    font-size: 11px;
+    text-transform: uppercase; 
+    letter-spacing: 2px; 
+    cursor: pointer; 
+    transition: 0.4s var(--g-ease);
+    border: 1.5px solid #e2e8f0; 
+    background: var(--g-primary); 
+    color: #fff; 
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 10px; 
+    text-decoration: none;
+  }
+  .btn-lux:hover { 
+    background: var(--g-sage); 
+    transform: translateY(-3px); 
+    box-shadow: 0 15px 30px rgba(0, 106, 78, 0.15); 
+    border-color: var(--g-sage);
+  }
+  .btn-ghost { background: #fff; color: #94a3b8; border-color: var(--g-border); }
+  .btn-ghost:hover { color: var(--g-primary); border-color: var(--g-primary); }
+
+  /* --- Governance Data Grid (Supreme Rounding) --- */
+  .gov-card { 
+    background: var(--g-card); 
+    border-radius: 40px; 
+    border: 1px solid var(--g-border); 
+    box-shadow: var(--g-shadow); 
+    overflow: hidden; 
+    margin: 0 10px;
+  }
+  
+  .table-lux { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .table-lux thead th {
+    background: #f8fafc; 
+    padding: 22px 30px; 
+    text-align: left;
+    font-weight: 950; 
+    text-transform: uppercase; 
+    letter-spacing: 1.5px;
+    color: #94a3b8; 
+    border-bottom: 1.5px solid var(--g-border); 
+    font-size: 10px;
+  }
+  .table-lux tbody tr { border-bottom: 1px solid #f1f5f9; transition: 0.3s; }
+  .table-lux tbody tr:hover { background: rgba(0, 106, 78, 0.02); }
+  .table-lux td { padding: 24px 30px; vertical-align: middle; }
+
+  /* --- Status Indicators --- */
+  .pill-lux { 
+    padding: 6px 14px; 
+    border-radius: 10px; 
+    font-weight: 950; 
+    font-size: 10px; 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    border: 1.5px solid #e2e8f0; 
+    background: #f8fafc; 
+    color: #94a3b8;
+    display: inline-block;
+  }
+  .st-active { background: #ecfdf5; color: var(--g-sage); border-color: #d1fae5; }
+  .st-blocked { background: #fef2f2; color: #b91c1c; border-color: #fee2e2; }
+
+  /* --- Row Actions --- */
+  .act-btn {
+    padding: 8px 18px; 
+    border-radius: 12px; 
+    font-weight: 950; 
+    font-size: 10px;
+    text-transform: uppercase; 
+    letter-spacing: 1.5px; 
+    cursor: pointer; 
+    border: 1.5px solid transparent; 
+    transition: 0.3s var(--g-ease);
+  }
+  .act-block { color: #b91c1c; background: rgba(185, 28, 28, 0.05); border-color: rgba(185, 28, 28, 0.1); }
+  .act-block:hover { background: #b91c1c; color: #fff; transform: translateY(-2px); }
+  .act-unblock { color: var(--g-sage); background: rgba(0, 106, 78, 0.05); border-color: rgba(0, 106, 78, 0.1); }
+  .act-unblock:hover { background: var(--g-sage); color: #fff; transform: translateY(-2px); }
+
+</style>
+
+<div class="gov-wrap wrap">
+  
+  <header class="gov-header">
+    <div>
+      <h1 class="gov-h1">Identity Governance <span style="font-family:'Inter'; font-weight:600; opacity:0.2; font-size:20px;">— অ্যাকাউন্ট মডারেশন</span></h1>
+      <div style="margin-top:12px; font-size:11px; font-weight:900; color:var(--g-gold); text-transform:uppercase; letter-spacing:2px;">
+        Centralized manifest for user authentication & lifecycle status
+      </div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:10px; font-weight:950; color:var(--g-gold); letter-spacing:3px; text-transform:uppercase;">Protocol Active</div>
+      <div style="font-size:11px; font-weight:800; color:var(--g-primary); margin-top:6px; opacity:0.6;">Viewing Newest 200 Entities</div>
+    </div>
+  </header>
+
+  <!-- Search Surface -->
+  <section class="search-surface">
+    <form class="search-grid" method="get" action="/admin/accounts">
+      <div class="field-group">
+        <label class="field-label">Entity Identifier</label>
+        <div style="display:flex; align-items:center; position:relative;">
+          <i data-lucide="search" size="16" style="position:absolute; left:15px; color:#94a3b8; opacity:0.7;"></i>
+          <input class="in-lux" style="padding-left:45px;" type="text" name="q" value="{{ q or '' }}" placeholder="Name, Email, or Registry ID" />
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Lifecycle Role</label>
+        <select class="in-lux" name="role" style="min-width:160px;">
+          <option value="all" {% if role=='all' %}selected{% endif %}>All Roles</option>
+          <option value="buyer" {% if role=='buyer' %}selected{% endif %}>Buyer Registry</option>
+          <option value="seller" {% if role=='seller' %}selected{% endif %}>Seller Registry</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Auth Status</label>
+        <select class="in-lux" name="status" style="min-width:160px;">
+          <option value="all" {% if status=='all' %}selected{% endif %}>All States</option>
+          <option value="active" {% if status=='active' %}selected{% endif %}>Active Session</option>
+          <option value="blocked" {% if status=='blocked' %}selected{% endif %}>Blocked / Revoked</option>
+        </select>
+      </div>
+
+      <div style="display:flex; gap:10px;">
+        <button class="btn-lux" type="submit"><i data-lucide="filter" size="14"></i> Execute Sync</button>
+        <a class="btn-lux btn-ghost" href="/admin/accounts">Reset Hub</a>
+      </div>
+    </form>
+  </section>
+
+  <!-- Governance Card -->
+  <div class="gov-card">
+    <div style="overflow-x:auto;">
+      <table class="table-lux" style="min-width:1100px;">
+        <thead>
+          <tr>
+            <th style="width:100px;">ID</th>
+            <th>Legal Identity</th>
+            <th>Electronic Manifest (Email)</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Authorized At</th>
+            <th style="width:180px; text-align:right;">Execution</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in users %}
+          <tr>
+            <td style="font-weight:900; color:#94a3b8; font-family: 'JetBrains Mono';">#{{ u.id }}</td>
+            <td style="font-weight:950; font-size:14.5px; color:var(--g-primary);">{{ u.name or 'Unnamed Entity' }}</td>
+            <td style="font-weight:700; color:#64748b; opacity:0.8;">{{ u.email }}</td>
+            <td><span class="pill-lux" style="font-weight:900;">{{ u.role|upper }}</span></td>
+            <td>
+              {% if u.status == 'active' %}
+                <span class="pill-lux st-active">Active</span>
+              {% else %}
+                <span class="pill-lux st-blocked">Blocked</span>
+              {% endif %}
+            </td>
+            <td style="font-weight:800; color:var(--g-primary); opacity:0.5; font-size:11px; text-transform:uppercase;">{{ u.created_at }}</td>
+            <td align="right">
+              <div style="display:flex; gap:10px; justify-content:flex-end;">
+                <form method="post" action="/admin/accounts/{{u.id}}/toggle?next={{ request.full_path|urlencode }}" style="margin:0;">
+                  {% if u.status == 'active' %}
+                    <button class="act-btn act-block" type="submit" onclick="return confirm('Revoke access for this entity?')">Block</button>
+                  {% else %}
+                    <button class="act-btn act-unblock" type="submit">Unblock</button>
+                  {% endif %}
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="7" style="padding:120px 0; text-align:center;">
+              <i data-lucide="user-x" size="64" style="color:var(--g-border); margin-bottom:20px; opacity:0.5;"></i>
+              <div style="font-weight:900; color:#cbd5e1; text-transform:uppercase; letter-spacing:5px; font-size:12px;">No Identity Matches Found</div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    if(window.lucide) lucide.createIcons();
+  });
+</script>
+
+{% endblock %}

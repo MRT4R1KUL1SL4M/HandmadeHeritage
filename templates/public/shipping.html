@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<style>
+  /* -------- SHIPPING & LOGISTICS: AUTHORITATIVE BOUTIQUE EDITION -------- */
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Inter:wght@400;600;700;800&family=Hind+Siliguri:wght@400;700&display=swap');
+
+  :root {
+    --p-green: #004d39;
+    --p-gold: #b28e45;
+    --p-dark: #0a0a0a;
+    --header-height: 120px;
+    --p-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  /* SNAP SCROLL ARCHITECTURE */
+  html {
+    scroll-behavior: smooth;
+    scroll-snap-type: y proximity;
+  }
+
+  .policy-master-wrap {
+    background-color: #fcfbf9;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+  }
+
+  /* SIDEBAR: STABLE CENTER LEFT */
+  .sidebar-container {
+    position: fixed;
+    left: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    width: 280px;
+    pointer-events: none;
+  }
+
+  .policy-sidebar-lux {
+    pointer-events: auto;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(40px);
+    border-radius: 30px;
+    padding: 30px;
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+  }
+
+  .sidebar-label {
+    font-weight: 900; font-size: 10px; text-transform: uppercase;
+    letter-spacing: 2px; color: var(--p-gold); margin-bottom: 20px;
+  }
+
+  .toc-link {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 0; color: #71717a; font-weight: 700;
+    text-decoration: none; font-size: 13px;
+    transition: all 0.4s var(--p-ease);
+    border-bottom: 1px solid rgba(0,0,0,0.02);
+  }
+  
+  .toc-link:hover, .toc-link.active { color: var(--p-dark); transform: translateX(8px); }
+  .toc-link.active { color: var(--p-green); border-bottom-color: var(--p-green); }
+
+  /* FULL SCREEN SECTIONS */
+  .policy-section-lux {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 100px 100px 100px 380px;
+    scroll-snap-align: start;
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+    opacity: 0.2;
+    transition: opacity 0.8s ease;
+  }
+  
+  .policy-section-lux.active { opacity: 1; }
+
+  .policy-section-lux h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 900; color: var(--p-dark);
+    margin-bottom: 25px;
+    letter-spacing: -1.5px;
+  }
+
+  .bn-lux { font-family: 'Hind Siliguri'; font-size: 18px; color: #a1a1aa; margin-left: 15px; font-weight: 600; }
+
+  .policy-text {
+    max-width: 850px;
+    color: #1f2937;
+    font-size: 18px;
+    line-height: 1.8;
+    font-weight: 500;
+  }
+
+  .policy-list { margin: 30px 0; padding: 0; list-style: none; }
+  .policy-list li {
+    padding: 15px 0 15px 35px; position: relative;
+    font-weight: 700; font-size: 16px; color: var(--p-dark);
+    border-bottom: 1px solid rgba(0,0,0,0.02);
+  }
+  .policy-list li::before {
+    content: ""; position: absolute; left: 0; top: 24px; 
+    width: 20px; height: 2px; background: var(--p-gold);
+  }
+
+  /* Authority Note Box */
+  .lux-alert {
+    background: #f8f8f6; border-left: 4px solid var(--p-green);
+    padding: 30px; border-radius: 0 20px 20px 0; margin-top: 30px;
+    font-weight: 600; color: var(--p-dark); font-style: italic;
+  }
+
+  /* Signature Block */
+  .signature-block {
+    margin-top: 50px;
+    padding-top: 30px;
+    border-top: 2px solid var(--p-gold);
+    max-width: 400px;
+  }
+  .sig-name { font-family: 'Playfair Display'; font-size: 24px; font-weight: 900; color: var(--p-dark); }
+  .sig-title { font-weight: 800; font-size: 12px; text-transform: uppercase; color: var(--p-gold); letter-spacing: 1px; margin-top: 5px; }
+
+  /* Progress Bar */
+  .reading-progress {
+    position: fixed; top: 0; left: 0; width: 0%; height: 6px;
+    background: linear-gradient(90deg, var(--p-green), var(--p-gold));
+    z-index: 2001;
+  }
+
+  .policy-footer-gap { height: 0px; scroll-snap-align: end; }
+
+  @media (max-width: 1100px) {
+    .sidebar-container { display: none; }
+    .policy-section-lux { padding: 80px 30px; }
+  }
+</style>
+
+<div class="reading-progress" id="progressBar"></div>
+
+<div class="sidebar-container">
+  <aside class="policy-sidebar-lux">
+    <div class="sidebar-label">LOGISTICS HUB</div>
+    <nav id="sidebarNav">
+      <a href="#estimates" class="toc-link active"><i data-lucide="clock"></i> Estimates</a>
+      <a href="#processing" class="toc-link"><i data-lucide="hammer"></i> Preparation</a>
+      <a href="#tracking" class="toc-link"><i data-lucide="map-pin"></i> Tracking</a>
+      <a href="#customs" class="toc-link"><i data-lucide="globe"></i> Customs</a>
+      <a href="#packaging" class="toc-link"><i data-lucide="package"></i> Packaging</a>
+      <a href="#compliance" class="toc-link"><i data-lucide="verified"></i> Authority</a>
+    </nav>
+  </aside>
+</div>
+
+<section class="policy-master-wrap">
+  
+  <article id="estimates" class="policy-section-lux active">
+    <h2>Delivery Timelines <span class="bn-lux">আনুমানিক সময়</span></h2>
+    <div class="policy-text">
+      Handmade Heritage coordinates with elite global couriers to ensure the safe passage of your acquisition. Timelines are strictly estimates.
+      <ul class="policy-list">
+        <li><strong>Local (Bangladesh):</strong> 2–4 business days post-dispatch.</li>
+        <li><strong>International:</strong> 5–12 business days depending on destination and customs clearance.</li>
+        <li><strong>High-Volume Alert:</strong> Holiday seasons require an additional 1–3 business days for logistics processing.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article id="processing" class="policy-section-lux">
+    <h2>Artisan Processing <span class="bn-lux">প্রস্তুতির সময়</span></h2>
+    <div class="policy-text">
+      Quality cannot be rushed. Every masterpiece undergoes a mandatory inspection and preparation period.
+      <ul class="policy-list">
+        <li>Standard processing duration is <strong>1–3 business days</strong>.</li>
+        <li>Custom or made-to-order items follow extended preparation schedules as noted on product manifests.</li>
+      </ul>
+      <div class="lux-alert">
+        Heritage items often require specific finishing or drying times. We prioritize product integrity over rapid dispatch.
+      </div>
+    </article>
+
+  <article id="tracking" class="policy-section-lux">
+    <h2>Shipment Monitoring <span class="bn-lux">ট্র্যাকিং</span></h2>
+    <div class="policy-text">
+      Collectors are provided with comprehensive tracking credentials upon carrier hand-off.
+      <ul class="policy-list">
+        <li>Tracking data initializes upon the carrier's primary scan.</li>
+        <li>Remote region updates may experience intermittent delays between scanning nodes.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article id="customs" class="policy-section-lux">
+    <h2>Customs & Duty Protocol <span class="bn-lux">কাস্টমস</span></h2>
+    <div class="policy-text">
+      International acquisitions cross sovereign borders and are subject to local governance.
+      <ul class="policy-list">
+        <li>Import duties and clearance fees are the <strong>sole legal liability</strong> of the buyer.</li>
+        <li>Handmade Heritage does not facilitate or oversee tax negotiations with local authorities.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article id="packaging" class="policy-section-lux">
+    <h2>Preservation Packaging <span class="bn-lux">প্যাকেজিং</span></h2>
+    <div class="policy-text">
+      We utilize museum-grade packaging protocols to ensure the preservation of artisan artifacts.
+      <ul class="policy-list">
+        <li>Fragile items feature multi-layer impact shielding.</li>
+        <li>Textiles are hermetically sealed against environmental moisture and contaminants.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article id="compliance" class="policy-section-lux">
+    <h2>Logistics Compliance <span class="bn-lux">আইনি সম্মতি</span></h2>
+    <div class="policy-text">
+      Our shipping network is governed by international maritime and air freight regulations.
+      
+      <div class="signature-block">
+        <div class="sig-name">Md. Tarikul Islam</div>
+        <div class="sig-title">Owner of Handmade Heritage</div>
+      </div>
+    </div>
+  </article>
+
+  <div class="policy-footer-gap"></div>
+
+</section>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+
+    const sections = document.querySelectorAll('.policy-section-lux');
+    const navLinks = document.querySelectorAll('.toc-link');
+    const progressBar = document.getElementById('progressBar');
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          sections.forEach(s => s.classList.remove('active'));
+          entry.target.classList.add('active');
+
+          const currentId = entry.target.getAttribute('id');
+          navLinks.forEach(link => {
+            if (link.getAttribute('href') === `#${currentId}`) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+          });
+        }
+      });
+    }, { threshold: 0.5 });
+
+    sections.forEach(s => revealObserver.observe(s));
+
+    window.onscroll = () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      progressBar.style.width = scrolled + "%";
+    };
+  });
+</script>
+
+{% endblock %}

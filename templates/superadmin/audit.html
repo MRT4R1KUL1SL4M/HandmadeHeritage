@@ -1,0 +1,261 @@
+{% extends 'superadmin/superadmin_base.html' %}
+{% block body %}
+
+<style>
+  /* ================================================================
+     FORENSIC INTELLIGENCE HUB: SYSTEM AUDIT (v28.5)
+     THEME: Obsidian Slate & Heritage Emerald | Precision Logging
+     REFINEMENT: Rounded geometry, expanded breathing room, and balanced haptics.
+     ================================================================ */
+
+  :root {
+    --a-bg: #f8fafc;
+    --a-card: #ffffff;
+    --a-slate: #0f172a;
+    --a-emerald: #004d39;
+    --a-gold: #b28e45;
+    --a-border: rgba(15, 23, 42, 0.08);
+    --a-muted: #64748b;
+    --a-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  /* --- Balanced Outer Wrapper --- */
+  .audit-wrap { 
+    padding: 30px 15px 50px; 
+    font-family: 'Inter', sans-serif; 
+    background-color: var(--a-bg); 
+  }
+
+  /* --- Cinematic Header --- */
+  .audit-header {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-end;
+    margin-bottom: 35px; 
+    border-bottom: 2px solid var(--a-border); 
+    padding-bottom: 25px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .audit-h1 { font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 950; letter-spacing: -1.5px; color: var(--a-slate); }
+  .audit-sub { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; color: var(--a-gold); display: block; margin-bottom: 8px; }
+
+  /* --- Advanced Filter Surface (Enhanced Rounding) --- */
+  .filter-surface {
+    background: var(--a-card); 
+    padding: 25px 40px; 
+    border-radius: 30px;
+    border: 1px solid var(--a-border); 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+    margin-bottom: 30px; 
+    display: flex; 
+    gap: 15px; 
+    align-items: center; 
+    flex-wrap: wrap;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  
+  .in-lux {
+    height: 48px; 
+    border: 2.5px solid #eef2f6; 
+    border-radius: 16px; 
+    padding: 0 20px;
+    font-size: 14px; 
+    font-weight: 700; 
+    color: var(--a-slate); 
+    outline: none; 
+    transition: 0.4s var(--a-ease);
+    background: #fbfbfc;
+  }
+  .in-lux:focus { 
+    border-color: var(--a-emerald); 
+    background: #fff;
+    box-shadow: 0 12px 25px rgba(0, 77, 57, 0.06); 
+    transform: translateY(-2px);
+  }
+
+  .btn-lux {
+    padding: 0 25px; 
+    height: 48px;
+    border-radius: 16px; 
+    font-weight: 950; 
+    font-size: 11px;
+    text-transform: uppercase; 
+    letter-spacing: 2px; 
+    cursor: pointer; 
+    transition: 0.4s var(--a-ease);
+    border: 1.5px solid #e2e8f0; 
+    background: var(--a-slate); 
+    color: #fff; 
+    display: flex; 
+    align-items: center; 
+    gap: 10px;
+  }
+  .btn-lux:hover { 
+    background: var(--a-emerald); 
+    transform: translateY(-3px); 
+    box-shadow: 0 15px 30px rgba(0, 77, 57, 0.15);
+  }
+  .btn-ghost { background: #fff; color: var(--a-muted); }
+
+  /* --- Forensic Data Table (Supreme Rounding) --- */
+  .audit-card { 
+    background: var(--a-card); 
+    border-radius: 40px; /* High Rounding */
+    border: 1px solid var(--a-border); 
+    box-shadow: 0 40px 100px -20px rgba(0,0,0,0.05); 
+    overflow: hidden; 
+    margin: 0 10px;
+  }
+  
+  .table-lux { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .table-lux thead th {
+    background: #f8fafc; 
+    padding: 22px 30px; /* Increased padding */
+    text-align: left;
+    font-weight: 950; 
+    text-transform: uppercase; 
+    letter-spacing: 1.5px;
+    color: var(--a-muted); 
+    border-bottom: 1.5px solid var(--a-border);
+    position: sticky; 
+    top: 0; 
+    z-index: 5;
+  }
+  .table-lux tbody tr { border-bottom: 1px solid #f1f5f9; transition: 0.3s; }
+  .table-lux tbody tr:hover { background: rgba(0, 77, 57, 0.02); }
+  .table-lux td { 
+    padding: 24px 30px; /* Increased internal padding */
+    vertical-align: top; 
+  }
+
+  /* --- Status Badging Logic --- */
+  .pill {
+    padding: 6px 14px; 
+    border-radius: 10px; 
+    font-weight: 950; 
+    font-size: 10px;
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    border: 1.5px solid transparent;
+    display: inline-block; 
+    white-space: nowrap;
+  }
+  .pill-pay { background: #ecfdf5; color: #047857; border-color: #d1fae5; }
+  .pill-payout { background: #eff6ff; color: #1d4ed8; border-color: #dbeafe; }
+  .pill-settings { background: #fffbeb; color: #b45309; border-color: #fef3c7; }
+  .pill-entity { background: #f8fafc; color: var(--a-slate); border-color: #e2e8f0; font-family: 'JetBrains Mono', monospace; }
+
+  .meta-manifest {
+    font-family: 'JetBrains Mono', monospace; 
+    font-size: 11.5px; 
+    line-height: 1.7;
+    color: #475569; 
+    word-break: break-all; 
+    max-width: 550px; 
+    background: #fcfbf9; 
+    padding: 15px 20px; /* Breathing room inside JSON block */
+    border-radius: 18px; 
+    border: 1.5px solid #f1f5f9;
+  }
+  .timestamp { font-weight: 800; color: var(--a-slate); white-space: nowrap; font-size: 13px; }
+
+</style>
+
+<div class="audit-wrap wrap">
+  <header class="audit-header">
+    <div>
+      <span class="audit-sub">Forensic System Audit</span>
+      <h1 class="audit-h1">Activity Logs <span style="font-family:'Inter'; font-weight:600; opacity:0.3; font-size:18px;">— অডিট লগ</span></h1>
+    </div>
+    <button class="btn-lux btn-ghost" onclick="window.location.href='/superadmin/dashboard'">
+      <i data-lucide="layout-grid" size="14"></i> Dashboard Hub
+    </button>
+  </header>
+
+  <!-- Filter Card -->
+  <div class="filter-surface">
+    <form method="get" style="display:flex; width:100%; gap:15px; align-items:center; flex-wrap:wrap; margin:0;">
+      <div style="display:flex; flex-direction:column; gap:6px;">
+        <label class="audit-sub" style="margin:0; font-size:9px; letter-spacing:1px;">Category Sync</label>
+        <select class="in-lux" name="filter" style="min-width:180px;">
+          <option value="" {% if not flt %}selected{% endif %}>Full Manifest</option>
+          <option value="payments" {% if flt=='payments' %}selected{% endif %}>Payment Assets</option>
+          <option value="payouts" {% if flt=='payouts' %}selected{% endif %}>Payout Lifecycle</option>
+        </select>
+      </div>
+      
+      <div style="flex:1; position:relative; display:flex; flex-direction:column; gap:6px;">
+        <label class="audit-sub" style="margin:0; font-size:9px; letter-spacing:1px;">Identity Search</label>
+        <div style="position:relative;">
+          <i data-lucide="search" size="16" style="position:absolute; left:15px; top:16px; color:var(--a-muted);"></i>
+          <input class="in-lux" style="width:100%; padding-left:45px;" type="text" name="q" value="{{ q or '' }}" placeholder="Identifier, actor email, or execution event...">
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; align-self: flex-end;">
+        <button class="btn-lux" type="submit">Execute Sync</button>
+        {% if flt or q %}
+          <button class="btn-lux btn-ghost" type="button" onclick="window.location.href='/superadmin/audit'">Reset</button>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+
+  <!-- Table Card -->
+  <div class="audit-card">
+    <div style="overflow-x:auto;">
+      <table class="table-lux">
+        <thead>
+          <tr>
+            <th style="width:200px;">Chronological Sync</th>
+            <th style="width:240px;">Execution Actor</th>
+            <th style="width:200px;">Sovereign Action</th>
+            <th style="width:180px;">Target Entity</th>
+            <th>Metadata Manifest</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for a in logs %}
+            {% set act = (a.action or '') %}
+            {% set cls = '' %}
+            {% if act.startswith('payment_') %}{% set cls = 'pill-pay' %}{% endif %}
+            {% if act.startswith('payout_') %}{% set cls = 'pill-payout' %}{% endif %}
+            {% if act.startswith('settings_') %}{% set cls = 'pill-settings' %}{% endif %}
+            <tr>
+              <td><span class="timestamp">{{ a.created_at }}</span></td>
+              <td>
+                <div style="font-weight:900; color:var(--a-slate); font-size:14px; margin-bottom:4px;">{{ a.actor_email or 'SYSTEM_DAEMON' }}</div>
+                <div style="font-size:10px; font-weight:700; color:var(--a-muted); text-transform:uppercase; letter-spacing:0.5px;">ID: #{{ a.actor_id or '0' }}</div>
+              </td>
+              <td><span class="pill {{ cls }}">{{ a.action }}</span></td>
+              <td><span class="pill pill-entity">{{ a.entity_type }} #{{ a.entity_id }}</span></td>
+              <td>
+                <div class="meta-manifest">
+                  {{ a.meta_json or '—' }}
+                </div>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="5" style="padding:120px 0; text-align:center;">
+                <i data-lucide="history" size="60" style="color:var(--a-border); margin-bottom:20px; opacity:0.5;"></i>
+                <div style="font-weight:900; color:#cbd5e1; text-transform:uppercase; letter-spacing:5px; font-size:12px;">No Activity Manifested in Registry</div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    if(window.lucide) lucide.createIcons();
+  });
+</script>
+
+{% endblock %}

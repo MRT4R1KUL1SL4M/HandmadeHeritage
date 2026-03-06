@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+  :root {
+    --bg-silk: #fdfdfb; 
+    --accent-gold: #b8860b; 
+    --accent-dark: #121212;
+    --border-subtle: rgba(0, 0, 0, 0.06);
+    --card-bg: #ffffff;
+    --p-emerald: #004d39;
+  }
+
+  .inventory-wrap {
+    max-width: 1100px;
+    margin: 60px auto;
+    padding: 0 24px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* --- Header & Navigation --- */
+  .nav-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 40px; padding-bottom: 25px; border-bottom: 1.5px solid var(--border-subtle);
+  }
+  .nav-title h2 { font-family: 'Outfit', sans-serif; font-size: 34px; font-weight: 850; letter-spacing: -1.5px; margin: 0; color: var(--accent-dark); }
+  .nav-title p { font-size: 11px; font-weight: 800; color: var(--accent-gold); text-transform: uppercase; letter-spacing: 2.5px; margin-bottom: 8px; }
+
+  .btn-lux {
+    background: var(--accent-dark); color: #fff; padding: 12px 24px; border-radius: 14px;
+    font-size: 13px; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 10px;
+    transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1); box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+  .btn-lux:hover { background: var(--p-emerald); transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0,77,57,0.2); }
+
+  /* --- Product Registry Grid --- */
+  .product-grid { display: flex; flex-direction: column; gap: 14px; }
+  
+  .product-row {
+    background: var(--card-bg); border: 1px solid var(--border-subtle); border-radius: 20px;
+    padding: 20px 25px; display: grid; grid-template-columns: 2.5fr 1fr 1fr 0.8fr;
+    align-items: center; transition: 0.3s; text-decoration: none;
+  }
+  .product-row:hover { border-color: var(--accent-gold); transform: translateX(8px); box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
+
+  /* Image & Title Node */
+  .p-identity { display: flex; align-items: center; gap: 18px; }
+  .p-img-box {
+    width: 60px; height: 60px; border-radius: 14px; background: #f8fafc; overflow: hidden;
+    border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: center;
+  }
+  .p-img-box img { width: 100%; height: 100%; object-fit: cover; }
+  .p-info .title { font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700; color: var(--accent-dark); margin-bottom: 4px; }
+  .p-info .slug { font-size: 10px; font-weight: 800; color: var(--accent-gold); text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* Metrics Styling */
+  .p-cat { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
+  .p-val { font-weight: 800; font-size: 18px; color: var(--p-emerald); letter-spacing: -0.5px; }
+
+  /* Controls */
+  .action-hub { display: flex; gap: 12px; justify-content: flex-end; align-items: center; }
+  .btn-edit {
+    padding: 8px 18px; border-radius: 100px; background: #fff; border: 1.5px solid var(--border-subtle);
+    color: var(--accent-dark); font-size: 11px; font-weight: 900; text-decoration: none;
+    text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
+  }
+  .btn-edit:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
+
+  .btn-delete-icon {
+    background: transparent; border: none; color: #ef4444; cursor: pointer;
+    opacity: 0.3; transition: 0.3s; padding: 8px;
+  }
+  .btn-delete-icon:hover { opacity: 1; transform: scale(1.15); }
+
+  /* Empty State */
+  .empty-manifest { padding: 80px 0; text-align: center; color: #94a3b8; }
+</style>
+
+<div class="inventory-wrap">
+  <div style="margin-bottom: 25px;">
+    <button onclick="history.back()" style="background:none; border:none; cursor:pointer; color:var(--accent-gold); display:flex; align-items:center; gap:8px; font-weight:900; font-size:11px; text-transform:uppercase; letter-spacing:1px;">
+      <i data-lucide="arrow-left" size="14"></i> Return to Hub
+    </button>
+  </div>
+
+  <header class="nav-header">
+    <div class="nav-title">
+      <p>Artisan Inventory Manifest</p>
+      <h2>Collection Registry <span style="font-weight:300; opacity:0.3;">/ ইনভেন্টরি</span></h2>
+    </div>
+    <a class="btn-lux" href="/seller/products/new">
+      <i data-lucide="plus-circle" size="18"></i> Provision New Product
+    </a>
+  </header>
+
+  <div class="product-grid">
+    {% for p in items %}
+    <div class="product-row">
+      <div class="p-identity">
+        <div class="p-img-box">
+          {% if p.image_url %}
+            <img src="{{ p.image_url }}" alt="{{ p.title }}">
+          {% else %}
+            <i data-lucide="package" size="24" style="color:#e2e8f0;"></i>
+          {% endif %}
+        </div>
+        <div class="p-info">
+          <div class="title">{{ p.title }}</div>
+          <div class="slug">ID: {{ p.id }} • UID: {{ p.uuid[:8] if p.uuid else '—' }}</div>
+        </div>
+      </div>
+
+      <div class="p-cat">
+        <span style="background: rgba(184, 134, 11, 0.05); padding: 4px 10px; border-radius: 6px;">
+          {{ p.category or 'Boutique Item' }}
+        </span>
+      </div>
+
+      <div class="p-val">
+        <span class="money" data-usd="{{ p.price_usd }}">
+          {{ p.price_usd|money }}
+        </span>
+      </div>
+
+      <div class="action-hub">
+        <a class="btn-edit" href="/seller/products/{{ p.id }}/edit">Edit</a>
+        
+        <form method="post" action="/seller/products/{{ p.id }}/delete" onsubmit="return confirm('Archive this masterpiece permanently?');" style="margin:0;">
+          <button class="btn-delete-icon" type="submit" title="Delete Product">
+            <i data-lucide="trash-2" size="18"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+    {% else %}
+    <div class="empty-manifest">
+      <i data-lucide="archive" size="48" style="margin-bottom: 20px; opacity: 0.1;"></i>
+      <p style="font-weight:700; letter-spacing:1px; text-transform:uppercase; font-size:12px;">No Masterpieces Provisioned</p>
+      <a href="/seller/products/new" style="color:var(--accent-gold); font-size:11px; font-weight:900; text-decoration:none; margin-top:10px; display:inline-block;">+ ADD YOUR FIRST CREATION</a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+    // Currency formatter hook jodi thake
+    if(window.applyCurrencyUI) window.applyCurrencyUI();
+  });
+</script>
+
+{% endblock %}

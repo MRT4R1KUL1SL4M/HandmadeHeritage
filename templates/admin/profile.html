@@ -1,0 +1,231 @@
+{% extends 'admin/admin_base.html' %}
+{% block body %}
+
+<style>
+  /* ================================================================
+     ADMIN IDENTITY SUITE: ELITE PRESTIGE (v24.0)
+     THEME: Obsidian Slate, Heritage Emerald & Liquid Glass
+     ================================================================ */
+
+  :root {
+    --p-slate: #0f172a;
+    --p-emerald: #004d39;
+    --p-gold: #b28e45;
+    --p-bg: #fcfcfd;
+    --p-border: rgba(15, 23, 42, 0.06);
+    --p-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  .profile-wrap { padding: 40px 0; font-family: 'Inter', sans-serif; background-color: var(--p-bg); }
+
+  /* --- Cinematic Header --- */
+  .profile-h1 { font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 950; letter-spacing: -1.5px; color: var(--p-slate); }
+  .profile-sub { font-size: 10px; font-weight: 950; text-transform: uppercase; letter-spacing: 3px; color: var(--p-gold); display: block; margin-bottom: 8px; }
+
+  /* --- Premium Card System --- */
+  .p-card-lux { 
+    background: #ffffff; border-radius: 30px; border: 1px solid var(--p-border); 
+    box-shadow: 0 40px 100px -20px rgba(0,0,0,0.03); padding: 40px; margin-bottom: 25px;
+    transition: 0.5s var(--p-ease);
+  }
+  .p-card-lux:hover { transform: translateY(-5px); box-shadow: 0 50px 120px -20px rgba(0,77,57,0.06); }
+
+  /* --- Ultra-Premium Photo Upload --- */
+  .upload-zone {
+    width: 120px; height: 120px; border-radius: 35px; position: relative;
+    background: #f8fafc; border: 2px dashed #e2e8f0;
+    display: flex; align-items: center; justify-content: center;
+    transition: 0.4s var(--p-ease); cursor: pointer; overflow: hidden;
+  }
+  .upload-zone:hover { border-color: var(--p-emerald); background: #f0fdf4; }
+  .avatar-preview { width: 100%; height: 100%; object-fit: cover; border-radius: 32px; }
+  .upload-overlay {
+    position: absolute; inset: 0; background: rgba(0, 77, 57, 0.8);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: #fff; opacity: 0; transition: 0.3s;
+  }
+  .upload-zone:hover .upload-overlay { opacity: 1; }
+  .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 2; }
+
+  /* --- Form Architecture --- */
+  .in-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; position: relative; }
+  .in-label { font-weight: 950; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #94a3b8; }
+  
+  .in-lux {
+    height: 52px; border: 1.5px solid #eef2f6; border-radius: 16px; padding: 0 20px;
+    font-size: 14px; font-weight: 700; color: var(--p-slate); outline: none;
+    transition: 0.4s; background: #fbfbfc; width: 100%; box-sizing: border-box;
+  }
+  .in-lux:focus { border-color: var(--p-emerald); background: #fff; box-shadow: 0 15px 30px rgba(0, 77, 57, 0.04); }
+  .in-lux[readonly] { background: #f8fafc; color: #94a3b8; border-style: dashed; }
+
+  /* --- Eye Toggle Styling --- */
+  .eye-btn {
+    position: absolute; right: 18px; top: 38px; background: none; border: none;
+    color: #94a3b8; cursor: pointer; padding: 5px; transition: 0.2s; z-index: 5;
+  }
+  .eye-btn:hover { color: var(--p-emerald); }
+
+  /* --- Buttons --- */
+  .btn-primary-lux {
+    background: var(--p-slate); color: #fff; border: none; padding: 16px 32px;
+    border-radius: 16px; font-weight: 900; font-size: 12px; text-transform: uppercase;
+    letter-spacing: 2px; cursor: pointer; transition: 0.4s var(--p-ease);
+    display: inline-flex; align-items: center; gap: 12px;
+  }
+  .btn-primary-lux:hover { background: var(--p-emerald); transform: scale(1.02) translateY(-2px); box-shadow: 0 20px 40px rgba(0, 77, 57, 0.2); }
+  
+  .btn-danger-lux { 
+    background: #fff; color: #ef4444; border: 1.5px solid #fee2e2; 
+    padding: 12px 24px; border-radius: 14px; font-weight: 900; text-transform: uppercase;
+    font-size: 11px; letter-spacing: 1.5px; transition: 0.3s;
+  }
+  .btn-danger-lux:hover { background: #ef4444; color: #fff; border-color: #ef4444; }
+
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block; margin-right: 6px; }
+
+</style>
+
+<div class="profile-wrap wrap">
+  <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
+    <div>
+      <span class="profile-sub">Administrative Sovereignty</span>
+      <h1 class="profile-h1">Identity Profile <span style="font-family:'Inter'; font-weight:600; opacity:0.2; font-size:20px;">— প্রোফাইল</span></h1>
+    </div>
+    <a href="/admin/dashboard" class="btn-primary-lux" style="background:#fff; color:#64748b; border:1.5px solid #e2e8f0; padding:12px 24px;">
+      <i data-lucide="layout-grid" size="16"></i> Hub
+    </a>
+  </header>
+
+  <form method="post" enctype="multipart/form-data">
+    <div style="display:grid; grid-template-columns: 350px 1fr; gap: 25px; align-items: start;">
+      
+      <aside class="p-card-lux" style="text-align: center;">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 25px;">
+          <div class="upload-zone" id="dropzone">
+            {% if row.photo_url %}
+              <img src="{{ row.photo_url }}" class="avatar-preview" id="previewImg">
+            {% else %}
+              <div style="font-size:42px; font-weight:950; color:var(--p-emerald);">{{ (row.name or 'A')[:1] }}</div>
+            {% endif %}
+            <div class="upload-overlay">
+              <i data-lucide="camera" size="24"></i>
+              <span style="font-size:9px; font-weight:900; margin-top:8px;">UPDATE ASSET</span>
+            </div>
+            <input type="file" name="photo" accept="image/*" onchange="handlePreview(this)">
+          </div>
+
+          <div>
+            <div style="font-weight:1000; font-size:22px; color:var(--p-slate); letter-spacing:-0.5px;">{{ row.name }}</div>
+            <div style="margin-top:8px;">
+               <span class="pill" style="background:#f1f5f9; color:#64748b; font-size:10px; font-weight:900; padding:5px 12px; border-radius:100px; text-transform:uppercase;">
+                 <span class="status-dot"></span> {{ row.role }} Hierarchy
+               </span>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:35px; padding-top:25px; border-top:1.5px solid #f8fafc; font-size:11px; color:#94a3b8; font-weight:600; line-height:1.6;">
+          Official manifest last synchronized at <br><b style="color:var(--p-gold);">{{ row.created_at or 'Session Active' }}</b>
+        </div>
+      </aside>
+
+      <main class="p-card-lux">
+        <div class="in-group">
+          <label class="in-label">Legal Administrative Identity</label>
+          <input class="in-lux" name="name" value="{{ row.name }}" placeholder="Enter full legal name">
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px;">
+          <div class="in-group">
+            <label class="in-label">Secured Email (System Locked)</label>
+            <input class="in-lux" value="{{ row.email }}" readonly>
+          </div>
+          <div class="in-group">
+            <label class="in-label">Communication Node (Phone)</label>
+            <input class="in-lux" name="phone" value="{{ row.phone or '' }}" placeholder="+880 1XXX XXX XXX">
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; margin-top:20px; padding-top:20px; border-top:1.5px solid #f8fafc;">
+          <button class="btn-primary-lux" type="submit">Commit Identity Transition <i data-lucide="shield-check" size="16"></i></button>
+        </div>
+      </main>
+    </div>
+  </form>
+
+  <div class="p-card-lux">
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:30px;">
+      <div style="width:34px; height:34px; border-radius:10px; background:rgba(178, 142, 69, 0.1); color:var(--p-gold); display:grid; place-items:center;"><i data-lucide="key-round" size="18"></i></div>
+      <div class="profile-sub" style="margin:0; color:var(--p-slate);">Credential Rotation Protocol</div>
+    </div>
+
+    <form method="post" action="/admin/profile/password" style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: flex-end;">
+      <div class="in-group">
+        <label class="in-label">Current Security Key</label>
+        <input class="in-lux" type="password" name="current_password" required placeholder="••••••••">
+        <button type="button" class="eye-btn" onclick="togglePass(this)"><i data-lucide="eye" size="18"></i></button>
+      </div>
+      <div class="in-group">
+        <label class="in-label">New Security Key</label>
+        <input class="in-lux" type="password" name="new_password" required placeholder="••••••••">
+        <button type="button" class="eye-btn" onclick="togglePass(this)"><i data-lucide="eye" size="18"></i></button>
+      </div>
+      <div class="in-group">
+        <label class="in-label">Verify New Key</label>
+        <input class="in-lux" type="password" name="confirm_password" required placeholder="••••••••">
+        <button type="button" class="eye-btn" onclick="togglePass(this)"><i data-lucide="eye" size="18"></i></button>
+      </div>
+      <div style="grid-column: 1/-1; display: flex; justify-content: flex-end; margin-top:10px;">
+        <button class="btn-primary-lux" style="background:var(--p-emerald);" type="submit">Authorize Key Rotation</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="p-card-lux" style="display: flex; justify-content: space-between; align-items: center; border-color: rgba(239, 68, 68, 0.1); background: #fffafb;">
+    <div style="display:flex; align-items:center; gap:20px;">
+       <div style="width:44px; height:44px; border-radius:14px; background:#fef2f2; color:#ef4444; display:grid; place-items:center;"><i data-lucide="log-out" size="20"></i></div>
+       <div>
+         <div style="font-weight:1000; font-size:15px; color:#b91c1c; letter-spacing:-0.3px;">Revoke Session Authorization</div>
+         <div style="font-size:11px; font-weight:700; color:#94a3b8; margin-top:2px;">Terminate your current administrative lifecycle safely.</div>
+       </div>
+    </div>
+    <a href="/admin/logout" class="btn-danger-lux" style="text-decoration:none;">Revoke Access</a>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+  });
+
+  // Toggle Password Visibility
+  function togglePass(btn) {
+    const input = btn.parentElement.querySelector('input');
+    const icon = btn.querySelector('i');
+    if (input.type === "password") {
+      input.type = "text";
+      btn.innerHTML = '<i data-lucide="eye-off" size="18"></i>';
+    } else {
+      input.type = "password";
+      btn.innerHTML = '<i data-lucide="eye" size="18"></i>';
+    }
+    lucide.createIcons();
+  }
+
+  function handlePreview(input) {
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const zone = document.getElementById('dropzone');
+        zone.innerHTML = `<img src="${e.target.result}" class="avatar-preview" id="previewImg">` + 
+                         `<div class="upload-overlay"><i data-lucide="camera" size="24"></i></div>` +
+                         `<input type="file" name="photo" accept="image/*" onchange="handlePreview(this)">`;
+        lucide.createIcons();
+      }
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+</script>
+{% endblock %}

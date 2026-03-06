@@ -1,0 +1,435 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<style>
+  /* ================================================================
+     THE LOGISTICS CONCIERGE: SUPREME TRACKING (v7.0)
+     PRECISION SCALE: Compact Fonts, Deep Glassmorphism
+  */
+
+  :root {
+    --t-green: #004d39; 
+    --t-gold: #b28e45;
+    --t-dark: #0a0a0a;
+    --t-silk: #fcfbf9;
+    --t-glass: rgba(255, 255, 255, 0.96);
+    --t-border: rgba(15, 23, 42, 0.04);
+    --t-ease: cubic-bezier(0.19, 1, 0.22, 1);
+    --t-shadow-lux: 0 40px 100px -20px rgba(0, 0, 0, 0.08);
+  }
+
+  .track-master-wrap {
+    font-family: 'Inter', sans-serif; /* Sharper for small sizes */
+    background-color: var(--t-silk);
+    min-height: 100vh;
+    padding: 60px 0 120px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Parallax Ambient Background */
+  .ambient-mesh { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.18; animation: drift 25s infinite alternate; }
+  .blob-1 { width: 800px; height: 800px; background: var(--t-green); top: -15%; left: -10%; }
+  .blob-2 { width: 600px; height: 600px; background: var(--t-gold); bottom: -10%; right: -5%; }
+  @keyframes drift { from { transform: translate(0,0); } to { transform: translate(60px, 40px) scale(1.1); } }
+
+  .track-container { max-width: 1350px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 10; }
+
+  /* --- Compact Hero Header --- */
+  .track-hero-lux {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 50px; opacity: 0; transform: translateY(-20px);
+    animation: fadeInUpLux 1s var(--t-ease) forwards;
+  }
+  .h1-lux {
+    font-family: 'Playfair Display', serif; 
+    font-size: clamp(34px, 5vw, 56px); /* Reduced for elegance */
+    font-weight: 900; color: var(--t-dark); letter-spacing: -2.5px; line-height: 1;
+  }
+  .badge-lux {
+    padding: 8px 18px; border-radius: 100px; background: #fff;
+    border: 1px solid var(--t-border); font-weight: 900; font-size: 10px; /* Precise size */
+    text-transform: uppercase; letter-spacing: 2.5px; color: var(--t-green);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.02);
+  }
+
+  /* --- Elite Command Center (Search) --- */
+  .command-surface {
+    background: var(--t-glass); backdrop-filter: blur(40px);
+    border-radius: 35px; padding: 35px; border: 1px solid var(--t-border);
+    box-shadow: var(--t-shadow-lux); margin-bottom: 50px;
+    display: grid; grid-template-columns: 1.2fr 0.8fr auto; gap: 20px; align-items: flex-end;
+  }
+  .field-label { font-weight: 950; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #94a3b8; margin-bottom: 12px; display: block; }
+  .input-lux-wrap {
+    display: flex; align-items: center; background: #fff; border-radius: 18px;
+    border: 1px solid #e2e8f0; padding: 0 20px; height: 62px; transition: 0.4s var(--t-ease);
+  }
+  .input-lux-wrap:focus-within { border-color: var(--t-green); transform: translateY(-2px); box-shadow: 0 15px 30px rgba(0,77,57,0.05); }
+  .input-lux { border: none; outline: none; background: none; width: 100%; font-weight: 700; font-size: 15px; }
+
+  .btn-command {
+    height: 62px; padding: 0 45px; border-radius: 18px;
+    background: var(--t-dark); color: #fff; border: none;
+    font-weight: 900; font-size: 13px; cursor: pointer;
+    transition: all 0.4s var(--t-ease); text-transform: uppercase; letter-spacing: 1.5px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .btn-command:hover { background: var(--t-green); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0, 77, 57, 0.2); }
+
+  /* --- Grid Architecture --- */
+  .track-layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 35px; }
+
+  /* --- Shipment Manifest --- */
+  .manifest-card {
+    background: #fff; border-radius: 40px; border: 1px solid var(--t-border);
+    padding: 45px; box-shadow: 0 25px 60px rgba(0,0,0,0.02); margin-bottom: 35px;
+  }
+  .manifest-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 40px; }
+  .stat-node { padding: 22px; background: #fcfbf9; border-radius: 24px; border: 1px solid rgba(0,0,0,0.02); }
+  .node-label { font-weight: 900; font-size: 10px; text-transform: uppercase; color: #cbd5e1; letter-spacing: 1.5px; }
+  .node-val { font-weight: 900; font-size: 18px; color: var(--t-dark); margin-top: 6px; }
+
+  /* --- Realistic Map Physics --- */
+  .mapbox-lux {
+    height: 320px; background: #f3f4f6; border-radius: 30px; margin-top: 30px;
+    position: relative; overflow: hidden; border: 1px solid var(--t-border);
+    box-shadow: inset 0 0 40px rgba(0,0,0,0.03);
+  }
+  .map-mesh { position: absolute; inset: 0; background-image: radial-gradient(rgba(0,0,0,0.07) 1px, transparent 1px); background-size: 30px 30px; }
+  .truck-node {
+    position: absolute; width: 56px; height: 56px; background: #fff; border-radius: 18px;
+    display: grid; place-items: center; font-size: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    z-index: 50; transition: all 2.2s var(--t-ease); border: 1.5px solid var(--t-green);
+  }
+
+  /* --- Liquid Timeline Physics --- */
+  .event-lux {
+    display: grid; grid-template-columns: 65px 1fr; gap: 20px;
+    padding: 28px; background: #fff; border-radius: 30px;
+    border: 1px solid var(--t-border); opacity: 0; transform: translateY(20px);
+    transition: 0.8s var(--t-ease); box-shadow: 0 10px 30px rgba(0,0,0,0.01);
+    margin-bottom: 18px;
+  }
+  .event-lux.visible { opacity: 1; transform: translateY(0); }
+  .event-ico-wrap {
+    width: 65px; height: 65px; background: #d1fae5; border-radius: 20px;
+    display: grid; place-items: center; font-size: 26px; color: var(--t-green);
+  }
+  .event-time { font-weight: 900; font-size: 11px; color: var(--t-gold); margin-bottom: 5px; display: block; text-transform: uppercase; letter-spacing: 1px; }
+  .event-h3 { font-family: 'Playfair Display'; font-size: 22px; font-weight: 900; color: var(--t-dark); }
+  .event-desc { color: #64748b; font-weight: 600; font-size: 14px; margin-top: 6px; line-height: 1.7; }
+
+  /* Signature Block */
+  .authority-sig { margin-top: 50px; padding-top: 35px; border-top: 2px solid var(--t-gold); max-width: 380px; }
+  .sig-name { font-family: 'Playfair Display'; font-size: 24px; font-weight: 950; color: var(--t-dark); }
+  .sig-label { font-weight: 800; font-size: 11px; text-transform: uppercase; color: var(--t-gold); letter-spacing: 2px; margin-top: 6px; }
+
+  @keyframes fadeInUpLux { to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 1100px) {
+    .command-surface { grid-template-columns: 1fr; }
+    .track-layout { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="track-master-wrap">
+  <div class="ambient-mesh">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <div class="track-container">
+    
+    <header class="track-hero-lux">
+      <div>
+        <h1 class="h1-lux">Track Your <br>Acquisition.</h1>
+        <div class="badge-row">
+          <div class="badge-lux">Verified</div>
+          <div class="badge-lux">Global Logistics</div>
+          <div class="badge-lux">Museum Grade</div>
+        </div>
+      </div>
+      <button class="btn-command" style="background:none; border:1px solid #e2e8f0; color:var(--t-dark); padding: 0 30px;" onclick="history.back()">
+        <i data-lucide="arrow-left" size="14"></i> RETURN
+      </button>
+    </header>
+
+    <section class="command-surface">
+      <div class="field-group">
+        <label class="field-label">Registry Identifier</label>
+        <div class="input-lux-wrap">
+          <i data-lucide="hash" size="18" color="#94a3b8"></i>
+          <input id="orderId" class="input-lux" placeholder="HH-XXXX-XXXX" />
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Authorized Email</label>
+        <div class="input-lux-wrap">
+          <i data-lucide="mail" size="18" color="#94a3b8"></i>
+          <input id="email" class="input-lux" type="email" placeholder="collector@heritage.com" />
+        </div>
+      </div>
+      <button id="trackBtn" class="btn-command">AUTHENTICATE <i data-lucide="scan-eye" size="16"></i></button>
+    </section>
+
+    <div id="msg" style="display:none; margin-bottom: 40px; padding: 25px; border-radius: 20px; font-weight: 800; font-size: 14px;"></div>
+
+    <div class="track-layout">
+      
+      <div class="manifest-side">
+        <div class="manifest-card">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:40px;">
+            <div>
+              <h2 style="font-family:'Playfair Display'; font-size:30px; font-weight:900; letter-spacing:-1px;">Shipment Summary</h2>
+              <p id="sumSub" style="color:#94a3b8; font-weight:700; font-size:13px; margin-top:8px;">Awaiting Manifest Authorization...</p>
+            </div>
+            <button id="copyBtn" class="btn-command" style="height:42px; padding:0 20px; font-size:11px;" disabled>COPY TRACKING</button>
+          </div>
+
+          <div class="manifest-grid">
+            <div class="stat-node">
+              <span class="node-label">Lifecycle State</span>
+              <div id="vStatus" class="node-val">—</div>
+            </div>
+            <div class="stat-node">
+              <span class="node-label">Artisan Logistics</span>
+              <div id="vCarrier" class="node-val">—</div>
+            </div>
+            <div class="stat-node">
+              <span class="node-label">Collection Point</span>
+              <div id="vFrom" class="node-val">—</div>
+            </div>
+            <div class="stat-node">
+              <span class="node-label">Est. Arrival</span>
+              <div id="vEta" class="node-val">—</div>
+            </div>
+          </div>
+
+          <div class="mapbox-lux">
+            <div class="map-mesh"></div>
+            <div class="truck-node" id="truck">🚚</div>
+            <svg style="position:absolute; inset:0; width:100%; height:100%; opacity:0.25;">
+                <path d="M50,280 C150,240 350,120 550,50" fill="none" stroke="var(--t-green)" stroke-width="4" stroke-dasharray="10,10" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="manifest-card" style="padding:40px; border-left: 5px solid var(--t-gold);">
+            <h3 style="font-family:'Playfair Display'; font-size:24px; font-weight:900; margin-bottom:25px;">Artifact Metadata</h3>
+            <div style="display:flex; flex-direction:column; gap:16px;">
+                <div style="display:flex; justify-content:space-between; font-weight:800; font-size:15px; padding-bottom:12px; border-bottom:1px solid rgba(0,0,0,0.02);">
+                    <span style="color:#94a3b8">Logistics Service</span>
+                    <span id="dService">—</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-weight:800; font-size:15px; padding-bottom:12px; border-bottom:1px solid rgba(0,0,0,0.02);">
+                    <span style="color:#94a3b8">Curated Weight</span>
+                    <span id="dWeight">—</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-weight:800; font-size:15px;">
+                    <span style="color:#94a3b8">Acquisition Value</span>
+                    <span id="dValue">—</span>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <div class="timeline-side">
+        <div style="margin-bottom:35px; display:flex; justify-content:space-between; align-items:center;">
+            <h2 style="font-family:'Playfair Display'; font-size:30px; font-weight:900;">Journey Log</h2>
+            <div class="badge-lux" style="color:var(--t-gold); border-color:rgba(178,142,69,0.2);">LIVE UPDATES</div>
+        </div>
+        
+        <div class="timeline-lux" id="timeline">
+            <div style="padding:100px 40px; text-align:center; opacity:0.4;">
+                <i data-lucide="shield-check" size="48" color="#cbd5e1" style="margin-bottom:20px;"></i>
+                <p style="font-weight:900; text-transform:uppercase; letter-spacing:3px; color:#cbd5e1; font-size:12px;">Waiting for manifest...</p>
+            </div>
+        </div>
+
+        <div class="authority-sig">
+            <div class="sig-name">Md. Tarikul Islam</div>
+            <div class="sig-label">Owner of Handmade Heritage</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  const $ = (id) => document.getElementById(id);
+
+  function animateTruck(progress) {
+    const truck = $('truck');
+    if(!truck) return;
+    const p = Math.max(0, Math.min(1, Number(progress || 0)));
+    const x = 10 + (80 * p);
+    const y = 80 - (70 * p);
+    truck.style.left = `${x}%`;
+    truck.style.top = `${y}%`;
+    truck.style.transform = `translate(-50%, -50%) rotate(${p * 12}deg)`;
+  }
+
+  function iconFor(status){
+    const s = (status||"").toLowerCase();
+    if(s.includes("delivered")) return "✅";
+    if(s.includes("out for")) return "🛵";
+    if(s.includes("shipped")) return "🚚";
+    if(s.includes("packed")) return "📦";
+    if(s.includes("confirmed")) return "🧾";
+    if(s.includes("paid")) return "💳";
+    return "🏛️";
+  }
+
+  function fmtTime(ts){
+    try{
+      const d = new Date(ts);
+      return d.toLocaleDateString('en-US', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+    }catch(e){
+      return String(ts||'');
+    }
+  }
+
+  function renderTimeline(events) {
+    const container = $('timeline');
+    if(!container) return;
+    if(!events || events.length === 0){
+      container.innerHTML = `
+        <div style="padding:100px 40px; text-align:center; opacity:0.4;">
+          <i data-lucide="shield-check" size="48" color="#cbd5e1" style="margin-bottom:20px;"></i>
+          <p style="font-weight:900; text-transform:uppercase; letter-spacing:3px; color:#cbd5e1; font-size:12px;">No updates yet</p>
+        </div>
+      `;
+      lucide.createIcons();
+      return;
+    }
+
+    container.innerHTML = events.map((ev, i) => `
+      <div class="event-lux" style="transition-delay: ${i * 120}ms">
+        <div class="event-ico-wrap">${iconFor(ev.title)}</div>
+        <div>
+          <span class="event-time">${fmtTime(ev.time)} ${ev.location ? '• '+ev.location : ''}</span>
+          <div class="event-h3">${ev.title}</div>
+          <div class="event-desc">${(ev.desc || 'Update recorded.').replace(/</g,'&lt;')}</div>
+        </div>
+      </div>
+    `).join('');
+
+    setTimeout(() => {
+      document.querySelectorAll('.event-lux').forEach(el => el.classList.add('visible'));
+    }, 100);
+
+    lucide.createIcons();
+  }
+
+  function setSummary(data) {
+    $('vStatus').textContent = data.status || 'Pending';
+    $('vCarrier').textContent = data.carrier || 'Artisan Direct';
+    $('vFrom').textContent = data.from || 'Dhaka Node';
+    $('vEta').textContent = data.eta || '—';
+    $('dService').textContent = data.service || 'Handmade Priority';
+    $('dWeight').textContent = data.weight || '—';
+    $('dValue').textContent = data.value || '—';
+    $('sumSub').textContent = data.verified ? "Authorized Masterpiece View" : "Guest Identification";
+    $('copyBtn').disabled = !(data.tracking_code);
+    animateTruck(data.progress || 0.1);
+    renderTimeline(data.events || []);
+  }
+
+  function showMsg(kind, text){
+    const el = $('msg');
+    el.style.display = 'block';
+    el.textContent = text;
+    el.style.background = kind === 'ok' ? 'rgba(34,197,94,0.10)' : 'rgba(239,68,68,0.10)';
+    el.style.border = kind === 'ok' ? '1px solid rgba(34,197,94,0.18)' : '1px solid rgba(239,68,68,0.18)';
+    el.style.color = kind === 'ok' ? '#166534' : '#991b1b';
+  }
+
+  async function fetchTracking(){
+    const code = ($('orderId').value || '').trim();
+    const email = ($('email').value || '').trim();
+    if(!code){
+      showMsg('err', 'Please enter your Registry Identifier (order code).');
+      return;
+    }
+
+    const btn = $('trackBtn');
+    const old = btn.innerHTML;
+    btn.innerHTML = `<span style="opacity:0.6; font-size:11px;">LOADING...</span>`;
+    btn.disabled = true;
+
+    try{
+      const url = new URL('/api/track', window.location.origin);
+      url.searchParams.set('code', code);
+      if(email) url.searchParams.set('email', email);
+      const res = await fetch(url.toString(), {method:'GET'});
+      const out = await res.json().catch(()=>({}));
+      if(!res.ok){
+        showMsg('err', out.error || 'Could not fetch tracking.');
+        btn.innerHTML = old; btn.disabled = false;
+        return;
+      }
+      showMsg('ok', `Tracking loaded for ${out.order_code}.`);
+      setSummary(out);
+
+      // enable copy tracking
+      $('copyBtn').onclick = async ()=>{
+        try{
+          await navigator.clipboard.writeText(out.tracking_code || out.order_code);
+          showMsg('ok', 'Copied.');
+        }catch(e){
+          showMsg('err', 'Copy not supported in this browser.');
+        }
+      };
+
+    }catch(e){
+      showMsg('err', 'Network error.');
+    }finally{
+      btn.innerHTML = old;
+      btn.disabled = false;
+    }
+  }
+
+  $('trackBtn').addEventListener('click', fetchTracking);
+
+  window.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+
+    // Prefill from email link: /track?code=HH-...
+    const qs = new URLSearchParams(window.location.search);
+    const code = qs.get('code');
+    if(code) $('orderId').value = code;
+
+    // If logged in and email input is visible, prefill from a data attribute if present
+    {% if session.get('user_id') and session.get('role','').lower()=='buyer' %}
+      // Buyer is logged in; tracking API doesn't need email.
+      $('email').value = "{{ session.get('email','') }}";
+    {% endif %}
+
+    const qEmail = qs.get('email');
+    if(qEmail) $('email').value = qEmail;
+
+    // Auto-load only when we have enough to authorize: logged-in buyer OR email provided
+    {% if session.get('user_id') and session.get('role','').lower()=='buyer' %}
+      const canAuto = true;
+    {% else %}
+      const canAuto = !!qEmail;
+    {% endif %}
+
+    if(code && canAuto){
+      fetchTracking();
+    }
+
+    document.addEventListener('mousemove', (e) => {
+      const x = (e.clientX / window.innerWidth) * 15;
+      const y = (e.clientY / window.innerHeight) * 15;
+      const amb = document.querySelector('.ambient-mesh');
+      if(amb) amb.style.transform = `translate(${x}px, ${y}px)`;
+    });
+  });
+</script>
+
+{% endblock %}

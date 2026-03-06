@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+  :root {
+    --bg-silk: #fdfdfb; 
+    --accent-gold: #b8860b; 
+    --deep-shade: #1e293b; /* Premium Deep Charcoal Blue (Black er poriborte) */
+    --border-subtle: rgba(0, 0, 0, 0.06);
+    --glass-white: rgba(255, 255, 255, 0.85);
+  }
+
+  body {
+    background-color: var(--bg-silk);
+    font-family: 'Inter', sans-serif;
+    color: var(--deep-shade);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .aura-bg {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at 50% -10%, #f3efea 0%, #fdfdfb 100%);
+    z-index: -1;
+  }
+
+  .main-wrapper {
+    max-width: 1100px;
+    margin: 80px auto;
+    padding: 0 24px;
+  }
+
+  /* Back Button */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #888;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    transition: 0.3s;
+  }
+
+  .back-link:hover {
+    color: var(--accent-gold);
+    transform: translateX(-5px);
+  }
+
+  /* Master Card Style */
+  .m-card {
+    background: var(--glass-white);
+    border-radius: 35px;
+    border: 1px solid var(--border-subtle);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 10px 40px -15px rgba(0,0,0,0.03);
+    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .m-card:hover {
+    border-color: var(--accent-gold);
+    box-shadow: 0 40px 80px -20px rgba(184, 134, 11, 0.08);
+  }
+
+  /* Layout Grid */
+  .pro-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 25px;
+  }
+
+  /* Avatar with Gold Ring */
+  .avatar-ring {
+    width: 145px;
+    height: 145px;
+    border-radius: 45px;
+    background: linear-gradient(135deg, var(--accent-gold), #e5e5e0);
+    padding: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pro-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 42px;
+    border: 5px solid #fff;
+    background-size: cover;
+    background-position: center;
+    background-color: #f8f9fa;
+  }
+
+  /* Section Labels */
+  .m-label {
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--accent-gold);
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  /* Stats Box */
+  .stats-box {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    background: #f9f8f4;
+    padding: 20px;
+    border-radius: 24px;
+    margin-top: 30px;
+  }
+
+  .stat-item { text-align: center; }
+  .stat-item span { font-size: 9px; font-weight: 800; color: #aaa; text-transform: uppercase; display: block; margin-bottom: 5px; }
+  .stat-item b { font-size: 15px; font-weight: 800; color: var(--deep-shade); }
+
+  /* Info Rows */
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+  }
+  .info-row:last-child { border: none; }
+  .info-row span { font-size: 13px; font-weight: 700; color: #888; }
+  .info-row b { font-size: 14px; font-weight: 800; color: var(--deep-shade); }
+
+  /* Premium Buttons */
+  .btn-elite {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 18px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 800;
+    transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    background: var(--deep-shade);
+    color: #fff;
+  }
+
+  .btn-elite:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+  
+  /* Member ID Card - Deep Shade Gradient */
+  .member-id-card {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    padding: 25px;
+    border-radius: 25px;
+    color: #fff;
+    text-align: center;
+    margin-top: 20px;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .id-label { font-size: 10px; font-weight: 800; letter-spacing: 2px; opacity: 0.6; text-transform: uppercase; }
+  .id-value { font-family: 'Outfit'; font-size: 22px; font-weight: 800; letter-spacing: 2.5px; margin-top: 8px; color: var(--accent-gold); }
+
+</style>
+
+<div class="aura-bg"></div>
+
+<div class="main-wrapper">
+  
+  <a href="/buyer/dashboard" class="back-link">
+    <i data-lucide="arrow-left" size="14"></i> RETURN TO DASHBOARD
+  </a>
+
+  <div class="m-card" style="padding: 40px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+    <div>
+      <h2 style="font-family:'Outfit'; font-size:36px; font-weight:900; letter-spacing: -1.5px; margin: 0;">Buyer Lounge</h2>
+      <p style="font-size:14px; color: #888; font-weight:600; margin-top:5px;">Personal Identity & Acquisition Profile</p>
+    </div>
+    <a href="/profile/edit" style="font-size:12px; font-weight:900; color:var(--accent-gold); text-decoration:none; border-bottom: 2px solid var(--accent-gold); padding-bottom:3px;">
+      EDIT SETTINGS
+    </a>
+  </div>
+
+  <div class="pro-grid">
+    <div class="m-card" style="padding: 45px;">
+      <div style="display: flex; gap: 35px; align-items: center;">
+        <div class="avatar-ring">
+          <div class="pro-avatar" style="{% if profile.avatar_url %}background-image:url('{{ profile.avatar_url }}');{% endif %}"></div>
+        </div>
+        <div>
+          <span class="m-label" style="margin-bottom: 8px;">Authenticated Member</span>
+          <h1 style="font-family:'Outfit'; font-size: 32px; font-weight: 900; margin: 0; letter-spacing: -1px;">{{ profile.display_name or user.name }}</h1>
+          <p style="color: #666; margin-top: 8px; font-weight: 600; font-size: 15px;">
+            <i data-lucide="mail" size="15" style="vertical-align: middle; margin-right: 6px; color: var(--accent-gold);"></i> {{ user.email }}
+          </p>
+        </div>
+      </div>
+
+      <div class="stats-box">
+        <div class="stat-item"><span>Status</span><b>Active</b></div>
+        <div class="stat-item"><span>Security</span><b>Verified</b></div>
+        <div class="stat-item"><span>Joined</span><b>{{ user.created_at.strftime('%Y') if user.created_at else '2026' }}</b></div>
+      </div>
+
+      <div style="margin-top: 40px; padding-top: 35px; border-top: 1px dashed #e5e5e0;">
+        <span class="m-label">Personal Narrative</span>
+        <p style="font-size: 16px; line-height: 1.8; color: #555; font-weight: 500;">
+          {{ profile.bio or "A curated profile of a heritage art collector." }}
+        </p>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+      <div class="m-card" style="padding: 40px;">
+        <span class="m-label">Lounge Information</span>
+        <div class="info-row"><span>Phone</span><b>{{ profile.phone or '—' }}</b></div>
+        <div class="info-row"><span>Region</span><b>{{ profile.city or '—' }}</b></div>
+        <div class="info-row"><span>Country</span><b>{{ profile.country or 'Bangladesh' }}</b></div>
+        <div class="info-row"><span>Address</span><b>{{ profile.address_line or '—' }}</b></div>
+      </div>
+
+      <div class="member-id-card">
+        <span class="id-label">Official Member ID</span>
+        <div class="id-value">{{ member_id or 'HH-000000-0000' }}</div>
+        <p style="font-size: 11px; opacity: 0.6; margin-top: 10px; font-weight: 600;">Authorized Artisan Acquisition ID</p>
+      </div>
+
+      <a class="btn-elite" href="/shop">
+        <i data-lucide="shopping-bag" size="20"></i> EXPLORE COLLECTIONS
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+</script>
+
+{% endblock %}

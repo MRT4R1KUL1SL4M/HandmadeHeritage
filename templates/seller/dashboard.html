@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+  :root {
+    --bg-silk: #fdfdfb; 
+    --card-bg: rgba(255, 255, 255, 0.8);
+    --accent-dark: #121212;
+    --accent-gold: #b8860b; 
+    --border-subtle: rgba(0, 0, 0, 0.05);
+    --shadow-premium: 0 10px 40px -10px rgba(0, 0, 0, 0.04);
+  }
+
+  body {
+    background-color: var(--bg-silk);
+    color: var(--accent-dark);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .aura-bg {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at 50% -10%, #f3efea 0%, #fdfdfb 100%);
+    z-index: -1;
+  }
+
+  .main-wrapper {
+    max-width: 1300px;
+    margin: 80px auto;
+    padding: 0 40px;
+  }
+
+  .premium-header {
+    margin-bottom: 60px;
+  }
+
+  .premium-header .kicker {
+    font-family: 'Outfit', sans-serif;
+    color: var(--accent-gold);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-size: 11px;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+
+  .premium-header h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    color: var(--accent-dark);
+    margin: 0;
+  }
+
+  .master-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+
+  .m-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-subtle);
+    border-radius: 28px;
+    padding: 40px 30px;
+    position: relative;
+    backdrop-filter: blur(20px);
+    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    overflow: hidden;
+    text-decoration: none;
+    display: block;
+    box-shadow: var(--shadow-premium);
+  }
+
+  .m-card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(184, 134, 11, 0.3);
+    box-shadow: 0 30px 60px -12px rgba(184, 134, 11, 0.08);
+    background: #ffffff;
+  }
+
+  .m-icon {
+    width: 54px;
+    height: 54px;
+    background: #f9f7f2;
+    border: 1px solid rgba(0,0,0,0.03);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-gold);
+    margin-bottom: 30px;
+    transition: 0.5s;
+  }
+
+  .m-card:hover .m-icon {
+    background: var(--accent-gold);
+    color: #fff;
+    transform: scale(1.1) rotateY(180deg);
+  }
+
+  .m-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .m-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 19px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+  }
+
+  .m-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent-dark);
+    letter-spacing: -0.5px;
+  }
+
+  .m-footer {
+    margin-top: 30px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent-gold);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+    opacity: 0.8;
+  }
+
+  .m-card:hover .m-footer {
+    gap: 12px;
+    opacity: 1;
+  }
+
+  .dot {
+    height: 8px;
+    width: 8px;
+    background-color: #27ae60;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+    box-shadow: 0 0 10px rgba(39,174,96,0.3);
+  }
+
+  @media (max-width: 1100px) { .master-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { 
+    .master-grid { grid-template-columns: 1fr; }
+    .main-wrapper { padding: 0 20px; margin-top: 50px; }
+  }
+</style>
+
+<div class="aura-bg"></div>
+
+<div class="main-wrapper">
+  <header class="premium-header">
+    <div class="kicker">Merchant Control Center</div>
+    <h1>Seller Dashboard</h1>
+  </header>
+
+  <div class="master-grid">
+    <a href="/profile" class="m-card">
+      <div class="m-icon"><i data-lucide="store"></i></div>
+      <div class="m-label">Branding</div>
+      <div class="m-title">Store Profile</div>
+      <div class="m-value">Heritage Art</div> <div class="m-footer">Edit Shop Details <i data-lucide="chevron-right" size="16"></i></div>
+    </a>
+
+    <a href="/seller/products" class="m-card">
+      <div class="m-icon"><i data-lucide="box"></i></div>
+      <div class="m-label">Stock</div>
+      <div class="m-title">Total Products</div>
+      <div class="m-value">{{ stats.products.c if stats and stats.products else 0 }}</div>
+      <div class="m-footer">Manage Inventory <i data-lucide="chevron-right" size="16"></i></div>
+    </a>
+
+    <a href="/seller/orders" class="m-card">
+      <div class="m-icon"><i data-lucide="shopping-bag"></i></div>
+      <div class="m-label">Sales</div>
+      <div class="m-title">Recent Orders</div>
+      <div class="m-value">{{ stats.orders.c if stats and stats.orders else 0 }}</div>
+      <div class="m-footer">View All Sales <i data-lucide="chevron-right" size="16"></i></div>
+    </a>
+
+    <a href="/seller/kyc" class="m-card">
+      <div class="m-icon"><i data-lucide="check-circle-2"></i></div>
+      <div class="m-label">Verification</div>
+      <div class="m-title">Account Status</div>
+      <div class="m-value" style="color: #27ae60;"></span>Approved</div>
+      <div class="m-footer">Security Settings <i data-lucide="chevron-right" size="16"></i></div>
+    </a>
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+</script>
+
+{% endblock %}

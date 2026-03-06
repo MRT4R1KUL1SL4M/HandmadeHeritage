@@ -1,0 +1,544 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<div class="shop-premium">
+
+<style>
+  /* ================================================================
+     MASTER ARTISAN EDITION: MUTED PREMIUM VAULT
+     TEXTURE: Film Grain Overlay | THEME: #f7f0e8 (Balanced Mid-Light)
+     PALETTE: #ACBAC4 (Slate Blue) | #9CAB84 (Sage Green)
+     ================================================================ */
+
+  :root {
+    --p-slate: #ACBAC4;
+    --p-sage: #9CAB84;
+    --p-bg-custom: #f7f0e8; /* Base Background */
+    --p-surface: #f2ebe1;   /* Muted Surface - Less bright than white */
+    --p-dark-base: #2d3748;
+    --p-text-muted: #718096;
+    --p-border: rgba(172, 186, 196, 0.2);
+    --p-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  /* --- Premium Background & Film Grain --- */
+  .shop-premium {
+    position: relative;
+    background-color: var(--p-bg-custom);
+    color: var(--p-dark-base);
+    min-height: 100vh;
+    padding-bottom: 60px;
+    overflow: hidden;
+  }
+
+  /* Fixed Film Grain Overlay for Luxury Texture - Multiply for dark/light integration */
+  .shop-premium::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.10'/%3E%3C/svg%3E");
+    opacity: 0.2; mix-blend-mode: multiply;
+  }
+
+  .shop-premium > * { position: relative; z-index: 2; }
+
+  .shop-wrap { padding: 40px 0; }
+
+  /* --- Premium Muted Shop Hero --- */
+  .shop-hero {
+    background: var(--p-surface);
+    border: 1px solid var(--p-border);
+    border-radius: 32px; padding: 50px; margin-bottom: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+    position: relative;
+    overflow: hidden;
+  }
+  /* Subtle palette tint in hero */
+  .shop-hero::after {
+    content: ""; position: absolute; top: -50%; right: -10%; width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(156, 171, 132, 0.15) 0%, transparent 70%);
+  }
+
+  .shop-titlebig { font-family: 'Playfair Display', serif; font-size: 44px; font-weight: 800; color: var(--p-dark-base); letter-spacing: -1px; }
+  .shop-subline { font-size: 17px; color: var(--p-text-muted); margin-top: 12px; max-width: 750px; line-height: 1.7; }
+
+  /* Muted Filter Chips */
+  .shop-chips { display: flex; gap: 10px; margin-top: 30px; }
+  .chipx {
+    height: 38px; padding: 0 16px; border-radius: 12px;
+    background: rgba(255,255,255,0.4); border: 1px solid var(--p-border);
+    color: var(--p-text-muted); font-weight: 700; font-size: 12px; cursor: pointer; transition: 0.3s;
+  }
+  .chipx:hover { background: var(--p-surface); border-color: var(--p-slate); color: var(--p-dark-base); }
+  .chipx.on { background: var(--p-dark-base); color: #fff; border-color: var(--p-dark-base); }
+
+  /* --- Layout & Sidebar --- */
+  .shop-layout { display: grid; grid-template-columns: 280px 1fr; gap: 35px; align-items: start; }
+
+  .side {
+    position: sticky; top: 110px;
+    background: var(--p-surface);
+    border: 1px solid var(--p-border);
+    border-radius: 28px; padding: 30px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.01);
+  }
+  .side-h { font-family: 'Playfair Display'; font-size: 22px; font-weight: 800; color: var(--p-dark-base); margin-bottom: 25px; }
+  .fblock { padding: 22px 0; border-top: 1px solid rgba(0,0,0,0.03); }
+  .flabel { font-weight: 900; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--p-slate); margin-bottom: 15px; display: block; }
+  
+  .check { 
+    display: flex; align-items: center; gap: 12px; padding: 9px 0; 
+    cursor: pointer; color: var(--p-text-muted); font-size: 14px; transition: 0.2s; font-weight: 600;
+  }
+  .check:hover { color: var(--p-dark-base); transform: translateX(5px); }
+  .check input { accent-color: var(--p-sage); width: 18px; height: 18px; border: 1px solid var(--p-border); }
+
+  /* --- Toolbar --- */
+  .tool {
+    background: var(--p-surface);
+    border: 1px solid var(--p-border);
+    border-radius: 20px; padding: 15px 25px;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 30px;
+  }
+  .sel {
+    background: rgba(255,255,255,0.5); border: 1px solid var(--p-border);
+    color: var(--p-dark-base); border-radius: 12px; height: 40px; padding: 0 15px; font-weight: 700; font-size: 13px;
+  }
+  .countpill { font-weight: 800; font-size: 12px; color: var(--p-text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+  /* --- Sovereign Muted Product Cards --- */
+  .shop-gridx { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  @media (max-width: 1200px) { .shop-gridx { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 650px) { .shop-gridx { grid-template-columns: 1fr; } }
+
+  .cardx {
+    background: var(--p-surface); border: 1px solid var(--p-border);
+    border-radius: 30px; overflow: hidden; transition: 0.5s var(--p-ease);
+    display: flex; flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.015);
+  }
+  .cardx:hover { 
+    transform: translateY(-8px); 
+    border-color: var(--p-slate); 
+    background: #fff; /* Only turns brighter on hover for feedback */
+    box-shadow: 0 25px 50px -15px rgba(0,0,0,0.06);
+  }
+
+  .imgx { position: relative; aspect-ratio: 4/5; background: #e2e8f0; overflow: hidden; }
+  .imgx img { width: 100%; height: 100%; object-fit: cover; transition: 0.8s var(--p-ease); opacity: 0.9; }
+  .cardx:hover .imgx img { transform: scale(1.06); opacity: 1; }
+
+  .badge {
+    position: absolute; top: 20px; left: 20px; background: var(--p-dark-base);
+    color: #fff; padding: 5px 14px; border-radius: 100px; font-size: 9px; font-weight: 900;
+    text-transform: uppercase; letter-spacing: 1.5px;
+  }
+
+  .bodyx { padding: 30px; flex: 1; display: flex; flex-direction: column; }
+  .titlex { font-size: 19px; font-weight: 800; color: var(--p-dark-base); margin-bottom: 5px; }
+  .subx { font-size: 13px; color: var(--p-text-muted); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; font-weight: 500; }
+  .subx .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--p-sage); }
+
+  .pricex { margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding-top: 18px; border-top: 1px solid rgba(0,0,0,0.04); }
+  .money { font-size: 22px; font-weight: 900; color: var(--p-dark-base); letter-spacing: -1px; }
+  .rating { font-size: 12px; font-weight: 900; color: #d97706; background: rgba(217, 119, 6, 0.08); padding: 4px 10px; border-radius: 10px; }
+
+  .actx { display: flex; gap: 10px; margin-top: 25px; }
+  .btnx {
+    height: 44px; border-radius: 12px; border: 1px solid var(--p-border);
+    background: rgba(255,255,255,0.4); color: var(--p-dark-base); font-weight: 800; font-size: 12px;
+    cursor: pointer; flex: 1; transition: 0.3s var(--p-ease); display: flex; align-items: center; justify-content: center;
+    text-decoration: none;
+  }
+  .btnx.primary { background: var(--p-dark-base); color: #fff; border-color: var(--p-dark-base); }
+  .btnx:hover { transform: translateY(-2px); border-color: var(--p-slate); background: #fff; }
+  .btnx.primary:hover { background: var(--p-slate); border-color: var(--p-slate); }
+
+  /* Quick View Modal Premium Muted */
+  .modal { 
+    position: fixed; inset: 0; z-index: 2000;
+    background: rgba(45, 55, 72, 0.2); backdrop-filter: blur(6px); 
+    display: none; align-items: center; justify-content: center; padding: 20px;
+  }
+  .mcard { 
+    background: var(--p-bg-custom); border: 1px solid var(--p-border); 
+    border-radius: 40px; box-shadow: 0 40px 100px rgba(0,0,0,0.1);
+    max-width: 1000px; width: 100%; overflow: hidden;
+  }
+
+  @media (max-width: 1050px) {
+    .shop-layout { grid-template-columns: 1fr; }
+    .side { position: relative; top: 0; }
+  }
+</style>
+
+<div class="wrap shop-wrap">
+  <!-- 1) Shop Hero -->
+  <div class="shop-hero">
+    <div class="shop-hero-top">
+      <div>
+        <h1 class="shop-titlebig" id="shopTitle">The Master Archive.</h1>
+        <div class="shop-subline" id="shopSubline">
+          Curated heritage assets in a soft, premium environment. Experience Bangladesh's finest craftsmanship redefined for the modern eye.
+        </div>
+      </div>
+      <div class="shop-chips" id="activeChips">
+        <button class="chipx" id="chipQuery" style="display:none;"></button>
+        <button class="chipx" id="chipCat" style="display:none;"></button>
+        <button class="chipx" id="chipClearAll" style="display:none;">Reset Archive ✕</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="shop-layout">
+    <!-- 2) Filter Sidebar -->
+    <aside class="side">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+        <h3 class="side-h" style="margin:0;">Refine</h3>
+        <button id="resetFilters" style="color:var(--p-slate); background:none; border:none; font-weight:900; cursor:pointer; font-size:11px; text-transform:uppercase; letter-spacing:1.5px;">Reset</button>
+      </div>
+
+      <div class="fblock">
+        <span class="flabel">Collections</span>
+        <label class="check"><input type="checkbox" class="f-cat" value="textiles"> Textiles & Jamdani</label>
+        <label class="check"><input type="checkbox" class="f-cat" value="pottery"> Heritage Pottery</label>
+        <label class="check"><input type="checkbox" class="f-cat" value="jewelry"> Artisan Jewelry</label>
+        <label class="check"><input type="checkbox" class="f-cat" value="home_decor"> Interior Decor</label>
+        <label class="check"><input type="checkbox" class="f-cat" value="gifts"> Curated Gifts</label>
+      </div>
+
+      
+      <div class="fblock">
+        <span class="flabel">Discovery Layers</span>
+        <label class="check"><input type="radio" name="layer" class="f-layer" value=""> All</label>
+        <label class="check"><input type="radio" name="layer" class="f-layer" value="flash"> Flash Sell</label>
+        <label class="check"><input type="radio" name="layer" class="f-layer" value="archive"> Museum Collection</label>
+        <label class="check"><input type="radio" name="layer" class="f-layer" value="trending"> Trending Mastery</label>
+        <label class="check"><input type="radio" name="layer" class="f-layer" value="discover"> Expand Discovery</label>
+        <label class="check"><input type="radio" name="layer" class="f-layer" value="full"> Full Dispatch</label>
+      </div>
+
+      
+      <div class="fblock">
+        <span class="flabel">Valuation ($)</span>
+        <div style="display:flex; gap:10px;">
+          <input class="in-lite" id="priceMin" type="number" min="0" step="1" placeholder="Min" style="flex:1; padding:10px 12px; border-radius:12px; border:1px solid rgba(0,0,0,0.08); font-weight:800;">
+          <input class="in-lite" id="priceMaxNum" type="number" min="0" step="1" placeholder="Max" style="flex:1; padding:10px 12px; border-radius:12px; border:1px solid rgba(0,0,0,0.08); font-weight:800;">
+        </div>
+        <input class="range" id="priceMax" type="range" min="0" max="5000" value="5000" style="width:100%; margin-top:12px; accent-color: var(--p-slate);">
+        <div style="display:flex; justify-content:space-between; font-size:12px; margin-top:10px; font-weight:800; color:var(--p-text-muted);">
+          <span>$0</span>
+          <span id="priceMaxLabel">$5000</span>
+        </div>
+      </div>
+
+        <button id="applyPrice" class="btnx primary" style="width:100%; justify-content:center; padding:14px 16px; border-radius:14px; margin-bottom:10px;">Apply Price</button>
+        <a class="btnx" href="/wishlist" style="margin-bottom:12px;">♡ Saved Masterpieces</a>
+        <a class="btnx primary" href="/cart">🛒 Acquire Collection</a>
+      </div>
+    </aside>
+
+    <!-- 3) Inventory Grid -->
+    <section>
+      <div class="tool">
+        <div class="countpill" id="countPill">Discovering Inventory...</div>
+        <div style="display:flex; gap:12px;">
+          <select class="sel" id="sortSel">
+            <option value="featured">Sort: Heritage Select</option>
+            <option value="new">Sort: Recent Acquisitions</option>
+            <option value="price_asc">Price: Ascending</option>
+            <option value="price_desc">Price: Descending</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="gridRoot">
+        <div class="shop-gridx" id="productGrid"></div>
+      </div>
+
+      <div id="pager" style="margin-top:50px; display:flex; justify-content:center; gap:10px;">
+        <div id="pageNums" style="display:flex; gap:8px;"></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- Premium Quick View Modal -->
+<div class="modal" id="qvModal">
+  <div class="mcard" style="display: grid; grid-template-columns: 1fr 1.2fr;">
+    <div style="background:#e2e8f0;"><img id="qvImg" style="width:100%; height:100%; object-fit:cover;"></div>
+    <div style="padding:60px; position:relative; background: var(--p-surface);">
+      <button id="qvClose" style="position:absolute; top:30px; right:30px; background:none; border:none; color:var(--p-dark-base); font-size:24px; cursor:pointer; opacity:0.3;">✕</button>
+      <h2 id="qvTitle" style="font-family:'Playfair Display'; font-size:42px; margin:0; line-height:1.1; color: var(--p-dark-base);"></h2>
+      <div id="qvMeta" style="margin:20px 0; color:var(--p-slate); font-weight:900; font-size:12px; text-transform:uppercase; letter-spacing:2px;"></div>
+      <p id="qvDesc" style="color:var(--p-text-muted); line-height:1.8; font-size:16px; margin:30px 0;"></p>
+      <div style="font-size:38px; font-weight:900; margin-bottom:40px; color: var(--p-dark-base);">
+        <span class="money" id="qvPrice"><span class="sym">$</span><span class="amt">0</span></span>
+      </div>
+      <div style="display:flex; gap:15px;">
+        <button class="btnx primary" id="qvAdd" style="height:55px; font-size:14px;">Acquire Now</button>
+        <button class="btnx" id="qvWish" style="height:55px;">Add to Wishlist</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Registry Updated</div>
+
+<script>
+  const $ = (q,el=document)=> el.querySelector(q);
+  const $$ = (q,el=document)=> Array.from(el.querySelectorAll(q));
+  const qs = new URLSearchParams(location.search);
+
+  const state = {
+    q: (qs.get("q")||"").trim(),
+    category: (qs.get("category")||"").trim(),
+    layer: "", // flash|archive|trending|discover|full
+    sort: (qs.get("sort")||"").trim(),
+    min: qs.get("min") ? Number(qs.get("min")) : null,
+    max: qs.get("max") ? Number(qs.get("max")) : null,
+  };
+
+  // Derive layer from query params
+  if(qs.get("flash")==="1") state.layer="flash";
+  else if(qs.get("archive")==="1") state.layer="archive";
+  else if((qs.get("sort")||"")==="trending") state.layer="trending";
+  else if(qs.get("discover")==="1") state.layer="discover";
+  else if((qs.get("dispatch")||"")==="full") state.layer="full";
+
+  const CATEGORY_LABELS = {
+    textiles: "Textiles & Jamdani",
+    pottery: "Historical Pottery",
+    jewelry: "Artisan Adornments",
+    jute: "Golden Fiber Art",
+    home_decor: "Sovereign Interior",
+    gifts: "The Archive Gifts"
+  };
+
+  const LAYER_LABELS = {
+    flash: "Flash Sell",
+    archive: "Museum Collection",
+    trending: "Trending Mastery",
+    discover: "Expand Discovery",
+    full: "Full Dispatch"
+  };
+
+  function setHeroTitle(){
+    const titleEl = $("#shopTitle");
+    const subEl = $("#shopSubline");
+    let title = "The Master Archive.";
+    let sub = "Curated heritage assets in a soft, premium environment. Experience Bangladesh's finest craftsmanship redefined for the modern eye.";
+
+    if(state.category){
+      title = (CATEGORY_LABELS[state.category] || state.category) + ".";
+      sub = "A focused collection refined by category — crafted, verified, and ready to discover.";
+    }
+    if(state.layer){
+      title = (LAYER_LABELS[state.layer] || state.layer) + ".";
+      sub = "A curated layer designed for discovery — limited, trending, archival, and editorial.";
+    }
+    if(state.q){
+      title = `Search: "${state.q}"`;
+      sub = "Results based on your query across the full archive.";
+    }
+    if(titleEl) titleEl.textContent = title;
+    if(subEl) subEl.textContent = sub;
+  }
+
+  function syncUI(){
+    // Categories (single-select using existing checkboxes)
+    $$(".f-cat").forEach(cb=>{
+      cb.checked = (state.category && cb.value===state.category);
+    });
+
+    // Layer radios
+    $$(".f-layer").forEach(r=>{
+      r.checked = (r.value===(state.layer||""));
+    });
+
+    // Price
+    const priceMax = $("#priceMax");
+    const priceMaxLabel = $("#priceMaxLabel");
+    const priceMin = $("#priceMin");
+    const priceMaxNum = $("#priceMaxNum");
+
+    if(priceMin) priceMin.value = (state.min ?? "");
+    if(priceMaxNum) priceMaxNum.value = (state.max ?? (priceMax ? priceMax.value : ""));
+    if(priceMax){
+      if(state.max!=null && !isNaN(state.max)) priceMax.value = String(state.max);
+      if(priceMaxLabel) priceMaxLabel.textContent = `$${Number(priceMax.value).toFixed(0)}`;
+      priceMax.addEventListener("input", ()=>{
+        if(priceMaxLabel) priceMaxLabel.textContent = `$${Number(priceMax.value).toFixed(0)}`;
+        if(priceMaxNum) priceMaxNum.value = priceMax.value;
+      });
+    }
+  }
+
+  function buildQuery(){
+    const q = new URLSearchParams();
+    if(state.q) q.set("q", state.q);
+    if(state.category) q.set("category", state.category);
+
+    // layer -> query params
+    if(state.layer==="flash") q.set("flash","1");
+    else if(state.layer==="archive") q.set("archive","1");
+    else if(state.layer==="trending") q.set("sort","trending");
+    else if(state.layer==="discover") q.set("discover","1");
+    else if(state.layer==="full") q.set("dispatch","full");
+
+    if(state.sort && state.layer!=="trending") q.set("sort", state.sort);
+
+    if(state.min!=null && !isNaN(state.min)) q.set("min", String(state.min));
+    if(state.max!=null && !isNaN(state.max)) q.set("max", String(state.max));
+
+    return q;
+  }
+
+  function applyAndReload(){
+    const q = buildQuery();
+    const url = `${location.pathname}?${q.toString()}`;
+    history.replaceState(null,"",url);
+    setHeroTitle();
+    loadProducts();
+  }
+
+  function esc(s){ return String(s||"").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[m])); }
+
+  function card(p){
+    const title = esc(p.title_bn || p.title || "Untitled");
+    const img = esc(p.image_url || "");
+    const id = esc(p.id);
+    const maker = esc(p.maker || p.seller_name || "");
+    const price = Number(p.price_usd||0);
+    const compare = (p.compare_at_usd!=null) ? Number(p.compare_at_usd) : null;
+
+    const priceHtml = `<span class="money" data-usd="${price}"><span class="money-symbol">$</span><span class="money-amount">${price.toFixed(2)}</span></span>`;
+    const compareHtml = (compare && compare>price) ? `<span class="money old" data-usd="${compare}" style="margin-left:10px; text-decoration:line-through; opacity:.55; font-size:12px;"><span class="money-symbol">$</span><span class="money-amount">${compare.toFixed(2)}</span></span>` : "";
+    const badge = p.badge ? `<span class="pill">${esc(p.badge)}</span>` : "";
+
+    return `
+      <div class="p-cardx">
+        <div class="p-media">
+          <a href="/product?id=${id}" class="p-media-link">
+            <img src="${img}" alt="${title}" class="p-imgx">
+          </a>
+          ${badge}
+        </div>
+        <div class="p-bodyx">
+          <div class="p-tx">${title}</div>
+          <div class="subx"><span class="dot"></span> ${maker || "Curated maker"}</div>
+          <div class="pricex">${priceHtml}${compareHtml}</div>
+          <div class="actx">
+            <a href="/product?id=${id}" class="btnx primary">Details</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  async function loadProducts(){
+    const grid = $("#productsGrid");
+    const empty = $("#emptyState");
+    if(!grid) return;
+    grid.innerHTML = `<div style="padding:24px; font-weight:900; opacity:.65;">Loading…</div>`;
+
+    const q = buildQuery();
+    q.set("limit","48");
+
+    const res = await fetch(`/api/products?${q.toString()}`, {credentials:"same-origin"});
+    const data = await res.json();
+    const items = data.items || [];
+
+    if(items.length===0){
+      grid.innerHTML = "";
+      if(empty) empty.style.display = "block";
+      else grid.innerHTML = `<div style="padding:24px; font-weight:900;">No products found.</div>`;
+      return;
+    }
+    if(empty) empty.style.display = "none";
+    grid.innerHTML = items.map(card).join("");
+
+    if(window.applyCurrencyToAll) window.applyCurrencyToAll();
+  }
+
+  function bindUI(){
+    // Category single select
+    $$(".f-cat").forEach(cb=>{
+      cb.addEventListener("change", ()=>{
+        // enforce single
+        if(cb.checked){
+          $$(".f-cat").forEach(o=>{ if(o!==cb) o.checked=false; });
+          state.category = cb.value;
+          // choosing a category clears layer unless user explicitly set layer
+          // Keep layer if already set from Home deep links (e.g. flash)
+        }else{
+          state.category = "";
+        }
+        applyAndReload();
+      });
+    });
+
+    // Layer radios
+    $$(".f-layer").forEach(r=>{
+      r.addEventListener("change", ()=>{
+        state.layer = r.value || "";
+        // If selecting a discovery layer, clear category to match premium single-focus navigation
+        if(state.layer) state.category = "";
+        applyAndReload();
+      });
+    });
+
+    // Search
+    const qIn = $("#qInput");
+    if(qIn){
+      qIn.value = state.q;
+      qIn.addEventListener("keydown",(e)=>{
+        if(e.key==="Enter"){
+          state.q = (qIn.value||"").trim();
+          applyAndReload();
+        }
+      });
+    }
+    const qBtn = $("#qBtn");
+    if(qBtn){
+      qBtn.addEventListener("click", ()=>{
+        state.q = (qIn?.value||"").trim();
+        applyAndReload();
+      });
+    }
+
+    // Price apply
+    const minEl = $("#priceMin");
+    const maxEl = $("#priceMaxNum");
+    const applyPrice = $("#applyPrice");
+    const applyFn = ()=>{
+      const minV = minEl && minEl.value!=="" ? Number(minEl.value) : null;
+      const maxV = maxEl && maxEl.value!=="" ? Number(maxEl.value) : null;
+      state.min = (minV!=null && !isNaN(minV)) ? minV : null;
+      state.max = (maxV!=null && !isNaN(maxV)) ? maxV : null;
+      applyAndReload();
+    };
+    if(applyPrice) applyPrice.addEventListener("click", applyFn);
+    if(maxEl) maxEl.addEventListener("keydown",(e)=>{ if(e.key==="Enter") applyFn(); });
+    if(minEl) minEl.addEventListener("keydown",(e)=>{ if(e.key==="Enter") applyFn(); });
+
+    // Reset
+    const reset = $("#resetFilters");
+    if(reset){
+      reset.addEventListener("click", ()=>{
+        state.q=""; state.category=""; state.layer=""; state.sort=""; state.min=null; state.max=null;
+        applyAndReload();
+        syncUI();
+      });
+    }
+  }
+
+  // Boot
+  setHeroTitle();
+  syncUI();
+  bindUI();
+  loadProducts();
+</script>
+
+</div>
+
+{% endblock %}

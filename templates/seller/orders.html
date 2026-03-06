@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+  :root {
+    --bg-silk: #fdfdfb; 
+    --accent-gold: #b8860b; 
+    --accent-dark: #000000;
+    --border-subtle: rgba(0, 0, 0, 0.1);
+    --card-hover: #ffffff;
+  }
+
+  body {
+    background-color: var(--bg-silk);
+    font-family: 'Inter', sans-serif;
+    color: var(--accent-dark);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .aura-bg {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at 50% -10%, #f3efea 0%, #fdfdfb 100%);
+    z-index: -1;
+  }
+
+  .main-wrapper {
+    max-width: 1200px;
+    margin: 80px auto;
+    padding: 0 24px;
+  }
+
+  /* Header Section */
+  .order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 50px;
+  }
+
+  .order-header h2 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 40px;
+    font-weight: 900;
+    letter-spacing: -1.8px;
+    margin: 0;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 15px;
+  }
+
+  .btn-minimal {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--accent-gold);
+    text-decoration: none;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--accent-gold);
+    padding-bottom: 4px;
+    transition: 0.3s;
+  }
+
+  .btn-minimal:hover {
+    opacity: 0.6;
+    letter-spacing: 2px;
+  }
+
+  /* Order List Style */
+  .order-container {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .order-row {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1.5px solid var(--border-subtle);
+    border-radius: 24px;
+    padding: 28px 35px;
+    display: grid;
+    grid-template-columns: 1.2fr 2fr 1fr 1fr 1fr 1.2fr;
+    align-items: center;
+    backdrop-filter: blur(20px);
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .order-row:hover {
+    transform: translateY(-5px) scale(1.005);
+    background: var(--card-hover);
+    border-color: var(--accent-gold);
+    box-shadow: 0 20px 40px -15px rgba(0,0,0,0.06);
+  }
+
+  /* Content Styling */
+  .label-tiny {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #999;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .val-bold {
+    font-family: 'Outfit', sans-serif;
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--accent-dark);
+  }
+
+  .val-secondary {
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+  }
+
+  /* Status Badges - Masterclass style */
+  .status-badge {
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-block;
+    text-align: center;
+    border: 1px solid transparent;
+  }
+
+  /* Custom Status Colors */
+  .st-pending { background: #fffbeb; color: #b45309; border-color: #fde68a; }
+  .st-paid { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
+  .st-shipped { background: #eff6ff; color: #1e40af; border-color: #bfdbfe; }
+  .st-delivered { background: #166534; color: #fff; }
+  .st-cancelled { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
+
+  /* Mobile */
+  @media (max-width: 1000px) {
+    .order-row { grid-template-columns: repeat(2, 1fr); gap: 25px; }
+  }
+</style>
+
+<div class="aura-bg"></div>
+
+<div class="main-wrapper">
+  <header class="order-header">
+    <div>
+      <p style="font-size:12px; font-weight:900; color:var(--accent-gold); letter-spacing:4px; text-transform:uppercase; margin-bottom:10px;">Sales Logistics</p>
+      <h2>Orders <span style="font-weight:300; opacity:0.3;">/ অর্ডারসমূহ</span></h2>
+    </div>
+    <div class="header-actions">
+      <button class="btn-minimal" type="button" onclick="history.back()" style="display:inline-flex;align-items:center;gap:8px;">
+        <i data-lucide="arrow-left" size="16"></i> Back
+      </button>
+    </div>
+  </header>
+
+  <div class="order-container">
+    {% for r in rows %}
+    <div class="order-row">
+      <div>
+        <span class="label-tiny">ID Code</span>
+        <div class="val-bold">#{{ r.order_code }}</div>
+        <a href="/track?code={{ r.order_code }}/track?code={{ r.order_code }}email={{ r.buyer_email }}" style="font-size:11px; font-weight:700; color:var(--accent-gold); text-decoration:none;">Track Order →</a>
+      </div>
+
+      <div>
+        <span class="label-tiny">Consignee</span>
+        <div class="val-bold">{{ r.buyer_name }}</div>
+        <div class="val-secondary" style="font-size:12px; opacity:0.7;">{{ r.buyer_email }}</div>
+      </div>
+
+      <div>
+        <span class="label-tiny">Volume</span>
+        <div class="val-bold">{{ r.item_count }} <span style="font-size:12px; font-weight:500;">Items</span></div>
+      </div>
+
+      <div>
+        <span class="label-tiny">Total Value</span>
+        <div class="val-bold"><span class="money" data-usd="{{ r.total }}"><span class="sym">$</span><span class="amt">{{ r.total }}</span></span></div>
+      </div>
+
+      <div>
+        <span class="label-tiny">Payment</span>
+        <div class="val-secondary" style="font-weight:800; color: #166534;">{{ r.payment_status|upper }}</div>
+      </div>
+
+      <div style="text-align: right;">
+        <span class="label-tiny">Current Phase</span>
+        <span class="status-badge st-{{ r.status }}">
+          {{ r.status }}
+        </span>
+      </div>
+    </div>
+    {% else %}
+    <div style="text-align:center; padding: 100px 0; border: 2px dashed var(--border-subtle); border-radius: 32px;">
+      <i data-lucide="package-search" size="48" style="margin-bottom:20px; opacity:0.2;"></i>
+      <p style="font-weight:700; color:#999; letter-spacing:1px;">NO ORDERS FOUND IN THE REGISTRY</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+</script>
+
+{% endblock %}

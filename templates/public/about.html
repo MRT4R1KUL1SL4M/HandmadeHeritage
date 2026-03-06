@@ -1,0 +1,283 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<div class="policy-master-wrap">
+
+<style>
+  /* ================================================================
+     ABOUT US MASTERCLASS: THE ARTISAN MANIFESTO
+     THEME: #f7f0e8 (Custom Cream) | TEXTURE: Film Grain Overlay
+     PALETTE: #ACBAC4 (Slate Blue) | #9CAB84 (Sage Green)
+     ================================================================ */
+
+  :root {
+    --p-slate: #ACBAC4;
+    --p-sage: #9CAB84;
+    --p-bg-custom: #f7f0e8;
+    --p-surface: #fdfaf7;   /* Muted surface instead of white */
+    --p-dark: #1a1a1a;
+    --header-height: 120px;
+    --p-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-snap-type: y proximity;
+  }
+
+  .policy-master-wrap {
+    background-color: var(--p-bg-custom);
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* --- Film Grain Overlay (Maintained consistency with Home) --- */
+  .policy-master-wrap::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.06'/%3E%3C/svg%3E");
+    opacity: 0.25; mix-blend-mode: multiply;
+  }
+
+  .policy-master-wrap > * { position: relative; z-index: 2; }
+
+  /* SIDEBAR: Glassmorphism with Muted Surface */
+  .sidebar-container {
+    position: fixed;
+    left: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    width: 280px;
+    pointer-events: none;
+  }
+
+  .policy-sidebar-lux {
+    pointer-events: auto;
+    background: rgba(253, 250, 247, 0.9); /* Muted Surface Glass */
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border-radius: 30px;
+    padding: 35px;
+    border: 1px solid rgba(172, 186, 196, 0.3);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.05);
+  }
+
+  .sidebar-label {
+    font-weight: 900; font-size: 10px; text-transform: uppercase;
+    letter-spacing: 2.5px; color: var(--p-slate); margin-bottom: 25px;
+  }
+
+  .toc-link {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 0; color: #71717a; font-weight: 700;
+    text-decoration: none; font-size: 13px;
+    transition: all 0.4s var(--p-ease);
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+  }
+  
+  .toc-link:hover, .toc-link.active { color: var(--p-dark); transform: translateX(8px); }
+  .toc-link.active { color: var(--p-sage); border-bottom-color: var(--p-sage); }
+
+  /* FULL SCREEN SECTIONS */
+  .policy-section-lux {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 100px 100px 100px 380px;
+    scroll-snap-align: start;
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+    opacity: 0.15;
+    transition: opacity 1s ease;
+  }
+  
+  .policy-section-lux.active { opacity: 1; }
+
+  .policy-section-lux h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(34px, 5vw, 52px);
+    font-weight: 900; color: var(--p-dark);
+    margin-bottom: 30px;
+    letter-spacing: -1.5px;
+  }
+
+  .bn-lux { font-family: 'Hind Siliguri'; font-size: 18px; color: var(--p-slate); opacity: 0.8; margin-left: 15px; font-weight: 600; }
+
+  /* TYPOGRAPHY */
+  .policy-text {
+    max-width: 800px;
+    color: #2d3748;
+    font-size: 20px;
+    line-height: 1.85;
+    font-weight: 500;
+  }
+
+  .policy-list { margin: 35px 0; padding: 0; list-style: none; }
+  .policy-list li {
+    padding: 18px 0 18px 40px; position: relative;
+    font-weight: 700;
+    font-size: 18px; color: var(--p-dark);
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+  }
+  .policy-list li::before {
+    content: ""; position: absolute; left: 0; top: 28px; 
+    width: 25px; height: 3px; background: var(--p-sage);
+    border-radius: 2px;
+  }
+
+  .strong-auth { color: var(--p-sage); font-weight: 800; border-bottom: 2px solid rgba(156, 171, 132, 0.3); }
+
+  .firm-note {
+    background: var(--p-surface); border-left: 5px solid var(--p-slate);
+    padding: 35px; border-radius: 0 24px 24px 0; margin-top: 40px;
+    font-weight: 700; color: var(--p-dark); font-size: 19px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+  }
+
+  /* Signature Architecture */
+  .signature-block {
+    margin-top: 70px;
+    padding-top: 45px;
+    border-top: 2px solid var(--p-slate);
+    max-width: 450px;
+  }
+  .sig-name { font-family: 'Playfair Display'; font-size: 32px; font-weight: 900; color: var(--p-dark); }
+  .sig-title { font-weight: 800; font-size: 12px; text-transform: uppercase; color: var(--p-sage); letter-spacing: 3px; margin-top: 10px; }
+
+  .reading-progress {
+    position: fixed; top: 0; left: 0; width: 0%; height: 5px;
+    background: linear-gradient(90deg, var(--p-slate), var(--p-sage));
+    z-index: 2001;
+  }
+
+  @media (max-width: 1100px) {
+    .sidebar-container { display: none; }
+    .policy-section-lux { padding: 80px 30px; }
+  }
+</style>
+
+<div class="reading-progress" id="progressBar"></div>
+
+<div class="sidebar-container">
+  <aside class="policy-sidebar-lux">
+    <div class="sidebar-label">THE MANIFESTO</div>
+    <nav id="sidebarNav">
+      <a href="#story" class="toc-link active"><i data-lucide="book-open" width="16"></i> Our Story</a>
+      <a href="#curation" class="toc-link"><i data-lucide="filter" width="16"></i> Curation</a>
+      <a href="#quality" class="toc-link"><i data-lucide="award" width="16"></i> Authenticity</a>
+      <a href="#payout" class="toc-link"><i data-lucide="dollar-sign" width="16"></i> Fair Trade</a>
+      <a href="#sustain" class="toc-link"><i data-lucide="leaf" width="16"></i> Future</a>
+      <a href="#leadership" class="toc-link"><i data-lucide="user-check" width="16"></i> Ownership</a>
+    </nav>
+  </aside>
+</div>
+
+<section class="policy-master-wrap">
+  
+  <article id="story" class="policy-section-lux active">
+    <h2>The Legacy Story <span class="bn-lux">আমাদের গল্প</span></h2>
+    <div class="policy-text">
+      Handmade Heritage serves as the <span class="strong-auth">authoritative bridge</span> between master artisans and global collectors. We exist to ensure that ancient craftsmanship thrives within the modern digital landscape through transparency and a premium commercial experience.
+    </div>
+  </article>
+
+  <article id="curation" class="policy-section-lux">
+    <h2>Rigorous Curation <span class="bn-lux">নির্বাচন প্রক্রিয়া</span></h2>
+    <div class="policy-text">
+      We maintain an <span class="strong-auth">uncompromising standard</span> for our gallery. Every listing undergoes a strict verification protocol before being showcased:
+      <ul class="policy-list">
+        <li>Technique Verification: Confirmation of genuine handmade methods.</li>
+        <li>Material Integrity: Auditing of raw materials for heritage compliance.</li>
+        <li>Logistics Readiness: Mandatory museum-grade packaging standards.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article id="quality" class="policy-section-lux">
+    <h2>Artisan Authenticity <span class="bn-lux">মান ও আসলত্ব</span></h2>
+    <div class="policy-text">
+      Minor character variations are the hallmark of true handmade art. However, <span class="strong-auth">structural defects</span> are never tolerated. 
+      <div class="firm-note">
+        If an artifact fails to reflect the promised artisan quality, we exercise full authority to rectify the acquisition through our mediation protocols.
+      </div>
+    </div>
+  </article>
+
+  <article id="payout" class="policy-section-lux">
+    <h2>Fair Trade Mandate <span class="bn-lux">ন্যায্য মূল্য</span></h2>
+    <div class="policy-text">
+      Handmade Heritage enforces <span class="strong-auth">Pricing Transparency</span>. We demand that every listing reflects the true value of artisan labor, materials, and specialized techniques. Exploitative industrial pricing has no place in our collective.
+    </div>
+  </article>
+
+  <article id="sustain" class="policy-section-lux">
+    <h2>Future Sustainability <span class="bn-lux">টেকসই উদ্যোগ</span></h2>
+    <div class="policy-text">
+      We protect the future of craft through responsible commercial practices.
+      <ul class="policy-list">
+        <li>Mandatory right-sized, responsible packaging.</li>
+        <li>Promotion of long-life materials to reduce environmental impact.</li>
+        <li>Bespoke care guidance to ensure artifacts endure for generations.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article id="leadership" class="policy-section-lux">
+    <h2>Gallery Leadership <span class="bn-lux">আইনি সম্মতি</span></h2>
+    <div class="policy-text">
+      Handmade Heritage is a vision built on trust and the preservation of culture.
+      
+      <div class="signature-block">
+        <div class="sig-name">Md. Tarikul Islam</div>
+        <div class="sig-title">Owner of Handmade Heritage</div>
+      </div>
+    </div>
+  </article>
+
+  <div style="height: 100px;"></div>
+
+</section>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    if (window.lucide) lucide.createIcons();
+
+    const sections = document.querySelectorAll('.policy-section-lux');
+    const navLinks = document.querySelectorAll('.toc-link');
+    const progressBar = document.getElementById('progressBar');
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          sections.forEach(s => s.classList.remove('active'));
+          entry.target.classList.add('active');
+
+          const currentId = entry.target.getAttribute('id');
+          navLinks.forEach(link => {
+            if (link.getAttribute('href') === `#${currentId}`) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+          });
+        }
+      });
+    }, { threshold: 0.5 });
+
+    sections.forEach(s => revealObserver.observe(s));
+
+    window.onscroll = () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      progressBar.style.width = scrolled + "%";
+    };
+  });
+</script>
+
+</div>
+
+{% endblock %}

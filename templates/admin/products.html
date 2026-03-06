@@ -1,0 +1,304 @@
+{% extends 'admin/admin_base.html' %}
+{% block body %}
+
+<style>
+  /* ================================================================
+     PRODUCTS GOVERNANCE: ELITE MODERATION TERMINAL (v21.5)
+     THEME: #f7f0e8 (Luxury Cream) | PALETTE: Slate, Sage & Gold
+     REFINEMENT: Supreme Rounding & High-Fidelity Breathing Room
+     ================================================================ */
+
+  :root {
+    --p-bg: #f7f0e8;
+    --p-surface: #fdfaf7;
+    --p-card: #ffffff;
+    --p-dark: #1a202c;
+    --p-slate: #ACBAC4;
+    --p-sage: #006a4e; 
+    --p-gold: #b28e45;
+    --p-border: rgba(172, 186, 196, 0.25);
+    --p-shadow: 0 40px 100px -20px rgba(0,0,0,0.05);
+    --p-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* --- Hide redundant Base Title --- */
+  .super-topbar { display: none !important; }
+
+  .audit-wrap { 
+    padding: 20px 15px 60px; 
+    font-family: 'Inter', sans-serif; 
+    background-color: var(--p-bg);
+  }
+
+  /* --- Cinematic Header --- */
+  .audit-header {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-end;
+    margin-bottom: 35px; 
+    border-bottom: 2px solid var(--p-border); 
+    padding-bottom: 25px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .audit-h1 { font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 950; letter-spacing: -1.5px; color: var(--p-dark); }
+  .audit-sub { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; color: var(--p-gold); display: block; margin-bottom: 8px; }
+
+  /* --- Precision Search Surface (Enhanced Rounding) --- */
+  .filter-surface {
+    background: var(--p-card); 
+    padding: 25px 40px; 
+    border-radius: 30px;
+    border: 1px solid var(--p-border); 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+    margin-bottom: 30px; 
+    display: flex; 
+    gap: 15px; 
+    align-items: center; 
+    flex-wrap: wrap;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  
+  .in-lux {
+    height: 48px; 
+    border: 2.5px solid #eef2f6; 
+    border-radius: 14px; 
+    padding: 0 20px;
+    font-size: 14px; 
+    font-weight: 700; 
+    color: var(--p-dark); 
+    outline: none; 
+    transition: 0.4s var(--p-ease);
+    background: var(--p-surface);
+  }
+  .in-lux:focus { 
+    border-color: var(--p-gold); 
+    background: #fff;
+    box-shadow: 0 12px 25px rgba(178, 142, 69, 0.05); 
+    transform: translateY(-2px);
+  }
+
+  /* --- Data Architecture Table (Supreme Rounding) --- */
+  .audit-card { 
+    background: var(--p-card); 
+    border-radius: 40px; 
+    border: 1px solid var(--p-border); 
+    box-shadow: var(--p-shadow); 
+    overflow: hidden; 
+    margin: 0 10px;
+  }
+  
+  .table-lux { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .table-lux thead th {
+    background: #f8fafc; 
+    padding: 22px 30px; 
+    text-align: left;
+    font-weight: 950; 
+    text-transform: uppercase; 
+    letter-spacing: 1.5px;
+    color: var(--p-slate); 
+    border-bottom: 1.5px solid var(--p-border); 
+    font-size: 10px;
+  }
+  .table-lux tbody tr { border-bottom: 1px solid #f1f5f9; transition: 0.3s; }
+  .table-lux tbody tr:hover { background: rgba(0, 106, 78, 0.02); }
+  .table-lux td { 
+    padding: 24px 30px; 
+    vertical-align: middle; 
+  }
+
+  /* --- Product Identity Node --- */
+  .p-thumb { 
+    width: 60px; 
+    height: 60px; 
+    border-radius: 14px; 
+    background-size: cover; 
+    background-position: center; 
+    border: 1px solid var(--p-border); 
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05); 
+    flex-shrink: 0; 
+  }
+  .p-h { font-weight: 950; font-size: 14.5px; color: var(--p-dark); margin-bottom: 2px; }
+  .p-s { font-size: 10px; color: var(--p-slate); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* --- Status Badges --- */
+  .st-badge { 
+    padding: 6px 14px; 
+    border-radius: 10px; 
+    font-weight: 950; 
+    font-size: 10px; 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    display: inline-block;
+    border: 1.5px solid transparent;
+  }
+  .st-active { background: #ecfdf5; color: var(--p-sage); border-color: #d1fae5; }
+  .st-blocked { background: #fef2f2; color: #b91c1c; border-color: #fee2e2; }
+  .st-pending { background: #fff7ed; color: #c2410c; border-color: #ffedd5; }
+
+  /* --- Toggle Controls --- */
+  .tag-btn {
+    border: 1.5px solid #eef2f6; 
+    background: #fff; 
+    padding: 6px 14px; 
+    border-radius: 100px;
+    font-size: 10px; 
+    font-weight: 950; 
+    text-transform: uppercase; 
+    letter-spacing: 1.5px;
+    cursor: pointer; 
+    transition: 0.3s var(--p-ease); 
+    color: var(--p-slate);
+  }
+  .tag-btn:hover { border-color: var(--p-dark); color: var(--p-dark); transform: translateY(-2px); }
+  .tag-featured.active { background: rgba(124, 92, 255, 0.1); color: #7c5cff; border-color: #7c5cff; }
+  .tag-trending.active { background: rgba(34, 211, 238, 0.1); color: #0891b2; border-color: #0891b2; }
+
+  .btn-lux-ok {
+    background: var(--p-dark); 
+    color: #fff; 
+    border: none; 
+    padding: 0 18px;
+    height: 38px;
+    border-radius: 10px; 
+    font-weight: 950; 
+    font-size: 10px; 
+    text-transform: uppercase;
+    letter-spacing: 2px; 
+    cursor: pointer; 
+    transition: 0.3s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-lux-ok:hover { background: var(--p-sage); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 106, 78, 0.15); }
+  .btn-audit { background: var(--p-surface); border: 1.5px solid var(--p-border); color: var(--p-slate); text-decoration: none; }
+  .btn-audit:hover { border-color: var(--p-dark); color: var(--p-dark); }
+
+</style>
+
+<section class="audit-wrap wrap">
+  <header class="audit-header">
+    <div>
+      <span class="audit-sub">Inventory Sovereignty</span>
+      <h1 class="audit-h1">Products Moderation <span style="font-family:'Inter'; font-weight:600; opacity:0.2; font-size:20px;">— কন্ট্রোল</span></h1>
+    </div>
+    <a href="/admin/dashboard" class="btn-lux-ok btn-audit" style="border-radius:100px; padding: 10px 25px; height: auto;">
+      <i data-lucide="arrow-left" size="14"></i> Back to Command Hub
+    </a>
+  </header>
+
+  <!-- Search & Filter Surface -->
+  <section class="filter-surface">
+    <form method="get" action="/admin/products" style="display:flex; width: 100%; gap:15px; align-items:center;">
+      <div style="flex:1; position:relative; display:flex; align-items:center;">
+        <i data-lucide="search" size="16" style="position:absolute; left:15px; color:var(--p-slate);"></i>
+        <input class="in-lux" style="width:100%; padding-left:45px;" type="text" name="q" value="{{ q or '' }}" placeholder="Identify asset: title, artisan or registry ID">
+      </div>
+      <select class="in-lux" name="status" style="min-width:200px;">
+        <option value="">Full Inventory Registry</option>
+        <option value="pending" {% if status=='pending' %}selected{% endif %}>Pending Audit</option>
+        <option value="active" {% if status=='active' %}selected{% endif %}>Active Registry</option>
+        <option value="blocked" {% if status=='blocked' %}selected{% endif %}>Blocked / Revoked</option>
+      </select>
+      <button class="btn-lux-ok" type="submit" style="height:48px; border-radius:14px; padding: 0 25px;">Execute Audit</button>
+    </form>
+  </section>
+
+  <!-- Inventory Card -->
+  <div class="audit-card">
+    <div style="overflow-x:auto;">
+      <table class="table-lux" style="min-width:1150px;">
+        <thead>
+          <tr>
+            <th>Asset Specification</th>
+            <th>Artisan Source</th>
+            <th>Valuation</th>
+            <th>Velocity</th>
+            <th>Protocol State</th>
+            <th>Market Flags</th>
+            <th style="width:320px; text-align:right;">Governance Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in rows %}
+          <tr>
+            <td>
+              <div style="display:flex; gap:15px; align-items:center;">
+                <div class="p-thumb" style="{% if p.image_url %}background-image:url('{{ p.image_url }}');{% endif %}"></div>
+                <div>
+                  <div class="p-h">{{ p.title }}</div>
+                  <div class="p-s">{{ p.category_slug|replace('_', ' ') }} • ID: {{ p.id }}</div>
+                  {% if p.title_bn %}<div style="font-size:11px; color:var(--p-slate); font-weight:700; margin-top:2px;">{{ p.title_bn }}</div>{% endif %}
+                </div>
+              </div>
+            </td>
+            <td>
+              <div style="font-weight:900; color:var(--p-dark); font-size:14px; margin-bottom:2px;">{{ p.seller_name or 'Independent Artisan' }}</div>
+              <div style="font-size:11px; color:var(--p-slate); font-weight:800; opacity:0.8;">{{ p.seller_email }}</div>
+            </td>
+            <td>
+              <div style="font-weight:1000; font-size:16px; color:var(--p-sage); letter-spacing:-0.5px;">
+                <span class="money" data-usd="{{ p.price_usd or 0 }}">${{ (p.price_usd or 0)|round|int }}</span>
+              </div>
+            </td>
+            <td>
+              <div style="font-weight:950; font-size:14px; color:var(--p-dark);">{{ p.sold_count|default(0) }}</div>
+              <div style="font-size:9px; font-weight:900; text-transform:uppercase; color:var(--p-slate); letter-spacing:1px;">Acquisitions</div>
+            </td>
+            <td>
+              <span class="st-badge st-{{ p.status|lower }}">{{ p.status|upper }}</span>
+            </td>
+            <td>
+              <div style="display:flex; gap:8px;">
+                <form method="post" action="/admin/products/{{ p.id }}/toggle" style="margin:0;">
+                  <input type="hidden" name="field" value="is_featured">
+                  <button class="tag-btn tag-featured {% if p.is_featured %}active{% endif %}" type="submit">Featured</button>
+                </form>
+                <form method="post" action="/admin/products/{{ p.id }}/toggle" style="margin:0;">
+                  <input type="hidden" name="field" value="is_trending">
+                  <button class="tag-btn tag-trending {% if p.is_trending %}active{% endif %}" type="submit">Trending</button>
+                </form>
+              </div>
+            </td>
+            <td align="right">
+              <div style="display:flex; gap:10px; align-items:center; justify-content:flex-end;">
+                <form method="post" action="/admin/products/{{ p.id }}/status" style="display:flex; gap:8px; align-items:center; margin:0;">
+                  <select class="in-lux" name="status" style="height:38px; font-size:11px; padding:0 12px; min-width:110px; border-radius:10px;">
+                    <option value="pending" {% if p.status=='pending' %}selected{% endif %}>Pending</option>
+                    <option value="active" {% if p.status=='active' %}selected{% endif %}>Active</option>
+                    <option value="blocked" {% if p.status=='blocked' %}selected{% endif %}>Blocked</option>
+                  </select>
+                  <button class="btn-lux-ok" type="submit" style="padding:0 15px; height:38px; border-radius:10px;">Sync</button>
+                </form>
+                <a class="btn-lux-ok btn-audit" href="/product?id={{ p.id }}" target="_blank" style="padding:0 15px; height:38px; line-height:38px; border-radius:10px;">
+                  <i data-lucide="external-link" size="14"></i>
+                </a>
+              </div>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="7" style="padding:120px 0; text-align:center;">
+              <i data-lucide="package-search" size="64" style="color:var(--p-border); margin-bottom:20px; opacity:0.5;"></i>
+              <div style="font-weight:900; color:#cbd5e1; text-transform:uppercase; letter-spacing:5px; font-size:12px;">No Assets Found in Registry</div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    if(window.lucide) lucide.createIcons();
+    if(window.applyCurrencyUI) window.applyCurrencyUI();
+  });
+</script>
+
+{% endblock %}

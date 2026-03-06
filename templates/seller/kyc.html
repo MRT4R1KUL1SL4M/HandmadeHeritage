@@ -1,0 +1,336 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+  :root {
+    --bg-silk: #fdfdfb; 
+    --accent-gold: #b8860b; 
+    --accent-dark: #000000;
+    --border-subtle: rgba(0, 0, 0, 0.1);
+    --success-green: #166534;
+  }
+
+  body {
+    background-color: var(--bg-silk);
+    font-family: 'Inter', sans-serif;
+    color: var(--accent-dark);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .aura-bg {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at 50% -10%, #f3efea 0%, #fdfdfb 100%);
+    z-index: -1;
+  }
+
+  .main-wrapper {
+    max-width: 1100px;
+    margin: 80px auto;
+    padding: 0 24px;
+  }
+
+  /* Header Section */
+  .kyc-header {
+    margin-bottom: 50px;
+  }
+
+  .kyc-header h2 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 38px;
+    font-weight: 900;
+    letter-spacing: -1.5px;
+    margin: 0;
+  }
+
+  /* Verification Grid */
+  .kyc-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) { .kyc-grid { grid-template-columns: 1fr; } }
+
+  /* Masterclass Card Style */
+  .m-card {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1.5px solid var(--border-subtle);
+    border-radius: 32px;
+    padding: 40px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 10px 40px -15px rgba(0,0,0,0.04);
+  }
+
+  /* Form Elements */
+  .field-label {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #888;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .m-input {
+    width: 100%;
+    padding: 16px 20px;
+    border-radius: 16px;
+    border: 1.5px solid var(--border-subtle);
+    background: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    outline: none;
+    transition: 0.3s;
+    box-sizing: border-box;
+  }
+
+  .m-input:focus {
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 5px rgba(184, 134, 11, 0.1);
+  }
+
+  .m-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 600px) { .m-row { grid-template-columns: 1fr; } }
+
+  /* Premium Button */
+  .btn-secure {
+    width: 100%;
+    background: var(--accent-dark);
+    color: #fff;
+    border: none;
+    padding: 18px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    margin-top: 15px;
+  }
+
+  .btn-secure:hover:not(:disabled) {
+    transform: translateY(-5px);
+    background: #1a1a1a;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  }
+
+  /* Sidebar Status Styles */
+  .status-hub {
+    position: sticky;
+    top: 40px;
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    border-radius: 99px;
+    background: #fff;
+    border: 1.5px solid var(--border-subtle);
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 25px;
+  }
+
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: #f59e0b; }
+  .badge-ok .dot { background: #16a34a; box-shadow: 0 0 10px #16a34a; }
+  .badge-bad .dot { background: #ef4444; }
+
+  .kyc-msg {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #555;
+    margin-bottom: 30px;
+  }
+
+  .requirement-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .req-item {
+    display: flex;
+    gap: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #777;
+    align-items: center;
+  }
+
+  .req-item i { color: var(--accent-gold); }
+
+</style>
+
+<div class="aura-bg"></div>
+
+<div class="main-wrapper">
+  <div style="display:flex;justify-content:flex-start;gap:10px;margin:18px 0 10px;">
+    <button class="btn" type="button" onclick="history.back()" style="border-radius:999px;display:inline-flex;align-items:center;gap:8px;">
+      <i data-lucide="arrow-left" size="18"></i> Back
+    </button>
+  </div>
+  <header class="kyc-header">
+    <p style="font-size:12px; font-weight:900; color:var(--accent-gold); letter-spacing:4px; text-transform:uppercase; margin-bottom:10px;">Security Registry</p>
+    <h2>Seller Verification <span style="font-weight:300; opacity:0.3;">/ ভেরিফিকেশন</span></h2>
+  </header>
+
+  <div class="kyc-grid">
+    <div class="m-card">
+      <p style="font-size: 15px; color: #666; margin-bottom: 35px; line-height: 1.6;">
+        Please provide authentic documentation. Approved merchants gain access to global shipping and unlimited listings.
+      </p>
+
+      <form id="kycForm" class="kyc-form" enctype="multipart/form-data">
+        <div class="m-row">
+          <div>
+            <label class="field-label">National ID Number</label>
+            <input class="m-input" name="nid_number" placeholder="1234 5678 9012" value="{{ profile.nid_number if profile else '' }}">
+          </div>
+          <div>
+            <label class="field-label">Trade / Tax ID (Optional)</label>
+            <input class="m-input" name="tax_id" placeholder="TIN Number" value="{{ profile.tax_id if profile else '' }}">
+          </div>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+          <label class="field-label">Registered Business Address</label>
+          <textarea class="m-input" name="address" rows="3" placeholder="Full legal address">{{ profile.address if profile else '' }}</textarea>
+        </div>
+
+        <div class="m-row" style="margin-bottom: 24px;">
+          <div>
+            <label class="field-label">Payout Method</label>
+            <select class="m-input" name="payout_method" required>
+              {% set pm = (profile.payout_method if profile else '')|lower %}
+              <option value="" {% if not pm %}selected{% endif %}>Select method</option>
+              <option value="bkash" {% if 'bkash' in pm %}selected{% endif %}>bKash</option>
+              <option value="nagad" {% if 'nagad' in pm %}selected{% endif %}>Nagad</option>
+              <option value="rocket" {% if 'rocket' in pm %}selected{% endif %}>Rocket</option>
+              <option value="bank" {% if 'bank' in pm %}selected{% endif %}>Bank</option>
+              <option value="card" {% if 'card' in pm %}selected{% endif %}>Card</option>
+              <option value="paypal" {% if 'paypal' in pm %}selected{% endif %}>PayPal</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">Payout Account / Number</label>
+            <input class="m-input" name="payout_account" placeholder="e.g. 01XXXXXXXXX / Bank A/C" value="">
+            <div style="font-size:12px;color:#777;margin-top:8px;line-height:1.4;">
+              We'll store your payout account securely. On seller pages, we only show a masked version.
+              {% if profile and profile.payout_account_masked %}
+                <div style="margin-top:6px;"><b>Saved:</b> {{ profile.payout_method }} • {{ profile.payout_account_masked }}</div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="m-row" style="margin-bottom: 35px;">
+          <div>
+            <label class="field-label">NID Photo (Front)</label>
+            <input class="m-input" type="file" name="nid_front" accept="image/*">
+          </div>
+          <div>
+            <label class="field-label">NID Photo (Back)</label>
+            <input class="m-input" type="file" name="nid_back" accept="image/*">
+          </div>
+        </div>
+
+        <button class="btn-secure" type="submit" id="kycBtn">
+          <i data-lucide="shield-check" size="20"></i>
+          VERIFY IDENTITY
+        </button>
+        <div id="kycNote" style="margin-top:15px; font-size:13px; font-weight:700; text-align:center; color: var(--accent-gold);"></div>
+      </form>
+    </div>
+
+    <aside class="status-hub">
+      <div class="m-card">
+        <span class="field-label">Current Status</span>
+        {% set s = (profile.verification_status if profile else 'pending') %}
+        
+        <div class="status-badge {% if s=='approved' %}badge-ok{% elif s=='rejected' %}badge-bad{% endif %}">
+          <span class="dot"></span>
+          <span>{% if s=='approved' %}Approved{% elif s=='rejected' %}Rejected{% else %}In Review{% endif %}</span>
+        </div>
+
+        <div class="kyc-msg">
+          {% if s=='approved' %}
+            <strong style="color:var(--success-green); display:block; margin-bottom:5px;">System Verified.</strong> 
+            Your account is active. Explore your <a href="/seller/dashboard" style="color:var(--accent-dark); font-weight:800;">Dashboard</a>.
+          {% elif s=='rejected' %}
+            <strong style="color:#ef4444; display:block; margin-bottom:5px;">Resubmission Required.</strong> 
+            Documentation was insufficient.
+            {% if profile and profile.notes %}<p style="font-size:13px; background:#fff1f2; padding:12px; border-radius:12px; margin-top:10px;">Note: {{ profile.notes }}</p>{% endif %}
+          {% else %}
+            <strong style="display:block; margin-bottom:5px;">Pending Audit.</strong> 
+            Our security team is currently reviewing your application.
+          {% endif %}
+        </div>
+
+        <div class="requirement-list">
+          <div class="req-item"><i data-lucide="check-circle" size="16"></i> High-resolution document photos</div>
+          <div class="req-item"><i data-lucide="check-circle" size="16"></i> Matching business address</div>
+          <div class="req-item"><i data-lucide="check-circle" size="16"></i> Valid government-issued ID</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+  (function(){
+    const form = document.getElementById("kycForm");
+    const btn = document.getElementById("kycBtn");
+    const note = document.getElementById("kycNote");
+    if(!form || !btn) return;
+
+    form.addEventListener("submit", async (e)=>{
+      e.preventDefault();
+      btn.disabled = true;
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i data-lucide="loader-2" class="spin" size="20"></i> SECURING...';
+      lucide.createIcons();
+
+      const fd = new FormData(form);
+      note.textContent = "Establishing secure connection...";
+      try{
+        const res = await fetch("/api/seller/kyc", { method:"POST", body: fd });
+        const data = await res.json().catch(()=> ({}));
+        if(res.ok && data.success){
+          note.style.color = "#166534";
+          note.textContent = data.message || "Registry Updated.";
+          setTimeout(()=> window.location.reload(), 800);
+        }else{
+          note.style.color = "#ef4444";
+          note.textContent = data.error || "Update failed.";
+        }
+      }catch(err){
+        note.textContent = "Connection interrupted. Try again.";
+      }finally{
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        lucide.createIcons();
+      }
+    });
+  })();
+  lucide.createIcons();
+</script>
+
+{% endblock %}

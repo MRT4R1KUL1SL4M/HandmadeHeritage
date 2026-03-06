@@ -1,0 +1,291 @@
+{% extends 'superadmin/superadmin_base.html' %}
+{% block body %}
+
+<style>
+  /* ================================================================
+     SOVEREIGNTY HUB: ADMINISTRATIVE GOVERNANCE (v27.5)
+     THEME: Deep Slate, Heritage Emerald & Royal Gold
+     REFINEMENT: Supreme Rounding & High-Fidelity Breathing Room
+     ================================================================ */
+
+  :root {
+    --s-bg: #f8fafc;
+    --s-card: #ffffff;
+    --s-slate: #0f172a;
+    --s-emerald: #004d39;
+    --s-gold: #b28e45;
+    --s-border: rgba(15, 23, 42, 0.08);
+    --s-muted: #64748b;
+    --s-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  /* --- Balanced Outer Wrapper --- */
+  .sov-wrap { 
+    padding: 30px 15px 50px; 
+    font-family: 'Inter', sans-serif; 
+    background-color: var(--s-bg); 
+  }
+
+  /* --- Cinematic Header --- */
+  .sov-header {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-end;
+    margin-bottom: 35px; 
+    border-bottom: 2px solid var(--s-border); 
+    padding-bottom: 25px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .sov-h1 { font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 950; letter-spacing: -1.5px; color: var(--s-slate); }
+  .sov-sub { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; color: var(--s-gold); display: block; margin-bottom: 8px; }
+
+  /* --- Governance Cards (Supreme Rounding) --- */
+  .sov-card { 
+    background: var(--s-card); 
+    border-radius: 40px; /* High Rounding */
+    border: 1px solid var(--s-border); 
+    box-shadow: 0 40px 100px -20px rgba(0,0,0,0.05); 
+    padding: 45px; /* Increased internal padding */
+    margin-bottom: 30px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  .card-h { 
+    font-weight: 1000; 
+    font-size: 15px; 
+    color: var(--s-slate); 
+    margin-bottom: 30px; 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+    text-transform: uppercase; 
+    letter-spacing: 1.5px; 
+  }
+
+  /* --- Provisioning Form Layout --- */
+  .grid-lux { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; }
+  .field-group { display: flex; flex-direction: column; gap: 10px; }
+  .field-label { font-weight: 900; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--s-muted); padding-left: 5px; }
+  
+  .in-lux {
+    height: 52px; 
+    border: 2.5px solid #eef2f6; 
+    border-radius: 16px; 
+    padding: 0 20px;
+    font-size: 14px; 
+    font-weight: 700; 
+    color: var(--s-slate); 
+    outline: none;
+    transition: 0.4s var(--s-ease); 
+    background: #fbfbfc;
+  }
+  .in-lux:focus { 
+    border-color: var(--s-emerald); 
+    background: #fff; 
+    box-shadow: 0 12px 25px rgba(0, 77, 57, 0.06); 
+    transform: translateY(-2px);
+  }
+
+  /* --- Action Buttons --- */
+  .btn-execute {
+    background: var(--s-slate); 
+    color: #fff; 
+    border: none; 
+    padding: 0 35px;
+    height: 54px;
+    border-radius: 16px; 
+    font-weight: 950; 
+    font-size: 11px; 
+    text-transform: uppercase;
+    letter-spacing: 2.5px; 
+    cursor: pointer; 
+    transition: 0.4s var(--s-ease);
+    display: inline-flex; 
+    align-items: center; 
+    gap: 12px;
+  }
+  .btn-execute:hover { 
+    background: var(--s-emerald); 
+    transform: translateY(-4px); 
+    box-shadow: 0 20px 40px rgba(0, 77, 57, 0.18); 
+  }
+
+  .btn-ghost {
+    background: #fff; 
+    color: var(--s-muted); 
+    border: 1.5px solid var(--s-border);
+    padding: 10px 22px; 
+    border-radius: 14px; 
+    font-weight: 900; 
+    font-size: 10px;
+    text-transform: uppercase; 
+    letter-spacing: 1.5px; 
+    cursor: pointer; 
+    transition: 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-ghost:hover { border-color: var(--s-emerald); color: var(--s-emerald); transform: translateY(-2px); }
+
+  /* --- Table Architecture (Registry Spacing) --- */
+  .table-lux { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .table-lux thead th {
+    background: #f8fafc; 
+    padding: 22px 30px; 
+    text-align: left;
+    font-weight: 950; 
+    text-transform: uppercase; 
+    letter-spacing: 1.5px;
+    color: var(--s-muted); 
+    border-bottom: 1.5px solid var(--s-border); 
+    font-size: 10px;
+  }
+  .table-lux tbody tr { border-bottom: 1px solid #f1f5f9; transition: 0.3s; }
+  .table-lux tbody tr:hover { background: rgba(0, 106, 78, 0.02); }
+  .table-lux td { padding: 24px 30px; vertical-align: middle; }
+
+  /* --- Badges --- */
+  .tag-lux { 
+    display: inline-flex; 
+    align-items: center; 
+    padding: 6px 16px; 
+    border-radius: 100px; 
+    font-size: 10px; 
+    font-weight: 950; 
+    text-transform: uppercase; 
+    letter-spacing: 1px;
+    border: 1.5px solid var(--s-border); 
+    background: var(--s-bg); 
+    color: var(--s-muted);
+  }
+  .tag-super { color: var(--s-gold); border-color: rgba(178, 142, 69, 0.2); background: #fffbeb; }
+  .tag-active { color: #047857; background: #ecfdf5; border-color: #d1fae5; }
+  .tag-disabled { color: #b91c1c; background: #fef2f2; border-color: #fee2e2; }
+
+</style>
+
+<div class="sov-wrap wrap">
+  <header class="sov-header">
+    <div>
+      <span class="sov-sub">Platform Sovereignty</span>
+      <h1 class="sov-h1">Governance Registry <span style="font-family:'Inter'; font-weight:600; opacity:0.3; font-size:18px;">— অ্যাডমিন ব্যবস্থাপনা</span></h1>
+    </div>
+    <button class="btn-ghost" onclick="window.location.href='/superadmin/dashboard'">
+      <i data-lucide="layout-grid" size="14"></i> Dashboard Hub
+    </button>
+  </header>
+
+  <!-- Provisioning Card -->
+  <div class="sov-card">
+    <div class="card-h">
+      <i data-lucide="shield-plus" size="20" style="color:var(--s-emerald)"></i> 
+      Provision New Administrative Entity
+    </div>
+    <form method="post" action="/superadmin/admins/create">
+      <div class="grid-lux">
+        <div class="field-group">
+          <label class="field-label">Electronic Manifest (Email)</label>
+          <input class="in-lux" name="email" type="email" placeholder="official@heritage.com" required>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Security Credential (Password)</label>
+          <input class="in-lux" name="password" type="text" placeholder="Provisioning Key" required>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Legal Identity (Name)</label>
+          <input class="in-lux" name="name" type="text" placeholder="Administrative Name" required>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Access Hierarchy (Role)</label>
+          <select class="in-lux" name="role">
+            <option value="admin">Standard Auditor</option>
+            <option value="superadmin">Sovereign Superadmin</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top: 35px; padding-left: 5px;">
+        <button class="btn-execute" type="submit">
+          Authorize Provisioning 
+          <i data-lucide="key-round" size="18"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Registry Card -->
+  <div class="sov-card">
+    <div class="card-h">
+      <i data-lucide="users" size="20"></i> 
+      Authorized Administrative Registry
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="table-lux">
+        <thead>
+          <tr>
+            <th>Registry ID</th>
+            <th>Authorized Entity</th>
+            <th>Hierarchy Role</th>
+            <th>Protocol State</th>
+            <th style="text-align:right;">Sovereign Execution</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for a in admins %}
+          <tr>
+            <td style="color:var(--s-muted); font-weight:850; font-size:13px;">#{{ a.id }}</td>
+            <td>
+              <div style="font-weight:950; font-size:15px; color:var(--s-slate); margin-bottom:4px;">{{ a.name or 'Unnamed Entity' }}</div>
+              <div style="font-size:11.5px; color:var(--s-muted); font-weight:700; opacity:0.8;">{{ a.email }}</div>
+            </td>
+            <td>
+              <span class="tag-lux {% if a.role == 'superadmin' %}tag-super{% endif %}">
+                {{ a.role }}
+              </span>
+            </td>
+            <td>
+              {% if a.is_active %}
+                <span class="tag-lux tag-active">Active Manifest</span>
+              {% else %}
+                <span class="tag-lux tag-disabled">Access Revoked</span>
+              {% endif %}
+            </td>
+            <td align="right">
+              <div style="display:flex; gap:12px; justify-content:flex-end;">
+                <form method="post" action="/superadmin/admins/{{ a.id }}/toggle" style="margin:0;">
+                  <button class="btn-ghost" type="submit" style="min-width:100px; justify-content:center;">
+                    {{ 'Revoke Access' if a.is_active else 'Restore Protocol' }}
+                  </button>
+                </form>
+                <form method="post" action="/superadmin/admins/{{ a.id }}/role" style="margin:0;">
+                  <input type="hidden" name="role" value="{{ 'superadmin' if a.role != 'superadmin' else 'admin' }}">
+                  <button class="btn-ghost" type="submit" style="border-color:var(--s-gold); color:var(--s-gold);">
+                    Set {{ 'Superadmin' if a.role != 'superadmin' else 'Auditor' }}
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="5" style="padding:100px 0; text-align:center;">
+              <i data-lucide="shield-off" size="56" style="color:var(--s-border); margin-bottom:20px; opacity:0.5;"></i>
+              <div style="font-weight:900; color:#cbd5e1; text-transform:uppercase; letter-spacing:5px; font-size:12px;">No Administrative Entities Provisioned</div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    if(window.lucide) lucide.createIcons();
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+  :root {
+    --bg-silk: #fdfdfb; 
+    --accent-gold: #b8860b; 
+    --deep-shade: #1e293b;
+    --border-subtle: rgba(0, 0, 0, 0.08);
+    --glass-white: rgba(255, 255, 255, 0.85);
+  }
+
+  body {
+    background-color: var(--bg-silk);
+    font-family: 'Inter', sans-serif;
+    color: var(--deep-shade);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .aura-bg {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at 50% -10%, #f3efea 0%, #fdfdfb 100%);
+    z-index: -1;
+  }
+
+  .main-wrapper {
+    max-width: 900px; /* Form-er jonno narrow width elite lage */
+    margin: 80px auto;
+    padding: 0 24px;
+  }
+
+  /* Back Button */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #888;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    transition: 0.3s;
+  }
+  .back-link:hover { color: var(--accent-gold); transform: translateX(-5px); }
+
+  /* Master Card Architecture */
+  .m-card {
+    background: var(--glass-white);
+    border-radius: 35px;
+    border: 1px solid var(--border-subtle);
+    backdrop-filter: blur(20px);
+    padding: 50px;
+    box-shadow: 0 10px 40px -15px rgba(0,0,0,0.03);
+    margin-bottom: 30px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--accent-gold);
+    margin-bottom: 30px;
+    display: block;
+  }
+
+  /* Form Elements */
+  .input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-bottom: 25px;
+  }
+  @media(max-width:700px){ .input-grid { grid-template-columns: 1fr; } }
+
+  .field-wrapper { display: flex; flex-direction: column; gap: 8px; }
+
+  .label-text {
+    font-size: 11px;
+    font-weight: 800;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-left: 5px;
+  }
+
+  .m-input {
+    background: #fff;
+    border: 1.5px solid var(--border-subtle);
+    border-radius: 18px;
+    padding: 16px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--deep-shade);
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    outline: none;
+  }
+  .m-input:focus {
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 5px rgba(184, 134, 11, 0.1);
+    transform: translateY(-2px);
+  }
+
+  /* Upload Zone */
+  .upload-zone {
+    border: 2px dashed var(--border-subtle);
+    border-radius: 25px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+    background: rgba(255,255,255,0.4);
+  }
+  .upload-zone:hover { border-color: var(--accent-gold); background: #fff; }
+
+  /* Buttons */
+  .btn-elite {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 18px 35px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 800;
+    transition: 0.4s;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+  }
+  .btn-save { background: var(--deep-shade); color: #fff; width: 100%; }
+  .btn-save:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+</style>
+
+<div class="aura-bg"></div>
+
+<div class="main-wrapper">
+  
+  <a href="/profile" class="back-link">
+    <i data-lucide="arrow-left" size="14"></i> RETURN TO LOUNGE
+  </a>
+
+  <header style="margin-bottom: 40px;">
+    <h2 style="font-family:'Outfit'; font-size:40px; font-weight:900; letter-spacing: -2px; margin:0;">Refine Identity</h2>
+    <p style="font-size:14px; color:#888; font-weight:600; margin-top:5px;">Update your personal and security credentials.</p>
+  </header>
+  {# Password change alerts #}
+  {% if request.args.get('pw') %}
+    <div style="margin:0 0 18px 0; padding:14px 16px; border-radius:18px; border:1px solid rgba(0,0,0,.08); background: rgba(255,255,255,.75);">
+      {% set pw = request.args.get('pw') %}
+      {% if pw=='changed' %}
+        <div style="font-weight:900; color:#166534;">Password updated successfully.</div>
+      {% elif pw=='wrong_current' %}
+        <div style="font-weight:900; color:#991b1b;">Current password is incorrect.</div>
+      {% elif pw=='missing_current' %}
+        <div style="font-weight:900; color:#991b1b;">Please enter your current password to change it.</div>
+      {% elif pw=='mismatch' %}
+        <div style="font-weight:900; color:#991b1b;">New password and confirmation do not match.</div>
+      {% elif pw=='weak' %}
+        <div style="font-weight:900; color:#991b1b;">New password must be at least 8 characters.</div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+
+  <form method="post" action="/profile/edit" enctype="multipart/form-data">
+    
+    <div class="m-card">
+      <span class="section-label">General Information</span>
+      
+      <div class="input-grid">
+        <div class="field-wrapper">
+          <label class="label-text">Display Name</label>
+          <input class="m-input" name="display_name" value="{{ profile.display_name or '' }}" placeholder="Legal Name">
+        </div>
+        <div class="field-wrapper">
+          <label class="label-text">Phone Number</label>
+          <input class="m-input" name="phone" value="{{ profile.phone or '' }}" placeholder="+880...">
+        </div>
+      </div>
+
+      <div class="input-grid">
+        <div class="field-wrapper">
+          <label class="label-text">City / Region</label>
+          <input class="m-input" name="city" value="{{ profile.city or '' }}" placeholder="Dhaka">
+        </div>
+        <div class="field-wrapper">
+          <label class="label-text">Country</label>
+          <input class="m-input" name="country" value="{{ profile.country or 'Bangladesh' }}">
+        </div>
+      </div>
+
+      <div class="field-wrapper" style="margin-bottom: 25px;">
+        <label class="label-text">Narrative (Bio)</label>
+        <textarea class="m-input" name="bio" rows="3" style="resize:none;">{{ profile.bio or '' }}</textarea>
+      </div>
+
+      <div class="upload-zone" onclick="document.getElementById('avatar-input').click()">
+        <input type="file" id="avatar-input" name="avatar" style="display:none;" onchange="document.getElementById('file-status').innerText = 'Selected: ' + this.files[0].name">
+        <i data-lucide="camera" size="24" color="var(--accent-gold)"></i>
+        <p style="font-size: 11px; font-weight: 800; margin-top: 10px; color:#aaa;">UPLOAD AVATAR</p>
+        <span id="file-status" style="font-size:12px; font-weight:700; color:var(--accent-gold);"></span>
+      </div>
+    </div>
+
+    <div class="m-card" style="border-left: 5px solid var(--accent-gold);">
+      <span class="section-label">Security Transformation</span>
+      <p style="font-size:13px; color:#888; margin-bottom:25px; font-weight:600;">Leave fields blank if you do not wish to change your password.</p>
+      
+      <div class="field-wrapper" style="margin-bottom: 20px;">
+        <label class="label-text">Current Password</label>
+        <input class="m-input" type="password" name="current_password" placeholder="••••••••">
+      </div>
+
+      <div class="input-grid">
+        <div class="field-wrapper">
+          <label class="label-text">New Password</label>
+          <input class="m-input" type="password" name="new_password" placeholder="New Password">
+        </div>
+        <div class="field-wrapper">
+          <label class="label-text">Confirm New Password</label>
+          <input class="m-input" type="password" name="confirm_password" placeholder="Repeat Password">
+        </div>
+      </div>
+    </div>
+
+    {% if user.role == 'seller' %}
+    <div class="m-card">
+      <span class="section-label">Merchant Branding</span>
+      <div class="input-grid">
+        <div class="field-wrapper">
+          <label class="label-text">Shop Name</label>
+          <input class="m-input" name="shop_name" value="{{ seller.shop_name if seller else '' }}">
+        </div>
+        <div class="field-wrapper">
+          <label class="label-text">Instagram Handle</label>
+          <input class="m-input" name="instagram" value="{{ seller.instagram if seller else '' }}" placeholder="@handle">
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <div style="display: flex; gap: 15px;">
+      <button class="btn-elite btn-save" type="submit">
+        <i data-lucide="shield-check" size="18"></i> AUTHORIZE & UPDATE
+      </button>
+      <a href="/profile" class="btn-elite" style="background:transparent; border:1.5px solid var(--border-subtle); color:#888; width: 30%;">DISCARD</a>
+    </div>
+
+  </form>
+</div>
+
+<script>
+  lucide.createIcons();
+</script>
+
+{% endblock %}

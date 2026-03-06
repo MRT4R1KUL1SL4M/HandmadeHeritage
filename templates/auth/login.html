@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<style>
+  /* -------- THE MASTERPIECE: REFINED LUXURY LOGIN -------- */
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@400;500;600;700;800;900&family=Hind+Siliguri:wght@500;600;700;800;900&display=swap');
+
+  :root {
+    --p-green: #006a4e;
+    --p-mint: #10b981;
+    --p-gold: #f59e0b;
+    --p-dark: #0f172a;
+    --p-glass: rgba(255, 255, 255, 0.85);
+    --p-border: rgba(255, 255, 255, 0.5);
+    --p-shadow: 0 50px 100px rgba(0, 0, 0, 0.15);
+  }
+
+  .rx-master-wrap {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 60px 20px; background: #fcfaf7; position: relative; overflow: hidden;
+  }
+
+  /* Animated Blobs */
+  .blob { position: absolute; border-radius: 50%; filter: blur(90px); z-index: 0; opacity: 0.35; animation: blobFloat 22s infinite alternate ease-in-out; }
+  .blob-1 { width: 600px; height: 600px; background: var(--p-mint); top: -15%; left: -10%; }
+  .blob-2 { width: 500px; height: 500px; background: var(--p-gold); bottom: -10%; right: 5%; }
+
+  @keyframes blobFloat { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(120px, 80px) scale(1.1); } }
+
+  .auth-container { width: 100%; max-width: 1000px; position: relative; z-index: 10; perspective: 1500px; }
+
+  /* Premium Split Card */
+  .auth-shell {
+    display: grid; grid-template-columns: 1fr 1fr; background: var(--p-glass);
+    backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+    border-radius: 40px; border: 1px solid var(--p-border); box-shadow: var(--p-shadow);
+    overflow: hidden; opacity: 0; transform: translateY(40px); animation: fadeInUpLux 1s forwards 0.3s;
+  }
+
+  @keyframes fadeInUpLux { to { opacity: 1; transform: translateY(0); } }
+
+  /* Left Side: Visual Story */
+  .auth-visual { position: relative; overflow: hidden; min-height: 600px; display: flex; align-items: flex-end; padding: 50px; }
+  .auth-visual-img {
+    position: absolute; inset: 0;
+    background-image: url('https://images.unsplash.com/photo-1544967082-d9d25d867d66?auto=format&fit=crop&w=1600&q=70');
+    background-size: cover; background-position: center; filter: brightness(0.8); transition: transform 1.5s ease;
+  }
+  .auth-shell:hover .auth-visual-img { transform: scale(1.05); }
+  .auth-visual-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); }
+  .visual-content { position: relative; z-index: 2; color: #fff; }
+
+  /* Right Side: Form */
+  .auth-form-side { padding: 60px; background: rgba(255, 255, 255, 0.3); display: flex; flex-direction: column; justify-content: center; }
+
+  .form-h1 { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; color: var(--p-dark); margin-bottom: 40px; text-align: center; }
+
+  /* Input Refinement (The Fix) */
+  .field-lux { margin-bottom: 30px; position: relative; }
+  .label-lux { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 800; font-size: 13px; color: var(--p-dark); }
+  
+  .input-lux {
+    width: 100%; height: 60px; padding: 0 55px 0 20px; border-radius: 18px;
+    border: 1.5px solid rgba(0,0,0,0.06); background: white;
+    font-size: 16px; font-weight: 600; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .input-lux:focus { outline: none; border-color: var(--p-green); transform: translateY(-2px); box-shadow: 0 15px 35px rgba(0, 106, 78, 0.1); }
+
+  /* Eye Button PERFECT Alignment */
+  .pass-container { position: relative; width: 100%; }
+  .eye-btn-lux {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    background: transparent; border: none; cursor: pointer; color: #94a3b8; transition: all 0.3s;
+  }
+  .eye-btn-lux:hover { color: var(--p-green); background: rgba(0, 106, 78, 0.05); }
+
+  /* Button Logic */
+  .btn-lux {
+    width: 100%; height: 65px; border-radius: 20px; background: var(--p-dark); color: white;
+    font-weight: 900; font-size: 17px; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 12px; transition: all 0.4s ease;
+  }
+  .btn-lux:hover:not(:disabled) { background: var(--p-green); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0, 106, 78, 0.3); }
+
+  .msg-lux { margin-top: 15px; text-align: center; font-size: 13px; font-weight: 800; padding: 12px; border-radius: 14px; display: none; }
+  .msg-lux.bad { display: block; background: rgba(239, 68, 68, 0.08); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.1); }
+  .msg-lux.ok { display: block; background: rgba(16, 185, 129, 0.08); color: #10b981; }
+
+  @media (max-width: 900px) { .auth-shell { grid-template-columns: 1fr; } .auth-visual { display: none; } }
+</style>
+
+<section class="rx-master-wrap">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <div class="auth-container">
+    <div class="auth-shell" id="luxCard">
+      
+      <div class="auth-visual">
+        <div class="auth-visual-img"></div>
+        <div class="auth-visual-overlay"></div>
+        <div class="visual-content">
+          <span style="font-weight:900; letter-spacing:3px; color:var(--p-mint); font-size:11px; text-transform:uppercase;">Authentic Artistry</span>
+          <h2 class="visual-title">Handmade Heritage</h2>
+          <p style="opacity: 0.8; font-size: 14px; font-family: 'Hind Siliguri';">আপনার প্রিয় হস্তশিল্পের ঠিকানায় স্বাগতম।</p>
+        </div>
+      </div>
+
+      <div class="auth-form-side">
+        <h1 class="form-h1">Sign In</h1>
+
+        <div class="field-lux">
+          <div class="label-lux"><span>Email Address</span><span style="font-family:'Hind Siliguri'; opacity:0.5;">ইমেইল</span></div>
+          <input id="email" class="input-lux" type="email" placeholder="you@example.com" />
+        </div>
+
+        <div class="field-lux">
+          <div class="label-lux"><span>Password</span><a href="/forgot" style="color:var(--p-green); text-decoration:none; font-size:11px;">Forgot?</a></div>
+          <div class="pass-container">
+            <input id="password" class="input-lux" type="password" placeholder="••••••••" />
+            <button class="eye-btn-lux" type="button" onclick="togglePass('password')">
+              <i data-lucide="eye" width="20"></i>
+            </button>
+          </div>
+        </div>
+
+        <button id="loginBtn" class="btn-lux" onclick="login()">
+          <span>Enter Shop</span> <i data-lucide="arrow-right" width="20"></i>
+        </button>
+
+        <div id="msg" class="msg-lux"></div>
+
+        <div style="text-align: center; margin-top: 30px; font-size: 13px; font-weight: 600;">
+          New member? <a href="/register" style="color:var(--p-green); text-decoration:none; font-weight:800;">Join Now</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  // Center Eye Button Logic
+  function togglePass(id) {
+    const input = document.getElementById(id);
+    const icon = event.currentTarget.querySelector('i');
+    if (input.type === 'password') {
+      input.type = 'text';
+      // Manual Lucide Swap for instant feel
+      event.currentTarget.innerHTML = '<i data-lucide="eye-off" width="20"></i>';
+    } else {
+      input.type = 'password';
+      event.currentTarget.innerHTML = '<i data-lucide="eye" width="20"></i>';
+    }
+    lucide.createIcons();
+  }
+
+  // Same Logic as your previous pages
+  async function api(url, data){
+    const opt = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) };
+    const r = await fetch(url, opt);
+    const j = await r.json();
+    if(!r.ok) throw new Error(j.error || 'Failed');
+    return j;
+  }
+
+  async function login(){
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const msg = document.getElementById('msg');
+    const btn = document.getElementById('loginBtn');
+
+    if(!email || !password){
+      msg.textContent = "Details required (তথ্য দিন)।";
+      msg.className = "msg-lux bad";
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = "Opening Heritage Gates...";
+
+    try {
+      const res = await api('/api/login', { email, password });
+      msg.textContent = "Welcome back!"; msg.className = "msg-lux ok";
+      setTimeout(() => { window.location.href = res.redirect || '/'; }, 800);
+    } catch(e) {
+      msg.textContent = e.message; msg.className = "msg-lux bad";
+      btn.disabled = false;
+      btn.innerHTML = "Enter Shop";
+    }
+    lucide.createIcons();
+  }
+
+  // Parallax Tilt
+  const card = document.getElementById('luxCard');
+  document.addEventListener('mousemove', (e) => {
+    const x = (window.innerWidth / 2 - e.pageX) / 60;
+    const y = (window.innerHeight / 2 - e.pageY) / 60;
+    card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+  });
+
+  lucide.createIcons();
+</script>
+
+{% endblock %}

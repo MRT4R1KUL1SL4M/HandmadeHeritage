@@ -1,0 +1,330 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+  :root {
+    --primary: #0f172a;
+    --accent: #6366f1;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text-muted: #64748b;
+    --radius: 24px;
+  }
+
+  .co-wrapper {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg);
+    min-height: 100vh;
+    padding: 60px 0;
+    background-image: radial-gradient(rgba(0,0,0,0.02) 1.5px, transparent 1.5px);
+    background-size: 40px 40px;
+  }
+
+  .co-container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+  /* Luxury Header */
+  .co-header { text-align: center; margin-bottom: 50px; }
+  .co-header h1 { 
+    font-family: 'Playfair Display', serif; 
+    font-size: 45px; 
+    font-weight: 700; 
+    margin: 0; 
+    letter-spacing: -1.5px;
+  }
+  .co-header p { color: var(--text-muted); font-weight: 600; margin-top: 10px; }
+
+  /* Master Layout */
+  .co-grid { display: grid; grid-template-columns: 1fr 400px; gap: 40px; align-items: start; }
+
+  .co-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 40px;
+    box-shadow: 0 20px 50px -12px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.03);
+    margin-bottom: 30px;
+  }
+
+  .section-tag {
+    font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--accent); margin-bottom: 25px; display: block;
+  }
+
+  /* Inputs */
+  .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .field-group { margin-bottom: 20px; }
+  .field-label { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 8px; display: block; }
+  
+  .lux-input {
+    width: 100%; padding: 16px 20px; border-radius: 16px; border: 1.5px solid #f1f5f9;
+    font-weight: 600; font-size: 15px; transition: 0.3s; outline: none; background: #fcfdfe;
+    box-sizing: border-box;
+  }
+  .lux-input:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.08); }
+
+  /* Payment Tiles */
+  .pay-tile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+  .pay-tile {
+    padding: 20px; border-radius: 20px; border: 2px solid #f1f5f9; cursor: pointer;
+    text-align: center; transition: 0.3s; position: relative;
+  }
+  .pay-tile:hover { border-color: #e2e8f0; }
+  .pay-tile.active { border-color: var(--primary); background: #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.04); }
+  .pay-tile img { height: 35px; margin-bottom: 10px; filter: grayscale(100%); transition: 0.3s; }
+  .pay-tile.active img { filter: grayscale(0%); }
+  .pay-tile b { display: block; font-size: 14px; font-weight: 800; }
+
+  /* Summary Sidebar */
+  .summary-sidebar { position: sticky; top: 40px; }
+  .sum-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-weight: 600; font-size: 14px; color: var(--text-muted); }
+  .grand-total {
+    margin-top: 25px; padding-top: 25px; border-top: 2px dashed #e2e8f0;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .grand-total span { font-weight: 800; font-size: 32px; color: var(--primary); letter-spacing: -1px; }
+
+  /* Submission Button */
+  .btn-submit {
+    width: 100%; background: var(--primary); color: #fff; padding: 22px; border-radius: 20px;
+    border: none; font-size: 16px; font-weight: 800; margin-top: 30px; cursor: pointer;
+    transition: 0.4s; display: flex; align-items: center; justify-content: center; gap: 12px;
+  }
+  .btn-submit:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* Instructions Box */
+  #payIns {
+    margin-top: 25px; padding: 20px; border-radius: 20px; background: #f8fafc;
+    border: 1px solid #e2e8f0; display: none; animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  @media (max-width: 900px) { .co-grid { grid-template-columns: 1fr; } .summary-sidebar { position: relative; top: 0; } }
+</style>
+
+<div class="co-wrapper">
+  <div class="co-container">
+    
+    <div class="co-header">
+      <h1>Secure Checkout</h1>
+      <p>Please provide your shipping and payment information below.</p>
+    </div>
+
+    <div class="co-grid">
+      <div class="co-content">
+        
+        <div class="co-card">
+          <span class="section-tag">Shipping Information</span>
+          <div class="field-grid">
+            <div class="field-group">
+              <label class="field-label">Full Name</label>
+              <input class="lux-input" id="fullName" placeholder="Ex: Karim Ahmed">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Phone Number</label>
+              <input class="lux-input" id="phone" placeholder="01XXXXXXXXX">
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Country</label>
+            <select class="lux-input" id="country">
+              <option value="BD" selected>Bangladesh</option>
+              <option value="INTL">International</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Full Address</label>
+            <input class="lux-input" id="street" placeholder="House, Road, Area, City">
+          </div>
+        </div>
+
+        <div class="co-card">
+          <span class="section-tag">Payment Method</span>
+          
+          <div id="bdOptions" class="pay-tile-grid">
+            <div class="pay-tile" onclick="handlePaySelect('bKash', '01700000000', this)">
+              <img src="/static/img/payments/bkash.svg" alt="bKash">
+              <b>bKash Personal</b>
+            </div>
+            <div class="pay-tile" onclick="handlePaySelect('Nagad', '01800000000', this)">
+              <img src="/static/img/payments/nagad.svg" alt="Nagad">
+              <b>Nagad Personal</b>
+            </div>
+          </div>
+
+          <div id="intlOptions" class="pay-tile-grid" style="display:none;">
+            <div class="pay-tile" style="grid-column: span 2;" onclick="handlePaySelect('Card', '4111-XXXX-XXXX-4444', this)">
+              <i data-lucide="credit-card" style="margin-bottom:10px;"></i>
+              <b>Visa / Mastercard / Amex</b>
+            </div>
+          </div>
+
+          <div id="payIns">
+            <div style="font-size:12px; font-weight:800; color:var(--text-muted); margin-bottom:10px;" id="insType">SEND MONEY TO:</div>
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <h2 id="payNum" style="margin:0; letter-spacing:2px; font-weight:800;"></h2>
+              <button onclick="copyNum()" style="background:var(--primary); color:#fff; border:none; padding:8px 15px; border-radius:10px; font-weight:700; cursor:pointer;">Copy</button>
+            </div>
+          </div>
+
+          <div class="field-group" style="margin-top:30px;">
+            <label class="field-label">Transaction ID / Reference</label>
+            <input class="lux-input" id="trnxId" placeholder="Paste your TrnxID here" style="border-color: var(--accent);">
+          </div>
+        </div>
+
+      </div>
+
+      <div class="summary-sidebar">
+        <div class="co-card">
+          <span class="section-tag">Order Summary</span>
+          <div id="sumItems" style="margin-bottom:20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 15px;"></div>
+          
+          <div class="sum-row"><span>Subtotal</span><span id="subTotal">$0.00</span></div>
+          <div class="sum-row"><span>Shipping Cost</span><span id="shipPrice">$0.00</span></div>
+          
+          <div class="grand-total">
+            <div style="font-weight:700; color:var(--text-muted);">Total to Pay</div>
+            <span id="grandTotal">$0.00</span>
+          </div>
+
+          <button class="btn-submit" id="payBtn">
+            Complete Order <i data-lucide="arrow-right" size="20"></i>
+          </button>
+          
+          <div style="margin-top:25px; text-align:center;">
+            <div style="font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; display:flex; align-items:center; justify-content:center; gap:5px;">
+              <i data-lucide="shield-check" size="14"></i> 256-Bit SSL Secure Checkout
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let method = '';
+  let subtotal = 0;
+  const $ = (id) => document.getElementById(id);
+
+  // Dynamic Shipping Logic
+  function computeShipping() {
+    const country = $('country').value;
+    // logic: BD=2, INTL=15 (Free shipping logic: BD > 50 free, INTL > 150 free)
+    if (country === 'BD') {
+      return subtotal > 50 ? 0 : 2;
+    } else {
+      return subtotal > 150 ? 0 : 15;
+    }
+  }
+
+  function togglePayOptions() {
+    const isBD = $('country').value === 'BD';
+    $('bdOptions').style.display = isBD ? 'grid' : 'none';
+    $('intlOptions').style.display = isBD ? 'none' : 'grid';
+    $('payIns').style.display = 'none';
+    method = ''; // selection reset
+    document.querySelectorAll('.pay-tile').forEach(t => t.classList.remove('active'));
+    
+    // Refresh totals when country changes
+    refreshTotals();
+  }
+
+  function handlePaySelect(name, num, el) {
+    method = name;
+    document.querySelectorAll('.pay-tile').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    $('payIns').style.display = 'block';
+    $('payNum').innerText = num;
+    $('insType').innerText = `SEND MONEY (${name}) TO:`;
+  }
+
+  function copyNum() {
+    navigator.clipboard.writeText($('payNum').innerText);
+    const btn = event.target;
+    btn.innerText = "Copied!";
+    setTimeout(() => btn.innerText = "Copy", 1500);
+  }
+
+  function refreshTotals() {
+    const shipping = computeShipping();
+    const grand = subtotal + shipping;
+    $('shipPrice').innerText = '$' + shipping.toFixed(2);
+    $('grandTotal').innerText = '$' + grand.toFixed(2);
+  }
+
+  async function loadData() {
+    try {
+      const res = await fetch('/api/cart');
+      const data = await res.json();
+      const items = data.items || [];
+      subtotal = Number(data.total || 0);
+
+      $('subTotal').innerText = '$' + subtotal.toFixed(2);
+      
+      // Update Summary Items
+      $('sumItems').innerHTML = items.map(it => `
+        <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:10px; font-weight:600;">
+          <span>${it.title} <span style="opacity:0.5">x${it.qty}</span></span>
+          <span>$${Number(it.line_total).toFixed(2)}</span>
+        </div>
+      `).join('');
+
+      refreshTotals();
+    } catch (e) {
+      console.error("Failed to load cart data");
+    }
+  }
+
+  $('payBtn').onclick = async () => {
+    const trnx = $('trnxId').value.trim();
+    const name = $('fullName').value.trim();
+    const phone = $('phone').value.trim();
+    const address = $('street').value.trim();
+
+    if(!method) { alert("Please select a payment method."); return; }
+    if(!trnx || !name || !phone || !address) { alert("Please fill all shipping details."); return; }
+
+    $('payBtn').disabled = true;
+    $('payBtn').innerHTML = "Verifying Transaction...";
+
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          shipping_name: name,
+          shipping_phone: phone,
+          shipping_address: address,
+          payment_method: method,
+          trnx_id: trnx
+        })
+      });
+
+      const data = await res.json();
+      if(data.success) {
+        window.location.href = `/order-success?code=${data.order_code}`;
+      } else {
+        alert(data.error || "Checkout failed");
+        $('payBtn').disabled = false;
+        $('payBtn').innerHTML = "Complete Order";
+      }
+    } catch(e) {
+      alert("Network error. Try again.");
+      $('payBtn').disabled = false;
+    }
+  };
+
+  // Event Listeners
+  $('country').addEventListener('change', togglePayOptions);
+  
+  lucide.createIcons();
+  loadData();
+</script>
+
+{% endblock %}

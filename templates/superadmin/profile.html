@@ -1,0 +1,318 @@
+{% extends 'superadmin/superadmin_base.html' %}
+{% block body %}
+
+<style>
+  /* ================================================================
+     SUPREME COMMAND IDENTITY: PROFILE GOVERNANCE (v32.5)
+     THEME: Obsidian Slate, Heritage Emerald & Royal Gold
+     REFINEMENT: Supreme Rounding & High-Fidelity Breathing Room
+     ================================================================ */
+
+  :root {
+    --s-slate: #0f172a;
+    --s-emerald: #004d39;
+    --s-gold: #b28e45;
+    --s-bg: #fcfcfd;
+    --s-border: rgba(15, 23, 42, 0.06);
+    --s-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  /* --- Balanced Outer Wrapper --- */
+  .profile-wrap { 
+    padding: 30px 15px 60px; 
+    font-family: 'Inter', sans-serif; 
+    background-color: var(--s-bg); 
+  }
+
+  /* --- Cinematic Sovereign Header --- */
+  .profile-header {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 45px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .profile-h1 { font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 950; letter-spacing: -1.5px; color: var(--s-slate); }
+  .profile-sub { font-size: 10px; font-weight: 950; text-transform: uppercase; letter-spacing: 3px; color: var(--s-gold); display: block; margin-bottom: 8px; }
+
+  /* --- Premium Card System (Supreme Rounding) --- */
+  .p-card-lux { 
+    background: #ffffff; 
+    border-radius: 40px; 
+    border: 1px solid var(--s-border); 
+    box-shadow: 0 40px 100px -20px rgba(0,0,0,0.03); 
+    padding: 45px; 
+    margin-bottom: 30px;
+    margin-left: 10px;
+    margin-right: 10px;
+    transition: 0.5s var(--s-ease);
+  }
+  .p-card-lux:hover { 
+    transform: translateY(-8px); 
+    box-shadow: 0 50px 120px -20px rgba(178,142,69,0.06); 
+  }
+
+  /* --- Supreme Photo Upload Interface --- */
+  .upload-zone {
+    width: 150px; 
+    height: 150px; 
+    border-radius: 45px; 
+    position: relative;
+    background: #f8fafc; 
+    border: 2.5px dashed #e2e8f0;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    transition: 0.4s var(--s-ease); 
+    cursor: pointer; 
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+  }
+  .upload-zone:hover { border-color: var(--s-gold); background: #fffbeb; transform: scale(1.02); }
+  
+  .avatar-preview { width: 100%; height: 100%; object-fit: cover; border-radius: 42px; }
+  
+  .upload-overlay {
+    position: absolute; inset: 0; background: rgba(178, 142, 69, 0.88);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: #fff; opacity: 0; transition: 0.3s;
+  }
+  .upload-zone:hover .upload-overlay { opacity: 1; }
+  .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 2; }
+
+  /* --- Form Architecture --- */
+  .in-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 25px; position: relative; }
+  .in-label { font-weight: 950; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #94a3b8; padding-left: 5px; }
+  
+  .in-lux {
+    height: 56px; 
+    border: 2px solid #eef2f6; 
+    border-radius: 18px; 
+    padding: 0 25px;
+    font-size: 14.5px; 
+    font-weight: 700; 
+    color: var(--s-slate); 
+    outline: none;
+    transition: 0.4s var(--s-ease); 
+    background: #fbfbfc; 
+    width: 100%; 
+    box-sizing: border-box;
+  }
+  .in-lux:focus { 
+    border-color: var(--s-gold); 
+    background: #fff; 
+    box-shadow: 0 15px 30px rgba(178, 142, 69, 0.05); 
+    transform: translateY(-2px);
+  }
+  .in-lux[readonly] { background: #f8fafc; color: #94a3b8; border-style: dashed; cursor: not-allowed; }
+
+  /* --- Secure Eye Toggle --- */
+  .eye-btn {
+    position: absolute; right: 20px; top: 40px; background: none; border: none;
+    color: #94a3b8; cursor: pointer; padding: 5px; transition: 0.2s; z-index: 5;
+  }
+  .eye-btn:hover { color: var(--s-gold); }
+
+  /* --- Executive Button Matrix --- */
+  .btn-supreme {
+    background: var(--s-slate); 
+    color: #fff; 
+    border: none; 
+    padding: 0 40px;
+    height: 58px;
+    border-radius: 20px; 
+    font-weight: 950; 
+    font-size: 12px; 
+    text-transform: uppercase;
+    letter-spacing: 2.5px; 
+    cursor: pointer; 
+    transition: 0.4s var(--s-ease);
+    display: inline-flex; 
+    align-items: center; 
+    gap: 12px;
+  }
+  .btn-supreme:hover { 
+    background: var(--s-gold); 
+    transform: translateY(-4px); 
+    box-shadow: 0 20px 40px rgba(178, 142, 69, 0.2); 
+  }
+  
+  .btn-danger-lux { 
+    background: #fff; 
+    color: #ef4444; 
+    border: 1.5px solid #fee2e2; 
+    padding: 14px 28px; 
+    border-radius: 16px; 
+    font-weight: 950; 
+    text-transform: uppercase;
+    font-size: 11px; 
+    letter-spacing: 2px; 
+    transition: 0.3s;
+    text-decoration: none;
+  }
+  .btn-danger-lux:hover { background: #ef4444; color: #fff; transform: translateY(-2px); }
+
+  .status-badge { 
+    display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px; 
+    background: #f1f5f9; border-radius: 100px; font-size: 10px; font-weight: 950; 
+    color: var(--s-slate); text-transform: uppercase; letter-spacing: 1px;
+  }
+  .dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 12px #10b981; }
+
+</style>
+
+<div class="profile-wrap wrap">
+  <header class="profile-header">
+    <div>
+      <span class="profile-sub">Supreme Command Protocol</span>
+      <h1 class="profile-h1">Sovereign Identity <span style="font-family:'Inter'; font-weight:600; opacity:0.2; font-size:20px;">— প্রোফাইল</span></h1>
+    </div>
+    <a href="/superadmin/dashboard" class="btn-supreme" style="background:#fff; color:#64748b; border:2.5px solid #f1f5f9; padding:0 24px; height:48px;">
+      <i data-lucide="layout-grid" size="16"></i> Control Room
+    </a>
+  </header>
+
+  <form method="post" enctype="multipart/form-data">
+    <div style="display:grid; grid-template-columns: 420px 1fr; gap: 35px; align-items: start;">
+      
+      <!-- Avatar Card -->
+      <aside class="p-card-lux" style="text-align: center;">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 30px;">
+          <div class="upload-zone" id="dropzone">
+            {% if row.photo_url %}
+              <img src="{{ row.photo_url }}" class="avatar-preview" id="previewImg">
+            {% else %}
+              <div style="font-size:54px; font-weight:950; color:var(--s-gold);">{{ (row.name or 'S')[:1] }}</div>
+            {% endif %}
+            <div class="upload-overlay">
+              <i data-lucide="camera" size="32"></i>
+              <span style="font-size:10px; font-weight:950; margin-top:12px; letter-spacing:1.5px;">SYNC ASSET</span>
+            </div>
+            <input type="file" name="photo" accept="image/*" onchange="handlePreview(this)">
+          </div>
+
+          <div>
+            <div style="font-weight:1000; font-size:26px; color:var(--s-slate); letter-spacing:-1px;">{{ row.name }}</div>
+            <div style="margin-top:12px;">
+               <div class="status-badge">
+                 <span class="dot"></span> SUPREME {{ row.role|upper }}
+               </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:45px; padding-top:30px; border-top:1.5px solid #f8fafc; font-size:11.5px; color:#94a3b8; font-weight:700; line-height:1.8;">
+          System clearance level: <b style="color:var(--s-gold);">Level 0 (Full Access)</b><br>
+          Manifest synchronized: <span style="color:var(--s-slate);">{{ row.created_at or 'Permanent session' }}</span>
+        </div>
+      </aside>
+
+      <!-- Details Card -->
+      <main class="p-card-lux">
+        <div class="in-group">
+          <label class="in-label">Legal Sovereign Identity</label>
+          <input class="in-lux" name="name" value="{{ row.name }}" placeholder="Full administrative name">
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1.2fr 0.8fr; gap: 25px;">
+          <div class="in-group">
+            <label class="in-label">Encrypted Official Email</label>
+            <input class="in-lux" value="{{ row.email }}" readonly>
+          </div>
+          <div class="in-group">
+            <label class="in-label">Encrypted Phone Node</label>
+            <input class="in-lux" name="phone" value="{{ row.phone or '' }}" placeholder="+880 1XXX XXXXXX">
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; margin-top:30px; padding-top:30px; border-top:1.5px solid #f8fafc;">
+          <button class="btn-supreme" type="submit">Synchronize Identity <i data-lucide="shield-check" size="20"></i></button>
+        </div>
+      </main>
+    </div>
+  </form>
+
+  <!-- Password Rotation Card -->
+  <div class="p-card-lux">
+    <div style="display:flex; align-items:center; gap:15px; margin-bottom:40px;">
+      <div style="width:42px; height:42px; border-radius:14px; background:rgba(178, 142, 69, 0.1); color:var(--s-gold); display:grid; place-items:center;"><i data-lucide="key-round" size="22"></i></div>
+      <div>
+        <div class="profile-sub" style="margin:0; color:var(--s-slate); font-size:12px;">Security Protocol</div>
+        <div style="font-weight:900; font-size:18px; color:var(--s-slate); letter-spacing:-0.5px;">Master Key Rotation</div>
+      </div>
+    </div>
+
+    <form method="post" action="/superadmin/profile/password" style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 25px; align-items: flex-end;">
+      <div class="in-group">
+        <label class="in-label">Current Master Key</label>
+        <input class="in-lux" type="password" name="current_password" required placeholder="••••••••">
+        <button type="button" class="eye-btn" onclick="togglePass(this)"><i data-lucide="eye" size="20"></i></button>
+      </div>
+      <div class="in-group">
+        <label class="in-label">New Master Key</label>
+        <input class="in-lux" type="password" name="new_password" required placeholder="••••••••">
+        <button type="button" class="eye-btn" onclick="togglePass(this)"><i data-lucide="eye" size="20"></i></button>
+      </div>
+      <div class="in-group">
+        <label class="in-label">Authorize New Key</label>
+        <input class="in-lux" type="password" name="confirm_password" required placeholder="••••••••">
+        <button type="button" class="eye-btn" onclick="togglePass(this)"><i data-lucide="eye" size="20"></i></button>
+      </div>
+      <div style="grid-column: 1/-1; display: flex; justify-content: flex-end; margin-top:15px;">
+        <button class="btn-supreme" style="background:var(--s-emerald);" type="submit">Execute Key Rotation</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Revocation Card -->
+  <div class="p-card-lux" style="display: flex; justify-content: space-between; align-items: center; border-color: rgba(239, 68, 68, 0.1); background: #fffafb;">
+    <div style="display:flex; align-items:center; gap:25px;">
+       <div style="width:54px; height:54px; border-radius:20px; background:#fef2f2; color:#ef4444; display:grid; place-items:center;"><i data-lucide="log-out" size="24"></i></div>
+       <div>
+         <div style="font-weight:1000; font-size:18px; color:#b91c1c; letter-spacing:-0.8px;">Revoke Session Authority</div>
+         <div style="font-size:12px; font-weight:700; color:#94a3b8; margin-top:4px;">Safe termination of high-level sovereign session.</div>
+       </div>
+    </div>
+    <a href="/admin/logout" class="btn-danger-lux">Revoke Access</a>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    if(window.lucide) lucide.createIcons();
+  });
+
+  // Secure Toggle Logic
+  function togglePass(btn) {
+    const input = btn.parentElement.querySelector('input');
+    const icon = btn.querySelector('i');
+    if (input.type === "password") {
+      input.type = "text";
+      icon.setAttribute('data-lucide', 'eye-off');
+    } else {
+      input.type = "password";
+      icon.setAttribute('data-lucide', 'eye');
+    }
+    lucide.createIcons();
+  }
+
+  // Smooth Identity Preview
+  function handlePreview(input) {
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const zone = document.getElementById('dropzone');
+        // Clear previous and re-inject elements to trigger CSS transitions if any
+        zone.innerHTML = `<img src="${e.target.result}" class="avatar-preview" id="previewImg">` + 
+                         `<div class="upload-overlay"><i data-lucide="camera" size="32"></i></div>` +
+                         `<input type="file" name="photo" accept="image/*" onchange="handlePreview(this)">`;
+        lucide.createIcons();
+      }
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+</script>
+
+{% endblock %}

@@ -1,0 +1,188 @@
+{% extends "superadmin/superadmin_base.html" %}
+{% set title = 'Sovereign Control Room' %}
+
+{% block body %}
+<style>
+  /* ================================================================
+     SOVEREIGN COMMAND CENTER: MASTER OVERVIEW (v31.0)
+     THEME: Obsidian Slate, Heritage Emerald & Royal Gold
+     ================================================================ */
+
+  :root {
+    --s-bg: #f8fafc;
+    --s-slate: #0f172a;
+    --s-emerald: #004d39;
+    --s-gold: #b28e45;
+    --s-border: rgba(15, 23, 42, 0.06);
+    --s-muted: #64748b;
+    --s-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  /* --- Dashboard Infrastructure --- */
+  .super-wrap { padding: 30px 0; font-family: 'Inter', sans-serif; }
+
+  /* --- Metric Node Grid --- */
+  .super-kpis { 
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; 
+    margin-bottom: 30px; 
+  }
+  
+  .super-kpi { 
+    background: #ffffff; border-radius: 24px; padding: 25px; 
+    border: 1px solid var(--s-border); transition: 0.4s var(--s-ease);
+    position: relative; overflow: hidden;
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.02);
+  }
+  .super-kpi:hover { transform: translateY(-5px); border-color: var(--s-gold); box-shadow: 0 20px 50px -10px rgba(178, 142, 69, 0.1); }
+  
+  .super-kpi .k { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: var(--s-muted); margin-bottom: 12px; }
+  .super-kpi .v { font-size: 32px; font-weight: 950; color: var(--s-slate); letter-spacing: -1.5px; line-height: 1; }
+  .super-kpi .s { font-size: 11px; font-weight: 700; color: var(--s-muted); margin-top: 10px; opacity: 0.7; }
+  
+  /* --- Data Manifest Cards --- */
+  .super-row { display: grid; grid-template-columns: 1fr; gap: 25px; }
+  .super-card { 
+    background: #ffffff; border-radius: 30px; border: 1px solid var(--s-border); 
+    padding: 35px; box-shadow: 0 40px 100px -20px rgba(0,0,0,0.03); 
+  }
+  
+  .super-card .h { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 950; color: var(--s-slate); margin-bottom: 8px; }
+  .super-card .sub { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--s-gold); margin-bottom: 25px; }
+
+  /* --- High-Fidelity Tables --- */
+  .super-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .super-table thead th { 
+    text-align: left; padding: 15px; background: #f8fafc; color: var(--s-muted); 
+    font-weight: 950; text-transform: uppercase; letter-spacing: 1.5px; font-size: 10px;
+    border-bottom: 1px solid var(--s-border);
+  }
+  .super-table td { padding: 18px 15px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; font-weight: 700; color: var(--s-slate); }
+  .super-table tr:hover { background: #fcfbf9; }
+
+  /* --- Elite Accents --- */
+  .super-note { 
+    margin-top: 25px; padding: 15px 20px; border-radius: 15px; background: #fffbeb; 
+    border: 1px solid rgba(178, 142, 69, 0.2); font-size: 12px; font-weight: 800; color: var(--s-gold);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .money-v { color: var(--s-emerald); }
+  .mono-id { font-family: 'Courier New', monospace; font-weight: 800; color: var(--s-muted); }
+
+  @media (max-width: 1100px) { .super-kpis { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 700px) { .super-kpis { grid-template-columns: 1fr; } }
+</style>
+
+<div class="super-wrap">
+  <div class="super-kpis">
+    <div class="super-kpi">
+      <div class="k">Gross Merchandise Value</div>
+      <div class="v money-v">{{ kpis.gmv_30d|money }}</div>
+      <div class="s">Validated 30-day liquidity manifest</div>
+    </div>
+    <div class="super-kpi">
+      <div class="k">Acquisition Volume</div>
+      <div class="v">{{ kpis.orders_30d or 0 }}</div>
+      <div class="s">Total order registry executions</div>
+    </div>
+    <div class="super-kpi">
+      <div class="k">Buyer Identity Reach</div>
+      <div class="v">{{ kpis.active_buyers_30d or 0 }}</div>
+      <div class="s">Unique authenticated collectors</div>
+    </div>
+    <div class="super-kpi" style="border-left: 4px solid var(--s-gold);">
+      <div class="k">Fiscal Verifications</div>
+      <div class="v" style="color:var(--s-gold);">{{ kpis.pending_payment_verifications or 0 }}</div>
+      <div class="s">Pending auditor authorization</div>
+    </div>
+    <div class="super-kpi">
+      <div class="k">Escrow Liabilities</div>
+      <div class="v">{{ kpis.pending_payouts|money }}</div>
+      <div class="s">Funds awaiting artisan release</div>
+    </div>
+    <div class="super-kpi">
+      <div class="k">Settled Payouts</div>
+      <div class="v" style="color:var(--s-emerald);">{{ kpis.paid_payouts_30d|money }}</div>
+      <div class="s">30-day artisan capital release</div>
+    </div>
+  </div>
+
+  <div class="super-row">
+    <div class="super-card">
+      <div class="h">Verified Fiscal Manifests</div>
+      <div class="sub">Latest synchronized buyer acquisitions authenticated by staff.</div>
+      <div style="overflow-x:auto;">
+        <table class="super-table">
+          <thead>
+            <tr>
+              <th>Manifest ID</th>
+              <th>Collector Identity</th>
+              <th>Valuation</th>
+              <th>Fiscal Channel</th>
+              <th>Transaction Hash</th>
+              <th>Auth Timestamp</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for r in recent_payments %}
+            <tr>
+              <td class="mono-id">#{{ r.order_code }}</td>
+              <td>{{ r.buyer_name or 'Independent Entity' }}</td>
+              <td class="money-v">{{ r.amount|money }}</td>
+              <td><span style="background:#f1f5f9; padding:4px 8px; border-radius:6px; font-size:10px;">{{ r.payment_method }}</span></td>
+              <td class="mono-id" style="font-size:11px; opacity:0.6;">{{ r.trnx_id }}</td>
+              <td style="color:var(--s-muted); font-size:11px;">{{ r.verified_at }}</td>
+            </tr>
+          {% else %}
+            <tr><td colspan="6" style="text-align:center; padding:40px; color:var(--s-muted);">No fiscal events registered.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="super-card">
+      <div class="h">Artisan Capital Settlements</div>
+      <div class="sub">Latest sovereign capital releases with validated ledger proofs.</div>
+      <div style="overflow-x:auto;">
+        <table class="super-table">
+          <thead>
+            <tr>
+              <th>Manifest ID</th>
+              <th>Artisan Source</th>
+              <th>Net Settlement</th>
+              <th>Registry Reference</th>
+              <th>Execution Date</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for p in recent_payouts %}
+            <tr>
+              <td class="mono-id">#{{ p.order_id }}</td>
+              <td>{{ p.seller_name or 'Independent Artisan' }}</td>
+              <td class="money-v">{{ p.net_amount|money }}</td>
+              <td class="mono-id" style="font-size:11px; opacity:0.6;">{{ p.payout_ref }}</td>
+              <td style="color:var(--s-muted); font-size:11px;">{{ p.paid_at }}</td>
+            </tr>
+          {% else %}
+            <tr><td colspan="5" style="text-align:center; padding:40px; color:var(--s-muted);">No artisan settlements registered.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="super-note">
+        <span>Sovereign Protocol Manifest</span>
+        <span>Platform Governance Commission: <b style="color:var(--s-emerald); margin-left:10px;">{{ settings.commission_pct }}%</b></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,144 @@
+{% extends 'admin/admin_base.html' %}
+{% block body %}
+
+<style>
+  /* ================================================================
+     OPERATIONS COMMAND CENTER: MASTER DASHBOARD (v13.0)
+     THEME: Deep Slate & Heritage Emerald | Real-time Governance
+     ================================================================ */
+
+  :root {
+    --d-bg: #f8fafc;
+    --d-card: #ffffff;
+    --d-slate: #0f172a;
+    --d-emerald: #004d39;
+    --d-gold: #b28e45;
+    --d-border: rgba(15, 23, 42, 0.08);
+    --d-muted: #64748b;
+    --d-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  .dash-wrap { padding: 30px 0; font-family: 'Inter', sans-serif; background-color: var(--d-bg); }
+
+  /* --- Cinematic Header & Navigation --- */
+  .dash-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 30px; border-bottom: 2px solid var(--d-border); padding-bottom: 25px;
+  }
+  .dash-h1 { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 950; letter-spacing: -1.5px; color: var(--d-slate); }
+  .dash-sub { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: var(--d-gold); display: block; margin-bottom: 8px; }
+
+  .nav-hub { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+  .nav-chip {
+    padding: 8px 18px; border-radius: 100px; background: #fff;
+    border: 1px solid var(--d-border); text-decoration: none;
+    font-size: 11px; font-weight: 900; color: var(--d-muted);
+    text-transform: uppercase; letter-spacing: 1px; transition: 0.3s var(--d-ease);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .nav-chip:hover { 
+    background: var(--d-emerald); color: #fff; border-color: var(--d-emerald);
+    transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0, 77, 57, 0.15);
+  }
+
+  /* --- High-Fidelity KPI Grid --- */
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 25px; }
+  .kpi-card { 
+    background: var(--d-card); padding: 25px; border-radius: 20px; 
+    border: 1px solid var(--d-border); transition: 0.4s var(--d-ease);
+    position: relative; overflow: hidden;
+  }
+  .kpi-card:hover { border-color: var(--d-emerald); transform: translateY(-5px); box-shadow: 0 20px 50px -10px rgba(0,0,0,0.05); }
+  
+  .kpi-label { font-weight: 900; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--d-muted); margin-bottom: 12px; }
+  .kpi-val { font-size: 32px; font-weight: 950; color: var(--d-slate); letter-spacing: -1px; line-height: 1; }
+  .kpi-val.accent { color: var(--d-emerald); }
+  .kpi-val.warn { color: #c2410c; }
+
+  /* --- Priority Alert Banner --- */
+  .alert-banner {
+    margin-top: 30px; padding: 30px; border-radius: 24px;
+    background: #fff; border: 1.5px dashed var(--d-emerald);
+    display: flex; justify-content: space-between; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .alert-banner::before {
+    content: ''; position: absolute; inset: 0; background: var(--d-emerald); opacity: 0.03; pointer-events: none;
+  }
+  .alert-h { font-weight: 1000; font-size: 18px; color: var(--d-emerald); margin-bottom: 5px; display: flex; align-items: center; gap: 10px; }
+  .alert-p { font-size: 13px; font-weight: 600; color: var(--d-muted); line-height: 1.6; }
+
+  .btn-verify {
+    background: var(--d-emerald); color: #fff; text-decoration: none;
+    padding: 15px 30px; border-radius: 100px; font-weight: 900;
+    font-size: 12px; text-transform: uppercase; letter-spacing: 2px;
+    transition: 0.4s var(--d-ease); display: flex; align-items: center; gap: 10px;
+  }
+  .btn-verify:hover { background: var(--d-slate); transform: translateX(5px); box-shadow: 0 15px 30px rgba(0, 77, 57, 0.2); }
+
+  @media (max-width: 1100px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 768px) { .kpi-grid { grid-template-columns: 1fr; } .alert-banner { flex-direction: column; gap: 20px; text-align: center; } }
+
+</style>
+
+<div class="dash-wrap wrap">
+  <header class="dash-header">
+    <div>
+      <span class="dash-sub">Operational Hub</span>
+      <h1 class="dash-h1">Command Center <span style="font-family:'Inter'; font-weight:600; opacity:0.3; font-size:18px;">— ড্যাশবোর্ড</span></h1>
+      
+      <nav class="nav-hub">
+        <a class="nav-chip" href="/admin/orders"><i data-lucide="package" size="14"></i> Logistics</a>
+<a class="nav-chip" href="/admin/support"><i data-lucide="messages-square" size="14"></i> Support</a>
+        {% if is_superadmin %}
+          <a class="nav-chip" href="/admin/admins" style="color:var(--d-gold); border-color:rgba(178, 142, 69, 0.2);"><i data-lucide="crown" size="14"></i> Sovereignty</a>
+        {% endif %}
+        <a class="nav-chip" href="/admin/logout" style="color:#ef4444;"><i data-lucide="log-out" size="14"></i> Exit</a>
+      </nav>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:10px; font-weight:900; color:var(--d-gold); letter-spacing:2px; text-transform:uppercase;">Protocol: Active</div>
+      <div style="font-size:12px; font-weight:700; color:var(--d-muted); margin-top:5px;">Manual Verification Enabled</div>
+    </div>
+  </header>
+
+  <section class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Registered Entities</div>
+      <div class="kpi-val">{{ total_users }}</div>
+      <i data-lucide="users" size="40" style="position:absolute; right:-10px; bottom:-10px; opacity:0.03; color:var(--d-slate);"></i>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Total Acquisitions</div>
+      <div class="kpi-val">{{ total_orders }}</div>
+      <i data-lucide="shopping-bag" size="40" style="position:absolute; right:-10px; bottom:-10px; opacity:0.03; color:var(--d-slate);"></i>
+    </div>
+    <div class="kpi-card" style="border-left: 4px solid var(--d-gold);">
+      <div class="kpi-label">Awaiting Authorization</div>
+      <div class="kpi-val warn">{{ pending_orders }}</div>
+      <i data-lucide="clock" size="40" style="position:absolute; right:-10px; bottom:-10px; opacity:0.03; color:var(--d-gold);"></i>
+    </div>
+    <div class="kpi-card" style="border-left: 4px solid var(--d-emerald);">
+      <div class="kpi-label">Fiscal Revenue (Verified)</div>
+      <div class="kpi-val accent">{{ revenue|money }}</div>
+      <i data-lucide="banknote" size="40" style="position:absolute; right:-10px; bottom:-10px; opacity:0.03; color:var(--d-emerald);"></i>
+    </div>
+  </section>
+
+  <section class="alert-banner">
+    <div>
+      <div class="alert-h"><i data-lucide="zap" size="20"></i> Manual Fiscal Verification Required</div>
+      <div class="alert-p">Verify incoming Transaction IDs against the bank manifest to authorize pending order processing.</div>
+    </div>
+    <a href="/admin/orders" class="btn-verify">Execute Verification <i data-lucide="arrow-right" size="16"></i></a>
+  </section>
+</div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+  });
+</script>
+
+{% endblock %}

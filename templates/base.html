@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Handmade Heritage</title>
+  <meta name="description" content="Handmade Heritage — Weaving Stories, Preserving Traditions | Bringing Local Art to the Global Heart">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/static/css/theme.css"/>
+  <link rel="stylesheet" href="/static/css/messages_hub.css"/>
+
+  <!-- ===== Premium overrides (ticker + header actions + account dropdown + footer payments) ===== -->
+  <style>
+    /* --- Top ticker --- */
+    .topbar {
+      background: linear-gradient(90deg, #ACBAC4, #9CAB84); /* Premium Combo Background */
+      color: #0f172a; 
+      padding: 8px 0;
+      font-size: 11px;
+    }
+    .topbar-left{ display:flex; align-items:center; gap:10px; min-width:0; }
+    .ticker{
+      position:relative;
+      overflow:hidden;
+      white-space:nowrap;
+      min-width:0;
+      flex:1;
+      mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    }
+    .ticker-track{
+      display:inline-flex;
+      align-items:center;
+      gap:14px;
+      will-change: transform;
+      animation: tickerMove 22s linear infinite;
+    }
+    .ticker:hover .ticker-track{ animation-play-state: paused; }
+    .tick{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-weight:800;
+      opacity:.95;
+      letter-spacing:.5px;
+    }
+    .tick i{
+      width:6px; height:6px; border-radius:999px;
+      background: #ffffff;
+      display:inline-block;
+    }
+    .tick b{ font-weight:950; color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+    .tick .sep{ opacity:.3; margin:0 2px; }
+
+    @keyframes tickerMove{
+      0%{ transform: translateX(0); }
+      100%{ transform: translateX(-50%); }
+    }
+
+    .topbar-right{ display:flex; align-items:center; justify-content:flex-end; gap:10px; }
+
+    /* --- Premium Header: Corresponding Slate Blue --- */
+    .hdr {
+      background: rgba(172, 186, 196, 0.95) !important; /* Solid Slate Blue to match topbar start */
+      backdrop-filter: blur(25px) !important;
+      -webkit-backdrop-filter: blur(25px) !important;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      padding: 10px 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .actions{ display:flex; align-items:center; gap:8px; flex-wrap:nowrap; }
+
+    .action-btn{
+      height:40px; 
+      padding:0 18px;
+      border-radius:14px; 
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      text-decoration:none;
+      border: 1px solid rgba(0,0,0,0.07);
+      background: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      font-family: 'Inter', sans-serif;
+      font-weight: 700; 
+      color: #0f172a;
+      cursor: pointer;
+      white-space:nowrap;
+      letter-spacing: -0.2px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .action-btn:hover{
+      transform: translateY(-3px) scale(1.05);
+      border-color: #0f172a;
+      background: #ffffff;
+      box-shadow: 0 15px 30px -10px rgba(0,0,0,0.15);
+    }
+
+    .action-btn::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: 0.5s;
+    }
+    .action-btn:hover::after { left: 100%; }
+    
+    .action-btn .ico{ opacity: 1; font-size:16px; color: #4a5568; transition: color 0.2s; }
+    .action-btn:hover .ico { color: #0f172a; }
+
+    .action-btn.action-join{
+      background: #0f172a;
+      border-color: #0f172a;
+      color:#fff;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+    }
+    .action-btn.action-join:hover{
+      background: #1e293b;
+      box-shadow: 0 15px 35px -5px rgba(15, 23, 42, 0.3);
+      transform: translateY(-4px) scale(1.02);
+    }
+    .action-btn.action-join .ico { color: #fff !important; }
+
+    .search {
+      border: 1.5px solid rgba(0,0,0,0.08) !important;
+      background: rgba(255, 255, 255, 0.3) !important;
+      border-radius: 16px !important;
+      height: 44px !important; 
+      padding-left: 16px !important;
+      transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1) !important;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
+    }
+    
+    .search:focus-within {
+      background: #ffffff !important;
+      border-color: #0f172a !important;
+      box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08), 0 0 0 4px rgba(15, 23, 42, 0.03) !important;
+      transform: scale(1.005);
+    }
+    
+    .search-input {
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      color: #0f172a !important;
+      letter-spacing: -0.1px;
+      background: transparent;
+    }
+    
+    .search-input::placeholder { color: #4a5568; font-weight: 500; }
+    .search-ico { color: #4a5568; font-size: 18px; margin-right: 10px; transition: color 0.3s; }
+    .search:focus-within .search-ico { color: #0f172a; }
+
+    #globalSearchBtn {
+      background: #0f172a;
+      border-radius: 12px;
+      padding: 0 20px;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      margin-right: 3px;
+      height: 38px;
+      transition: all 0.3s ease;
+    }
+    #globalSearchBtn:hover { 
+      background: #1e293b; 
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    /* --- Premium Footer: Corresponding Sage Green --- */
+    .footer {
+      padding: 30px 0 15px;
+      background: #9CAB84; /* Solid Sage Green to match topbar end */
+      border-top: 1px solid rgba(0,0,0,0.05);
+      color: #0f172a;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .footer-grid > div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .ft-title {
+      font-weight: 900;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 10px;
+      color: #0f172a;
+    }
+    .ft-link {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13.5px;
+      color: #1e293b;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    .ft-link:hover { color: #fff; }
+
+    .ft-brand-area {
+      text-align: center;
+      max-width: 500px;
+      margin: 0 auto 15px;
+    }
+
+    .ft-pay{
+      margin: 10px 0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+    .paychip{
+      height:24px;
+      border-radius:4px;
+      border:1px solid rgba(0,0,0,0.05);
+      background: rgba(255, 255, 255, 0.6);
+      padding:0 6px;
+    }
+    .paychip img { height:12px; opacity: 0.8; }
+
+    .ft-social {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .soc {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid rgba(15, 23, 42, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0f172a;
+      transition: all 0.2s;
+    }
+    .soc:hover { background: #0f172a; color: #fff; border-color: #0f172a; transform: translateY(-1px); }
+
+    .backtop{
+      position: fixed;
+      right: 15px;
+      bottom: 15px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.08);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100;
+      transition: all 0.2s ease;
+    }
+    .backtop.show{ display:flex; }
+
+    @media (max-width: 768px) {
+      .footer-grid { grid-template-columns: 1fr; gap: 20px; }
+    }
+
+    /* Dropdown Animation */
+    .acc-wrap{ position:relative; display:inline-flex; }
+    .acc-menu{
+      position:absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      min-width: 200px;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.06);
+      background: #fff;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+      padding: 5px;
+      display:none;
+      z-index: 1000;
+      animation: popIn 0.15s ease-out;
+    }
+    @keyframes popIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+    .acc-wrap.open .acc-menu{ display:block; }
+    .acc-item{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      text-decoration:none;
+      color: #64748b;
+      font-weight: 500;
+      font-size: 13px;
+      transition: all 0.1s;
+    }
+    .acc-item:hover{ background: #f8fafc; color: #0f172a; }
+  </style>
+</head>
+
+<body>
+
+  <!-- Top Notice Bar -->
+  <div class="topbar">
+    <div class="wrap topbar-inner">
+      <div class="topbar-left">
+        <span class="dot" style="background: #ffffff; box-shadow: 0 0 8px #ffffff;"></span>
+        <div class="ticker" aria-label="Marketplace tagline">
+          <div class="ticker-track">
+            <span class="tick"><b>Weaving Stories, Preserving Traditions</b> <span class="sep">|</span> Bringing Local Art to the Global Heart</span>
+            <span class="tick"><b>Weaving Stories, Preserving Traditions</b> <span class="sep">|</span> Bringing Local Art to the Global Heart</span>
+          </div>
+        </div>
+      </div>
+      <div class="topbar-right"></div>
+    </div>
+  </div>
+
+  <!-- Sticky Header -->
+  <header class="hdr">
+    <div class="wrap hdr-row">
+      <!-- Brand -->
+      <a class="brand" href="/" aria-label="Home">
+        <span class="brand-mark" style="background:#0f172a; color:#fff; font-weight:900; border-radius: 8px;">HH</span>
+        <span class="brand-text">
+          <span class="brand-en" style="font-family:'Playfair Display'; font-weight:800; letter-spacing:-0.5px; color: #0f172a;">Handmade Heritage</span>
+        </span>
+      </a>
+
+      <!-- Search -->
+      <div class="search">
+        <span class="search-ico" aria-hidden="true">⌕</span>
+        <input id="globalSearchInput" class="search-input" placeholder="Search curated masterpieces..." />
+        <button id="globalSearchBtn" class="btn btn-primary" type="button">Search</button>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions">
+        {% set is_admin = session.get('admin_id') %}
+        {% set is_user  = session.get('user_id') %}
+        {% set role     = (session.get('role') or 'buyer')|lower %}
+
+        <button id="currencySwitch" class="action-btn" type="button">
+          <span class="ico"><i data-lucide="coins" width="14"></i></span>
+          <span class="pill-en" id="currencyText">USD</span>
+        </button>
+
+        {% if (not is_admin) and (role not in ['seller','admin','superadmin']) %}
+          <a class="action-btn" href="/cart">
+            <span class="ico"><i data-lucide="shopping-cart" width="14"></i></span>
+            <span class="pill-en">Cart</span>
+          </a>
+        {% endif %}
+
+        {% if is_admin %}
+          <a class="action-btn" href="/admin/dashboard">
+            <span class="ico"><i data-lucide="shield" width="14"></i></span>
+            <span class="pill-en">Admin</span>
+          </a>
+
+          <div class="acc-wrap" id="accWrap">
+            <button class="action-btn action-join" id="accountBtn" type="button">
+              <span class="ico"><i data-lucide="crown" width="14"></i></span>
+              <span class="pill-en">Account</span>
+            </button>
+
+            <div class="acc-menu" id="accountMenu">
+              <a class="acc-item" href="/admin/dashboard">Dashboard</a>
+              <a class="acc-item" href="/admin/profile">Settings</a>
+              <div style="height:1px; background:rgba(0,0,0,0.04); margin:4px 0;"></div>
+              <a class="acc-item acc-logout" href="/admin/logout" style="color:#ef4444;">Sign Out</a>
+            </div>
+          </div>
+
+        {% elif is_user %}
+          {% if role == 'seller' %}
+            <a class="action-btn" href="/seller/dashboard">
+              <span class="ico">🏪</span>
+              <span class="pill-en">Seller Hub</span>
+            </a>
+          {% else %}
+            <a class="action-btn" href="/wishlist">
+              <span class="ico"><i data-lucide="heart" width="14"></i></span>
+              <span class="pill-en">Wishlist</span>
+            </a>
+          {% endif %}
+
+          <div class="acc-wrap" id="accWrap">
+            <button class="action-btn action-join" id="accountBtn" type="button">
+              <span class="ico"><i data-lucide="user" width="14"></i></span>
+              <span class="pill-en">Account</span>
+            </button>
+
+            <div class="acc-menu" id="accountMenu">
+              <a class="acc-item" href="/profile">My Profile</a>
+              {% if role == 'buyer' %}
+                <a class="acc-item" href="/buyer/dashboard">My Records</a>
+              {% endif %}
+              <a class="acc-item" href="/support/chat">Support Chat</a>
+              <div style="height:1px; background:rgba(0,0,0,0.04); margin:4px 0;"></div>
+              <a class="acc-item acc-logout" href="/logout" style="color:#ef4444;">Logout</a>
+            </div>
+          </div>
+
+        {% else %}
+          <a class="action-btn" href="/login">
+            <span class="ico"><i data-lucide="user" width="14"></i></span>
+            <span class="pill-en">Sign In</span>
+          </a>
+          <a class="action-btn action-join" href="/register">
+            <span class="ico"><i data-lucide="sparkles" width="14"></i></span>
+            <span class="pill-en">Join</span>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <main>
+    {% block body %}{% endblock %}
+  </main>
+
+  <button id="backTop" class="backtop" type="button" aria-label="Back to top">↑</button>
+
+  <!-- Compact Custom Themed Footer -->
+  <footer class="footer">
+    <div class="wrap">
+      
+      <!-- Links Grid -->
+      <div class="footer-grid">
+        <div>
+          <div class="ft-title">Customer Care</div>
+          <a class="ft-link" href="/help">Help Center</a>
+          <a class="ft-link" href="/shipping">Shipping & Delivery</a>
+          <a class="ft-link" href="/returns">Returns & Refunds</a>
+          <a class="ft-link" href="/track">Track My Order</a>
+        </div>
+
+        <div>
+          <div class="ft-title">Company</div>
+          <a class="ft-link" href="/about">About Us</a>
+          <a class="ft-link" href="/admin/login">Admin Login</a>
+          <a class="ft-link" href="/register/seller">Become a Seller</a>
+          <a class="ft-link" href="/support/chat">Chat with Admin</a>
+        </div>
+
+        <div>
+          <div class="ft-title">Legal</div>
+          <a class="ft-link" href="/privacy">Privacy Policy</a>
+          <a class="ft-link" href="/terms">Terms & Conditions</a>
+          <a class="ft-link" href="/cookies">Cookie Policy</a>
+          <a class="ft-link" href="/contact">Contact</a>
+        </div>
+      </div>
+
+      <!-- Brand Area (Minimalist) -->
+      <div class="ft-brand-area">
+        <div class="ft-title" style="font-family:'Playfair Display'; font-size:18px; text-transform:none; margin-bottom:5px;">Handmade Heritage by Md. Tarikul Islam</div>
+        
+        <div class="ft-social">
+          <button class="soc" type="button"><svg viewBox="0 0 24 24" width="14"><path fill="currentColor" d="M13.5 22v-8h2.7l.5-3H13.5V9.1c0-.9.3-1.6 1.6-1.6H16.8V4.7c-.3 0-1.4-.1-2.6-.1-2.6 0-4.4 1.6-4.4 4.5V11H7v3h2.8v8h3.7z"/></svg></button>
+          <button class="soc" type="button"><svg viewBox="0 0 24 24" width="14"><path fill="currentColor" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm5.6-.9a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"/></svg></button>
+        </div>
+
+        <div class="ft-pay">
+          <div class="paychip"><img src="/static/img/payments/bkash.svg" alt="bKash"></div>
+          <div class="paychip"><img src="/static/img/payments/nagad.svg" alt="Nagad"></div>
+          <div class="paychip"><img src="/static/img/payments/visa.svg" alt="Visa"></div>
+          <div class="paychip"><img src="/static/img/payments/mastercard.svg" alt="Mastercard"></div>
+        </div>
+      </div>
+
+      <div style="text-align: center; font-size: 10px; color: #1e293b; font-weight: 800; letter-spacing: 1px; opacity: 0.6;">
+        © HANDMADE HERITAGE • 2026
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating Messages button -->
+  {% set _msg_href = '/messages' %}
+  {% if session.get('admin_id') %}
+    {% set _msg_href = '/admin/messages' %}
+  {% endif %}
+  <a class="hh-msg-fab" href="{{ _msg_href }}" aria-label="Messages" style="width:42px; height:42px; bottom:15px; right:15px; background:#0f172a; color:#fff; display:flex; align-items:center; justify-content:center; border-radius:50%; text-decoration:none; box-shadow:0 4px 12px rgba(0,0,0,0.15); position:fixed; z-index:100;">
+    <i data-lucide="messages-square" width="18" height="18"></i>
+    <span class="hh-msg-badge" id="hhMsgBadge" style="position:absolute; top:-2px; right:-2px; background:#ef4444; color:#fff; font-size:10px; font-weight:800; padding:2px 5px; border-radius:10px; border:2px solid #fff; display:none;">0</span>
+  </a>
+
+  <!-- Scripts -->
+  <script src="/static/js/app.js"></script>
+  <script src="/static/js/chat.js"></script>
+  <script>
+    window.hhRefreshMsgBadge = async function(){
+      try{
+        const res = await fetch('/api/messages/unread-count', {credentials:'same-origin'});
+        if(!res.ok) return;
+        const data = await res.json();
+        const n = Number(data.count||0);
+        const b = document.getElementById('hhMsgBadge');
+        if(!b) return;
+        if(n>0){
+          b.textContent = (n>99 ? '99+' : String(n));
+          b.style.display = 'flex';
+        } else {
+          b.style.display = 'none';
+        }
+      } catch(e){}
+    };
+    document.addEventListener('DOMContentLoaded', function(){
+      window.hhRefreshMsgBadge();
+      setInterval(window.hhRefreshMsgBadge, 15000);
+    });
+  </script>
+
+  <!-- Dropdown logic -->
+  <script>
+    (function(){
+      var wrap = document.getElementById('accWrap');
+      var btn  = document.getElementById('accountBtn');
+      if(!wrap || !btn) return;
+      btn.addEventListener('click', function(e){
+        e.preventDefault(); e.stopPropagation();
+        wrap.classList.toggle('open');
+      });
+      document.addEventListener('click', function(){ wrap.classList.remove('open'); });
+    })();
+  </script>
+
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      if(window.lucide && window.lucide.createIcons) window.lucide.createIcons();
+    });
+  </script>
+</body>
+</html>

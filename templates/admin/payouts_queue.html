@@ -1,0 +1,332 @@
+{% extends 'admin/admin_base.html' %}
+{% block body %}
+
+<style>
+  /* ================================================================
+     TREASURY TERMINAL: ELITE FISCAL DISBURSEMENT (v7.5)
+     THEME: #f7f0e8 (Luxury Cream) | PALETTE: Slate, Sage & Gold
+     REFINEMENT: Supreme Rounding, Title Suppression & Breathing Room
+     ================================================================ */
+  
+  :root {
+    --adm-bg: #f7f0e8;
+    --adm-surface: #fdfaf7;
+    --adm-card: #ffffff;
+    --adm-primary: #1a202c;
+    --adm-slate: #ACBAC4;
+    --adm-sage: #006a4e; 
+    --adm-gold: #b28e45;
+    --adm-border: rgba(172, 186, 196, 0.25);
+    --adm-shadow: 0 40px 100px -20px rgba(0,0,0,0.05);
+    --adm-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* --- Hide the redundant Base Dashboard Title --- */
+  .super-topbar { display: none !important; }
+
+  /* --- Balanced Outer Wrapper --- */
+  .payout-wrap { 
+    padding: 20px 15px 50px; 
+    font-family: 'Inter', sans-serif; 
+    background-color: var(--adm-bg); 
+  }
+
+  /* --- Cinematic Header --- */
+  .payout-header {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-end;
+    margin-bottom: 35px; 
+    border-bottom: 2px solid var(--adm-border); 
+    padding-bottom: 25px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .payout-h1 { font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 950; letter-spacing: -1.5px; color: var(--adm-primary); }
+
+  /* --- Navigation Chips --- */
+  .payout-nav { display: flex; gap: 12px; margin-top: 25px; }
+  .p-chip {
+    padding: 10px 22px; 
+    border-radius: 100px; 
+    background: #fff;
+    border: 1.5px solid var(--adm-border); 
+    text-decoration: none;
+    font-size: 11px; 
+    font-weight: 900; 
+    color: var(--adm-slate);
+    text-transform: uppercase; 
+    letter-spacing: 1.5px; 
+    transition: 0.4s var(--adm-ease);
+  }
+  .p-chip:hover { border-color: var(--adm-primary); color: var(--adm-primary); transform: translateY(-2px); }
+  .p-chip.active { 
+    background: var(--adm-primary); 
+    color: #fff; 
+    border-color: var(--adm-primary); 
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15); 
+  }
+
+  /* --- High-Density Data Card (Supreme Rounding) --- */
+  .payout-card { 
+    background: var(--adm-card); 
+    border-radius: 40px; 
+    border: 1px solid var(--adm-border); 
+    box-shadow: var(--adm-shadow); 
+    overflow: hidden; 
+    margin: 0 10px;
+  }
+  
+  .table-payout { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .table-payout thead th {
+    background: #f8fafc; 
+    padding: 22px 30px; 
+    text-align: left;
+    font-weight: 950; 
+    text-transform: uppercase; 
+    letter-spacing: 1.5px;
+    color: var(--adm-slate); 
+    border-bottom: 1.5px solid var(--adm-border); 
+    font-size: 10px;
+  }
+  .table-payout tbody tr { border-bottom: 1px solid #f1f5f9; transition: 0.3s; }
+  .table-payout tbody tr:hover { background: rgba(0, 106, 78, 0.02); }
+  .table-payout td { 
+    padding: 24px 30px; 
+    vertical-align: middle; 
+  }
+
+  /* --- Artisan & Fiscal Nodes --- */
+  .artisan-node { display: flex; align-items: center; gap: 15px; }
+  .artisan-avatar { 
+    width: 44px; height: 44px; border-radius: 12px; 
+    background: var(--adm-bg); display: grid; place-items: center; 
+    font-weight: 950; color: var(--adm-sage); border: 1.5px solid var(--adm-border); 
+    font-size: 14px;
+  }
+  
+  .val-net { font-weight: 1000; font-size: 18px; color: var(--adm-sage); letter-spacing: -0.5px; }
+  .val-sub { font-size: 12px; color: var(--adm-slate); font-weight: 700; }
+  .mono-acc { 
+    font-family: 'JetBrains Mono', monospace; 
+    font-weight: 800; 
+    color: var(--adm-sage); 
+    background: #f0fdf4; 
+    padding: 6px 12px; 
+    border-radius: 10px; 
+    font-size: 12px;
+    border: 1px solid rgba(0, 106, 78, 0.08);
+  }
+
+  /* --- Execution Interface (Refined Breathing Room) --- */
+  .execution-box {
+    background: var(--adm-surface); 
+    border: 1.5px solid var(--adm-border); 
+    border-radius: 24px;
+    padding: 25px; 
+    max-width: 450px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+  }
+  .input-treasury {
+    height: 48px; 
+    border-radius: 12px; 
+    border: 2px solid #eef2f6;
+    padding: 0 20px; 
+    font-weight: 700; 
+    font-size: 14px; 
+    width: 100%;
+    margin-bottom: 15px; 
+    outline: none; 
+    transition: 0.4s var(--adm-ease); 
+    color: var(--adm-primary);
+    background: #fff;
+  }
+  .input-treasury:focus { 
+    border-color: var(--adm-sage); 
+    box-shadow: 0 12px 25px rgba(0, 106, 78, 0.06); 
+    transform: translateY(-2px);
+  }
+
+  .btn-execute {
+    background: var(--adm-primary); 
+    color: #fff; 
+    border: none;
+    padding: 0 25px; 
+    height: 48px;
+    border-radius: 12px; 
+    font-weight: 950;
+    font-size: 11px; 
+    text-transform: uppercase; 
+    letter-spacing: 2px;
+    cursor: pointer; 
+    transition: 0.4s var(--adm-ease);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-execute:hover { 
+    background: var(--adm-sage); 
+    transform: translateY(-3px); 
+    box-shadow: 0 15px 30px rgba(0, 106, 78, 0.15); 
+  }
+
+  .btn-copy-lux {
+    background: #fff; 
+    border: 1.5px solid var(--adm-border);
+    padding: 8px 16px; 
+    border-radius: 10px; 
+    font-size: 10px;
+    font-weight: 950; 
+    text-transform: uppercase; 
+    cursor: pointer; 
+    color: var(--adm-gold);
+    transition: 0.3s;
+    letter-spacing: 1px;
+  }
+  .btn-copy-lux:hover { border-color: var(--adm-gold); background: #fffbeb; transform: scale(1.05); }
+
+  .status-pill {
+    padding: 6px 16px; 
+    border-radius: 100px; 
+    font-weight: 950; 
+    font-size: 10px;
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    display: inline-block;
+    border: 1.5px solid transparent;
+  }
+  .status-paid { background: #ecfdf5; color: var(--adm-sage); border-color: #d1fae5; }
+  .status-pending { background: #fff7ed; color: #c2410c; border-color: #ffedd5; }
+
+</style>
+
+<section class="payout-wrap wrap">
+  <div class="payout-header">
+    <div>
+      <span style="font-size:10px; font-weight:950; color:var(--adm-gold); text-transform:uppercase; letter-spacing:3px; display:block; margin-bottom:8px;">Fiscal Governance Protocol</span>
+      <h1 class="payout-h1">Treasury Control <span style="font-family:'Inter'; opacity:0.2; font-weight:600; font-size:18px;">— বিক্রেতা পেমেন্ট</span></h1>
+      <div class="payout-nav">
+        <a class="p-chip" href="/admin/dashboard">Operations Hub</a>
+        <a class="p-chip active" href="/admin/payouts?status=pending">Pending Audit</a>
+        <a class="p-chip" href="/admin/payouts?status=paid">Disbursement Log</a>
+      </div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:10px; font-weight:950; color:var(--adm-gold); letter-spacing:3px; text-transform:uppercase;">Escrow Protocol v2.0</div>
+      <div style="font-size:11px; font-weight:700; color:var(--adm-slate); margin-top:6px; text-transform:uppercase; letter-spacing:1px;">Eligible: Verified Acquisitions</div>
+    </div>
+  </div>
+
+  <div class="payout-card">
+    <div style="overflow-x:auto;">
+      <table class="table-payout" style="min-width:1150px;">
+        <thead>
+          <tr>
+            <th>Registry ID</th>
+            <th>Authorized Artisan</th>
+            <th>Gross Value</th>
+            <th>Platform Fee</th>
+            <th>Net Payable</th>
+            <th>Status</th>
+            <th style="width:450px;">Treasury Execution</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in rows %}
+          <tr>
+            <td>
+              <div style="font-weight:1000; color:var(--adm-primary); font-size:15px;">#{{ r.id }}</div>
+              <div style="font-size:10px; font-weight:900; color:var(--adm-slate); text-transform:uppercase; letter-spacing:0.5px; margin-top:2px;">Order: {{ r.order_code }}</div>
+            </td>
+            <td>
+              <div class="artisan-node">
+                <div class="artisan-avatar">{{ r.seller_name[0]|upper }}</div>
+                <div>
+                  <div style="font-weight:950; font-size:14px; color:var(--adm-primary); margin-bottom:2px;">{{ r.seller_name }}</div>
+                  <div style="font-size:11px; color:var(--adm-slate); font-weight:800; opacity:0.8;">Entity #{{ r.seller_id }}</div>
+                </div>
+              </div>
+            </td>
+            <td><div class="val-sub">{{ r.gross_amount|money }}</div></td>
+            <td><div class="val-sub" style="color:var(--adm-gold); opacity:0.8;">-{{ r.commission_amount|money }}</div></td>
+            <td><div class="val-net">{{ r.net_payable|money }}</div></td>
+            <td>
+              <span class="status-pill status-{{ r.status|lower }}">{{ r.status }}</span>
+            </td>
+            <td>
+              {% if r.status == 'pending' %}
+              <div class="execution-box">
+                <div style="display:flex; justify-content:space-between; margin-bottom:20px; align-items:center;">
+                  <div id="acct-{{ r.id }}">
+                    <span style="font-size:9px; font-weight:950; color:var(--adm-slate); display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:1px;">Disbursement Account</span>
+                    <span class="mono-acc">{{ r.payout_account_masked or 'Account Unset' }}</span>
+                  </div>
+                  {% if r.payout_account_masked %}
+                  <button type="button" class="btn-copy-lux" data-copy="#acct-{{ r.id }} .mono-acc">Copy ID</button>
+                  {% endif %}
+                </div>
+
+                <form method="post" enctype="multipart/form-data" action="/admin/payouts/{{ r.id }}/mark_paid">
+                  <input name="payout_ref" class="input-treasury" placeholder="Transaction Ref / Manifest ID" required>
+                  <div style="display:flex; gap:12px; align-items:center;">
+                    <input type="file" name="proof" id="file-{{r.id}}" style="display:none;">
+                    <label for="file-{{r.id}}" class="btn-execute" style="background:#fff; color:var(--adm-slate); border:2px solid var(--adm-border); cursor:pointer;">
+                      <i data-lucide="paperclip" size="14"></i> Proof
+                    </label>
+                    <button class="btn-execute" type="submit" style="flex:1;">Authorize Payout</button>
+                  </div>
+                </form>
+              </div>
+              {% else %}
+              <div style="border-left: 4px solid var(--adm-sage); padding: 8px 0 8px 25px;">
+                <div style="font-size:10px; font-weight:950; color:var(--adm-gold); text-transform:uppercase; letter-spacing:2px;">Governance Audit Trail</div>
+                <div style="font-weight:1000; font-size:14px; color:var(--adm-primary); margin-top:8px;">Ref: {{ r.payout_ref }}</div>
+                <div style="font-size:11px; color:var(--adm-slate); margin-top:6px; font-weight:700; text-transform:uppercase; opacity:0.8;">Authorized at {{ r.paid_at }}</div>
+              </div>
+              {% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="7" style="padding:120px 0; text-align:center;">
+              <i data-lucide="shield-check" size="64" style="color:var(--adm-border); margin-bottom:20px; opacity:0.5;"></i>
+              <div style="font-weight:900; color:#cbd5e1; text-transform:uppercase; letter-spacing:5px; font-size:12px;">Fiscal Registry Synchronized</div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+(function(){
+  lucide.createIcons();
+  
+  function textFromSelector(sel){
+    try{const el=document.querySelector(sel);return el?el.textContent.trim():'';}catch(e){return ''}
+  }
+  document.addEventListener('click', async function(e){
+    const btn = e.target.closest('button[data-copy]');
+    if(!btn) return;
+    const sel = btn.getAttribute('data-copy');
+    const txt = textFromSelector(sel);
+    if(!txt) return;
+    try{
+      await navigator.clipboard.writeText(txt);
+      const old = btn.textContent;
+      btn.textContent = 'Copied';
+      setTimeout(()=>btn.textContent=old, 1000);
+    }catch(err){
+      const ta=document.createElement('textarea');
+      ta.value=txt;document.body.appendChild(ta);ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+  });
+})();
+</script>
+
+{% endblock %}

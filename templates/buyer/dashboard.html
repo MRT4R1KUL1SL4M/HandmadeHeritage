@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<style>
+  /* ================================================================
+     COLLECTOR REGISTRY: BUYER DASHBOARD (v4.3)
+     THEME: #f7f0e8 (Luxury Cream) | PALETTE: Slate, Sage & Gold
+     REFINEMENT: Ultra-Minimalist Ledger Focus with Review Logic
+     ================================================================ */
+
+  :root {
+    --bg-silk: #f7f0e8;
+    --accent-gold: #b28e45;
+    --obsidian: #1a202c;
+    --sage-dark: #004d39;
+    --border-subtle: rgba(172, 186, 196, 0.25);
+    --surface: #fdfaf7;
+  }
+
+  .registry-master-wrap {
+    background-color: var(--bg-silk);
+    min-height: 100vh;
+    padding: 60px 0 120px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .r-container {
+    max-width: 1250px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* --- Registry Ledger Rows --- */
+  .ledger-section { margin-top: 20px; }
+  
+  .ledger-row {
+    background: #ffffff;
+    border: 1px solid var(--border-subtle);
+    border-radius: 32px;
+    padding: 30px;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 0.8fr 0.9fr 1.1fr;
+    align-items: center;
+    transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.01);
+  }
+
+  .ledger-row:hover {
+    transform: scale(1.01) translateX(10px);
+    border-color: var(--accent-gold);
+    background: var(--surface);
+  }
+
+  .reg-label { font-size: 9px; font-weight: 950; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; display: block; }
+  .reg-val { font-weight: 800; font-size: 15px; color: var(--obsidian); }
+
+  .status-pill {
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-block;
+  }
+  .st-delivered { background: #ecfdf5; color: var(--sage-dark); }
+  .st-pending { background: #fff7ed; color: #c2410c; }
+  .st-confirmed { background: #eff6ff; color: #1d4ed8; }
+  .st-shipped { background: #fdf4ff; color: #a21caf; }
+
+  /* --- Elite Action Nodes --- */
+  .btn-elite {
+    background: var(--obsidian);
+    color: #fff;
+    padding: 14px 18px;
+    border-radius: 16px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: 0.3s;
+    text-decoration: none;
+    border: none;
+  }
+
+  .btn-elite:hover {
+    background: #000;
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+  }
+
+  .btn-review {
+    background: var(--accent-gold);
+    color: #fff;
+    margin-top: 5px;
+  }
+  .btn-review:hover {
+    background: #966e33;
+  }
+
+  @media (max-width: 1000px) {
+    .ledger-row { grid-template-columns: 1fr 1fr; gap: 25px; }
+  }
+</style>
+
+<div class="registry-master-wrap">
+  <div class="r-container">
+    
+    <!-- Registry Ledger -->
+    <section class="ledger-section">
+      <div style="margin-bottom: 35px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 20px;">
+        <h3 style="font-family:'Playfair Display'; font-size:32px; font-weight:900; margin:0; letter-spacing: -1px; color: var(--obsidian);">Historical Records</h3>
+        <p style="font-size: 13px; color: #94a3b8; font-weight: 600; margin-top: 5px;">A chronological manifest of your artisan acquisitions.</p>
+      </div>
+
+      <div class="ledger-list">
+        {% if orders %}
+          {% for o in orders %}
+            <div class="ledger-row">
+              <!-- Column 1: Order Identity -->
+              <div>
+                <span class="reg-label">Manifest</span>
+                <div class="reg-val" style="color:var(--accent-gold);">#{{ o.order_code }}</div>
+                <div style="font-size:11px; color:#94a3b8; font-weight:600; margin-top:4px;">{{ o.created_at }}</div>
+              </div>
+
+              <!-- Column 2: Financial/Method -->
+              <div>
+                <span class="reg-label">Settlement</span>
+                <div style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:800;">
+                  {% set method = o.payment_method|lower if o.payment_method else 'cod' %}
+                  <span style="width:8px; height:8px; border-radius:50%; background:{% if method=='bkash' %}#d12053{% elif method=='nagad' %}#f7941d{% else %}#2563eb{% endif %};"></span>
+                  {{ method|upper }}
+                </div>
+                <div style="font-size:10px; color:#94a3b8; font-weight:700; margin-top:4px; font-family:'JetBrains Mono';">TXN: {{ o.trnx_id|default('—') }}</div>
+              </div>
+
+              <!-- Column 3: Lifecycle State -->
+              <div>
+                <span class="reg-label">Progress</span>
+                <span class="status-pill st-{{ o.status|lower }}">{{ o.status }}</span>
+              </div>
+
+              <!-- Column 4: Valuation -->
+              <div style="text-align: right; padding-right: 20px;">
+                <span class="reg-label">Valuation</span>
+                <div class="reg-val" style="font-size:22px; font-weight:950; letter-spacing:-1px;">{{ o.grand_total|money }}</div>
+              </div>
+
+              <!-- Column 5: Authoritative Actions -->
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <a href="/track?code={{ o.order_code }}" class="btn-elite">
+                  <span>Track Manifest</span> <i data-lucide="locate" size="14"></i>
+                </a>
+
+                <!-- Review Section: Only visible for delivered orders -->
+                {% if o.status|lower == 'delivered' %}
+                  {% set items_list = o['items'] if o is mapping and 'items' in o else [] %}
+                  {% for it in items_list %}
+                    {% if it.can_review and (not it.has_review) %}
+                      <a href="/product?id={{ it.product_id }}#leave-review" class="btn-elite btn-review">
+                        Review: {{ it.title[:15] }}{% if it.title|length > 15 %}...{% endif %} <i data-lucide="star" size="14"></i>
+                      </a>
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div style="padding: 100px; text-align: center; border: 2px dashed var(--border-subtle); border-radius: 40px; background: white;">
+            <i data-lucide="archive" size="48" style="opacity:0.1; margin-bottom:20px; color: var(--obsidian);"></i>
+            <p style="font-size:11px; font-weight:950; letter-spacing:4px; color:#cbd5e1; text-transform:uppercase;">Registry Archive Empty</p>
+          </div>
+        {% endif %}
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    if(window.lucide) lucide.createIcons();
+  });
+</script>
+
+{% endblock %}

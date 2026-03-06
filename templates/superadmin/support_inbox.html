@@ -1,0 +1,203 @@
+{% extends 'superadmin/superadmin_base.html' %}
+{% block body %}
+
+<style>
+  /* ================================================================
+     UNIFIED OMNI-CHANNEL INBOX: SUPREME OVERSIGHT (v35.5)
+     THEME: Obsidian Slate, Heritage Emerald & Royal Gold
+     REFINEMENT: Rounded geometry and enhanced breathing room.
+     ================================================================ */
+
+  :root {
+    --s-slate: #0f172a;
+    --s-emerald: #004d39;
+    --s-gold: #b28e45;
+    --s-bg: #fcfcfd;
+    --s-border: rgba(15, 23, 42, 0.06);
+    --s-muted: #64748b;
+    --s-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  /* --- Balanced Outer Wrapper --- */
+  .inbox-wrap { 
+    padding: 40px 15px; /* Added side padding for breathing room */
+    font-family: 'Inter', sans-serif; 
+    background-color: var(--s-bg); 
+  }
+
+  /* --- Cinematic Header --- */
+  .hub-header {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-end;
+    margin-bottom: 35px; 
+    border-bottom: 2.5px solid var(--s-border); 
+    padding-bottom: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .hub-h1 { font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 950; letter-spacing: -1.5px; color: var(--s-slate); }
+  .hub-sub { font-size: 10px; font-weight: 950; text-transform: uppercase; letter-spacing: 3px; color: var(--s-gold); display: block; margin-bottom: 8px; }
+
+  /* --- Command Card Architecture (Enhanced Rounding) --- */
+  .hub-card { 
+    background: #ffffff; 
+    border-radius: 40px; /* Increased rounding */
+    border: 1px solid var(--s-border); 
+    box-shadow: 0 40px 100px -20px rgba(0,0,0,0.03); 
+    padding: 45px; /* Increased internal padding */
+    position: relative;
+    z-index: 5;
+    margin: 0 10px; /* Gap from sidebar/screen edges */
+  }
+
+  /* --- Tab Navigation System --- */
+  .nav-tabs { display: flex; gap: 15px; margin-bottom: 35px; }
+  .tab-link {
+    padding: 14px 28px; 
+    border-radius: 18px; /* Softer corners */
+    background: #f8fafc; 
+    border: 1.5px solid #eef2f6;
+    text-decoration: none; 
+    font-size: 11px; 
+    font-weight: 900; 
+    color: var(--s-muted);
+    text-transform: uppercase; 
+    letter-spacing: 1.5px; 
+    transition: 0.4s var(--s-ease);
+    display: flex; 
+    align-items: center; 
+    gap: 10px;
+  }
+  .tab-link:hover { border-color: var(--s-gold); transform: translateY(-2px); background: #fff; }
+  .tab-link.active { 
+    background: var(--s-slate); 
+    color: #fff; 
+    border-color: var(--s-slate);
+    box-shadow: 0 12px 25px rgba(15, 23, 42, 0.15);
+  }
+
+  /* --- Conversation Dossier Nodes (Refined Spacing) --- */
+  .conv-list { display: grid; gap: 16px; }
+  .conv-node {
+    background: #fff; 
+    border: 1.5px solid #f1f5f9; 
+    border-radius: 24px; /* More rounded list items */
+    padding: 25px 35px; /* More horizontal breathing space */
+    text-decoration: none; 
+    transition: 0.4s var(--s-ease);
+    display: block; 
+    position: relative; 
+    overflow: hidden;
+  }
+  .conv-node:hover { 
+    border-color: var(--s-gold); 
+    transform: translateX(10px); 
+    box-shadow: 0 20px 45px -15px rgba(178, 142, 69, 0.1); 
+  }
+  .conv-node::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 0;
+    background: var(--s-gold); transition: 0.4s var(--s-ease);
+  }
+  .conv-node:hover::before { width: 8px; }
+
+  /* --- Information Layout --- */
+  .node-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+  .entity-name { font-weight: 1000; font-size: 17px; color: var(--s-slate); letter-spacing: -0.5px; }
+  .entity-email { font-size: 12px; font-weight: 700; color: var(--s-muted); margin-left: 10px; opacity: 0.7; }
+
+  .status-pill {
+    padding: 6px 16px; 
+    border-radius: 100px; 
+    font-size: 10px; 
+    font-weight: 950;
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    border: 1.5px solid transparent;
+  }
+  .st-open { background: #f0fdf4; color: #166534; border-color: #dcfce7; }
+  .st-closed { background: #f8fafc; color: var(--s-muted); border-color: #eef2f6; }
+
+  .node-meta { 
+    display: flex; 
+    align-items: center; 
+    gap: 25px; 
+    font-size: 11.5px; 
+    font-weight: 800; 
+    color: var(--s-muted); 
+    text-transform: uppercase; 
+    letter-spacing: 1px;
+    padding-top: 5px;
+  }
+  .meta-item { display: flex; align-items: center; gap: 8px; }
+
+</style>
+
+<div class="inbox-wrap wrap">
+  <header class="hub-header">
+    <div>
+      <span class="hub-sub">Sovereign Oversight Protocol</span>
+      <h1 class="hub-h1">Unified Intercom <span style="font-family:'Inter'; font-weight:600; opacity:0.2; font-size:20px;">— সাপোর্ট ইনবক্স</span></h1>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:10px; font-weight:900; color:var(--s-gold); letter-spacing:2px; text-transform:uppercase;">Surveillance Level: Max</div>
+      <div style="font-size:11px; font-weight:700; color:var(--s-muted); margin-top:5px;">Omni-Channel Manifest Sync</div>
+    </div>
+  </header>
+
+  <div class="hub-card">
+    <nav class="nav-tabs">
+      <a class="tab-link {% if tab=='buyer_support' %}active{% endif %}" href="/superadmin/support-inbox?tab=buyer_support">
+        <i data-lucide="shopping-bag" size="14"></i> Buyer Channels
+      </a>
+      <a class="tab-link {% if tab=='seller_support' %}active{% endif %}" href="/superadmin/support-inbox?tab=seller_support">
+        <i data-lucide="hammer" size="14"></i> Artisan Channels
+      </a>
+    </nav>
+
+    <div class="conv-list">
+      {% for r in rows %}
+        <a class="conv-node" href="/superadmin/support-inbox/{{ r.id }}">
+          <div class="node-head">
+            <div>
+              <span class="entity-name">{{ r.name or 'Authenticated User' }}</span>
+              <span class="entity-email">{{ r.email }}</span>
+            </div>
+            {% set st = r.status|lower %}
+            <span class="status-pill {% if st == 'open' or st == 'active' %}st-open{% else %}st-closed{% endif %}">
+              {{ r.status }}
+            </span>
+          </div>
+
+          <div class="node-meta">
+            <div class="meta-item">
+              <i data-lucide="layers" size="13" style="color:var(--s-gold);"></i>
+              Classification: <span style="color:var(--s-slate); font-weight:900;">{{ r.type|upper if r.type else 'GENERAL' }}</span>
+            </div>
+            <div class="meta-item">
+              <i data-lucide="clock" size="13"></i>
+              Last Manifest: <span style="opacity:0.8;">{{ r.last_at or r.created_at }}</span>
+            </div>
+            <div class="meta-item" style="margin-left:auto; color:var(--s-emerald); font-weight:950;">
+              View Full Thread <i data-lucide="arrow-right" size="14"></i>
+            </div>
+          </div>
+        </a>
+      {% else %}
+        <div style="padding:120px 0; text-align:center;">
+          <i data-lucide="message-square-off" size="56" style="color:var(--s-border); margin-bottom:20px; opacity:0.5;"></i>
+          <div style="font-weight:900; color:#cbd5e1; text-transform:uppercase; letter-spacing:5px; font-size:12px;">Manifest Synchronized (0 Inquiries)</div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    if (window.lucide) lucide.createIcons();
+  });
+</script>
+
+{% endblock %}

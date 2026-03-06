@@ -1,0 +1,116 @@
+{% extends "superadmin/superadmin_base.html" %}
+{% block body %}
+
+<style>
+  /* ================================================================
+     SYSTEM SETTINGS VAULT: GLOBAL CONFIGURATION (v34.0)
+     THEME: Obsidian Slate, Heritage Emerald & Royal Gold
+     ================================================================ */
+
+  :root {
+    --s-slate: #0f172a;
+    --s-emerald: #004d39;
+    --s-gold: #b28e45;
+    --s-bg: #fcfcfd;
+    --s-border: rgba(15, 23, 42, 0.08);
+    --s-muted: #64748b;
+    --s-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  .settings-wrap { padding: 40px 0; font-family: 'Inter', sans-serif; background-color: var(--s-bg); }
+
+  /* --- Cinematic Header --- */
+  .vault-header { margin-bottom: 30px; border-bottom: 2px solid var(--s-border); padding-bottom: 25px; }
+  .vault-h1 { font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 950; letter-spacing: -1.5px; color: var(--s-slate); }
+  .vault-sub { font-size: 10px; font-weight: 950; text-transform: uppercase; letter-spacing: 3px; color: var(--s-gold); display: block; margin-bottom: 8px; }
+
+  /* --- Command Card --- */
+  .vault-card { 
+    background: #ffffff; border-radius: 30px; border: 1px solid var(--s-border); 
+    box-shadow: 0 40px 100px -20px rgba(0,0,0,0.04); padding: 45px; max-width: 650px; margin: 0 auto;
+    transition: 0.4s var(--s-ease);
+  }
+  
+  /* --- Precision Inputs --- */
+  .field-box { margin-bottom: 30px; }
+  .field-label { font-weight: 950; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--s-muted); display: block; margin-bottom: 12px; }
+  
+  .in-lux-wrapper { position: relative; display: flex; align-items: center; }
+  .in-lux {
+    height: 58px; width: 100%; border: 2px solid #eef2f6; border-radius: 16px; 
+    padding: 0 50px 0 20px; font-size: 18px; font-weight: 800; color: var(--s-slate); 
+    outline: none; transition: 0.4s; background: #fbfbfc;
+  }
+  .in-lux:focus { border-color: var(--s-emerald); background: #fff; box-shadow: 0 15px 30px rgba(0, 77, 57, 0.05); }
+  
+  .pct-unit { position: absolute; right: 20px; font-weight: 900; color: var(--s-emerald); font-size: 18px; pointer-events: none; }
+
+  /* --- Button Matrix --- */
+  .btn-execute {
+    height: 54px; padding: 0 35px; border-radius: 15px; background: var(--s-slate);
+    color: #fff; font-weight: 900; font-size: 12px; text-transform: uppercase;
+    letter-spacing: 2px; border: none; cursor: pointer; transition: 0.4s var(--s-ease);
+    display: inline-flex; align-items: center; gap: 12px;
+  }
+  .btn-execute:hover { background: var(--s-emerald); transform: translateY(-3px); box-shadow: 0 20px 40px rgba(0, 77, 57, 0.2); }
+
+  .btn-ghost {
+    height: 54px; padding: 0 25px; border-radius: 15px; background: #fff;
+    color: var(--s-muted); border: 1.5px solid var(--s-border); font-weight: 900;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; cursor: pointer; transition: 0.3s;
+  }
+  .btn-ghost:hover { border-color: var(--s-slate); color: var(--s-slate); }
+
+  /* --- Forensic Notice --- */
+  .audit-notice { 
+    margin-top: 30px; padding: 20px; border-radius: 18px; background: #fffbeb; 
+    border: 1px solid rgba(178, 142, 69, 0.2); display: flex; gap: 15px; align-items: center;
+  }
+  .audit-text { font-size: 11px; font-weight: 700; color: #92400e; line-height: 1.6; }
+
+  code { background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', monospace; font-weight: 900; color: var(--s-slate); }
+
+</style>
+
+<div class="settings-wrap wrap">
+  <div class="vault-card">
+    <header class="vault-header">
+      <span class="vault-sub">Infrastructure Control</span>
+      <h1 class="vault-h1">System Settings <span style="font-family:'Inter'; font-weight:600; opacity:0.2; font-size:20px;">— কন্ট্রোল</span></h1>
+    </header>
+
+    <form method="post">
+      <div class="field-box">
+        <label class="field-label">Protocol: Global Commission (Platform Fee)</label>
+        <div class="in-lux-wrapper">
+          <input class="in-lux" type="number" step="0.01" min="0" max="100" name="commission_pct" value="{{ commission_pct }}" required>
+          <span class="pct-unit">%</span>
+        </div>
+        <p class="vault-sub" style="margin-top:12px; color:var(--s-muted); font-size:9px;">
+          This value dictates the automatic fiscal deduction applied to all artisan settlements.
+        </p>
+      </div>
+
+      <div style="display:flex; gap:12px; align-items:center;">
+        <button class="btn-execute" type="submit">Commit Changes <i data-lucide="shield-check" size="18"></i></button>
+        <button class="btn-ghost" type="button" onclick="window.location.href='/superadmin/dashboard'">Abort Manifest</button>
+      </div>
+
+      <div class="audit-notice">
+        <div style="width:36px; height:36px; border-radius:10px; background:rgba(178, 142, 69, 0.1); color:var(--s-gold); display:grid; place-items:center; flex-shrink:0;"><i data-lucide="eye" size="18"></i></div>
+        <div class="audit-text">
+          <b>Sovereign Oversight:</b> Any modifications to this parameter are forensicly recorded in the <code>site_settings</code> manifest. Changes take immediate effect across all future acquisition cycles.
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+  /* ================================================================
+     ARTISAN INTERCOM: REFINED DIALOGUE (v1.1)
+     ================================================================ */
+
+  :root {
+    --c-bg: #f8fafc;
+    --c-card: #ffffff;
+    --c-indigo: #4f46e5;
+    --c-slate: #0f172a;
+    --c-border: rgba(15, 23, 42, 0.08);
+    --c-muted: #64748b;
+    --c-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  .chat-page-wrap { 
+    padding: 30px 15px; 
+    background-color: var(--c-bg); 
+    min-height: 90vh; 
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* --- Navigation Architecture --- */
+  .chat-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 25px; width: 100%; max-width: 900px; margin-left: auto; margin-right: auto;
+  }
+  .chat-h1 { font-family: 'Outfit', sans-serif; font-size: 24px; font-weight: 900; letter-spacing: -1px; color: var(--c-slate); }
+  .chat-sub { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 2.5px; color: var(--c-indigo); display: block; margin-bottom: 4px; }
+
+  /* --- Interaction Card --- */
+  .chat-terminal {
+    background: var(--c-card); border-radius: 28px; border: 1px solid var(--c-border);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08); overflow: hidden;
+    width: 100%; max-width: 900px; margin: 0 auto; height: 70vh; display: flex; flex-direction: column;
+  }
+
+  /* --- Messaging Viewport --- */
+  .chat-viewport {
+    flex: 1; overflow-y: auto; padding: 30px; background: #fcfcfd;
+    background-image: radial-gradient(rgba(15, 23, 42, 0.04) 1.2px, transparent 1.2px);
+    background-size: 24px 24px;
+    display: flex; flex-direction: column; gap: 16px; scroll-behavior: smooth;
+  }
+
+  /* Chat Bubbles Physics */
+  .msg { 
+    max-width: 80%; display: flex; flex-direction: column; position: relative; 
+    animation: slideIn 0.3s var(--c-ease) forwards;
+  }
+  .msg.me { align-self: flex-end; align-items: flex-end; }
+  .msg.other { align-self: flex-start; align-items: flex-start; }
+
+  .bubble {
+    padding: 14px 20px; border-radius: 20px; font-size: 14px; line-height: 1.6; font-weight: 500;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+  }
+  .me .bubble { background: var(--c-indigo); color: #fff; border-bottom-right-radius: 4px; box-shadow: 0 8px 20px -6px rgba(79, 70, 229, 0.4); }
+  .other .bubble { background: #fff; color: var(--c-slate); border: 1px solid var(--c-border); border-bottom-left-radius: 4px; }
+
+  /* --- Input Terminal --- */
+  .chat-control {
+    padding: 20px 30px; background: #fff; border-top: 1px solid var(--c-border);
+    display: flex; gap: 12px; align-items: center;
+  }
+  .in-lux {
+    flex: 1; height: 50px; border: 2px solid #f1f5f9; border-radius: 16px;
+    padding: 0 20px; font-size: 15px; font-weight: 600; outline: none;
+    transition: 0.3s; background: #fbfbfc;
+  }
+  .in-lux:focus { border-color: var(--c-indigo); background: #fff; box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.05); }
+
+  .btn-send {
+    height: 50px; width: 50px; border-radius: 16px; background: var(--c-slate);
+    color: #fff; border: none; cursor: pointer; transition: 0.3s;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .btn-send:hover { background: var(--c-indigo); transform: scale(1.05); }
+
+  @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  
+  /* Scrollbar Polish */
+  .chat-viewport::-webkit-scrollbar { width: 4px; }
+  .chat-viewport::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+
+  @media (max-width: 600px) {
+    .chat-terminal { height: 80vh; border-radius: 20px; }
+    .msg { max-width: 90%; }
+    .chat-h1 { font-size: 20px; }
+  }
+</style>
+
+<div class="chat-page-wrap wrap">
+  <header class="chat-nav">
+    <div>
+      <span class="chat-sub">Authorized Boutique Line</span>
+      <h1 class="chat-h1">Direct Support Link</h1>
+    </div>
+    <a href="javascript:history.back()" style="text-decoration: none; color: var(--c-muted); font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+      <i data-lucide="x-circle" size="20"></i> DISMISS
+    </a>
+  </header>
+
+  <div class="chat-terminal">
+    <div id="box" class="chat-viewport">
+      <div style="margin:auto; text-align:center; opacity:0.3; padding: 40px;">
+        <i data-lucide="shield-check" size="48" style="color: var(--c-indigo);"></i>
+        <div style="font-weight:900; letter-spacing:2px; margin-top:15px; font-size:10px; text-transform:uppercase;">Protocol Active • Secured Thread</div>
+      </div>
+    </div>
+
+    <div class="chat-control">
+      <input id="inp" class="in-lux" placeholder="Type your message..." autocomplete="off" />
+      <button id="send" class="btn-send"><i data-lucide="send" size="18"></i></button>
+    </div>
+    <div id="status" style="padding: 0 30px 10px; font-size: 11px; color: var(--c-indigo); font-weight: 700; min-height: 25px;"></div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  const box = document.getElementById('box');
+  const inp = document.getElementById('inp');
+  const status = document.getElementById('status');
+  let afterId = 0;
+
+  function scrollToBottom() {
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function addMsg(role, body) {
+    if(box.querySelector('[style*="margin:auto"]')) box.innerHTML = '';
+
+    const row = document.createElement('div');
+    const isMe = (role === 'buyer');
+    row.className = 'msg ' + (isMe ? 'me' : 'other');
+    
+    const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const safeBody = body.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    
+    row.innerHTML = `
+      <div class="bubble">${safeBody}</div>
+      <div style="font-size:9px; font-weight:800; color:var(--c-muted); margin-top:4px; opacity:0.6;">${timestamp}</div>
+    `;
+    
+    box.appendChild(row);
+    scrollToBottom();
+  }
+
+  async function poll() {
+    try {
+      const res = await fetch(`/api/chat/seller/messages?seller_id={{ seller_id }}&after_id=${afterId}`);
+      const data = await res.json();
+      const msgs = data.messages || [];
+      msgs.forEach(m => {
+        afterId = Math.max(afterId, m.id || 0);
+        addMsg(m.role, m.body);
+      });
+    } catch(e) { console.warn("Sync interrupted."); }
+    setTimeout(poll, 2500);
+  }
+
+  async function send() {
+    const body = inp.value.trim();
+    if(!body) return;
+    
+    inp.value = '';
+    status.textContent = 'Transmitting...';
+    
+    try {
+      const res = await fetch('/api/chat/seller/send', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ seller_id: {{ seller_id }}, body })
+      });
+      if(res.ok) {
+        status.textContent = '';
+      }
+    } catch(e) { 
+      status.textContent = 'Failed to transmit.'; 
+    }
+  }
+
+  document.getElementById('send').addEventListener('click', send);
+  inp.addEventListener('keydown', (e) => { if(e.key === 'Enter') send(); });
+
+  lucide.createIcons();
+  poll();
+</script>
+
+{% endblock %}

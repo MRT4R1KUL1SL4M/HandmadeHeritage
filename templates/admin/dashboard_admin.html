@@ -1,0 +1,248 @@
+{% extends "admin/admin_base.html" %}
+{% set title = 'Admin Overview' %}
+{% set page_title = 'Operational Hub' %}
+{% set page_sub = 'High-density governance & real-time audit trail.' %}
+
+{% block body %}
+
+<style>
+  /* ================================================================
+     ADMIN OPERATIONAL HUB: SOVEREIGN EDITION (v3.5)
+     THEME: #f7f0e8 (Luxury Cream) | PALETTE: Slate, Sage & Gold
+     REFINEMENT: Supreme Rounding & High-Fidelity Breathing Room
+     ================================================================ */
+  
+  :root {
+    --adm-bg: #f7f0e8;
+    --adm-surface: #fdfaf7;
+    --adm-card: #ffffff;
+    --adm-slate: #ACBAC4;
+    --adm-sage: #006a4e; 
+    --adm-dark: #1a202c;
+    --adm-gold: #b28e45;
+    --adm-border: rgba(172, 186, 196, 0.25);
+    --adm-shadow: 0 40px 100px -20px rgba(0,0,0,0.05);
+    --adm-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* --- Outer Wrapper --- */
+  .dashboard-wrap { 
+    padding: 10px 10px 50px; 
+    font-family: 'Inter', sans-serif; 
+  }
+
+  /* --- Compact KPI Grid --- */
+  .mini-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  .mini-kpi-card {
+    background: var(--adm-card); 
+    padding: 25px 30px; 
+    border-radius: 28px;
+    border: 1px solid var(--adm-border); 
+    transition: 0.4s var(--adm-ease);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+  }
+  .mini-kpi-card:hover { 
+    border-color: var(--adm-sage); 
+    transform: translateY(-5px); 
+    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+  }
+  .k-label { 
+    font-weight: 950; 
+    font-size: 10px; 
+    color: var(--adm-slate); 
+    text-transform: uppercase; 
+    letter-spacing: 2px; 
+    margin-bottom: 12px; 
+  }
+  .k-val { 
+    font-size: 32px; 
+    font-weight: 900; 
+    color: var(--adm-dark); 
+    line-height: 1; 
+    letter-spacing: -1.5px; 
+  }
+
+  /* --- Layout Architecture --- */
+  .adm-main-layout { 
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 30px; 
+    align-items: start; 
+  }
+
+  /* --- Sovereign Modules --- */
+  .adm-module {
+    background: var(--adm-card); 
+    border-radius: 40px; 
+    border: 1px solid var(--adm-border);
+    padding: 40px; 
+    box-shadow: var(--adm-shadow);
+  }
+  .mod-head { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 25px; 
+    padding-bottom: 15px; 
+    border-bottom: 1.5px solid #f8fafc; 
+  }
+  .mod-h { 
+    font-family: 'Playfair Display', serif; 
+    font-weight: 900; 
+    font-size: 22px; 
+    color: var(--adm-dark); 
+    letter-spacing: -0.5px; 
+  }
+
+  /* --- List Rows --- */
+  .mini-row {
+    padding: 18px 22px; 
+    border-radius: 20px; 
+    background: var(--adm-surface);
+    border: 1px solid transparent; 
+    margin-bottom: 12px; 
+    transition: 0.3s var(--adm-ease);
+  }
+  .mini-row:hover { 
+    background: #fff; 
+    border-color: var(--adm-sage); 
+    transform: translateX(5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.02);
+  }
+
+  /* --- Messaging Specifics --- */
+  .msg-node { display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; }
+  .msg-h { font-weight: 850; font-size: 15px; color: var(--adm-dark); margin-bottom: 4px; }
+  .msg-p { font-size: 13px; color: #64748b; font-weight: 500; line-height: 1.5; }
+  .unread-dot { 
+    padding: 4px 10px; 
+    background: var(--adm-sage); 
+    color: #fff; 
+    border-radius: 8px; 
+    font-size: 10px; 
+    font-weight: 950; 
+  }
+
+  /* --- Audit Items --- */
+  .audit-item { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 15px 5px; 
+    border-bottom: 1px solid #f8fafc; 
+  }
+  .audit-h { font-weight: 900; font-size: 13px; color: var(--adm-dark); }
+  .audit-s { 
+    font-size: 10px; 
+    font-weight: 850; 
+    color: var(--adm-slate); 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    margin-top: 2px;
+  }
+  .audit-time { font-size: 11px; font-weight: 800; color: var(--adm-slate); opacity: 0.7; }
+
+  @media (max-width: 1100px) { 
+    .mini-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .adm-main-layout { grid-template-columns: 1fr; } 
+  }
+</style>
+
+<div class="dashboard-wrap">
+  <!-- KPI Metrics Matrix -->
+  <div class="mini-kpi-grid">
+    <div class="mini-kpi-card">
+      <div class="k-label">KYC Queue</div>
+      <div class="k-val">{{ ops.kyc_pending|default(0) }}</div>
+    </div>
+    <div class="mini-kpi-card">
+      <div class="k-label">Monetary Audit</div>
+      <div class="k-val">{{ ops.pay_submitted|default(0) }}</div>
+    </div>
+    <div class="mini-kpi-card">
+      <div class="k-label">Logistics Alert</div>
+      <div class="k-val" style="color: var(--adm-gold);">{{ ops.orders_attention|default(0) }}</div>
+    </div>
+    <div class="mini-kpi-card">
+      <div class="k-label">Support Load</div>
+      <div class="k-val" style="color: var(--adm-sage);">{{ ops.support_open|default(0) }}</div>
+    </div>
+  </div>
+
+  <div class="adm-main-layout">
+    <!-- Section: Support Manifest -->
+    <div class="adm-module">
+      <div class="mod-head">
+        <div class="mod-h">Live Support Manifest</div>
+        <a href="/admin/messages" style="font-weight: 950; font-size: 11px; color: var(--adm-gold); text-decoration: none; text-transform: uppercase; letter-spacing: 1.5px;">
+          View Full Inbox <i data-lucide="arrow-right" size="12" style="vertical-align: middle;"></i>
+        </a>
+      </div>
+      
+      {% if threads %}
+        {% for t in threads[:5] %}
+          <a class="mini-row" href="/admin/messages" style="display:block; text-decoration:none;">
+            <div class="msg-node">
+              <div style="flex: 1; min-width: 0;">
+                <div class="msg-h">{{ t.buyer_name or 'Artisan Collector' }}</div>
+                <div class="msg-p">{{ t.last_message[:80]|default('Awaiting response...') }}...</div>
+              </div>
+              <div style="text-align: right; flex-shrink: 0;">
+                {% if t.unread_count|int > 0 %}
+                  <span class="unread-dot">{{ t.unread_count }}</span>
+                {% endif %}
+                <div style="font-size: 10px; color: var(--adm-slate); margin-top: 8px; font-weight: 800; text-transform: uppercase;">
+                  {{ t.last_at }}
+                </div>
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      {% else %}
+        <div style="padding: 40px; text-align: center; opacity: 0.4;">
+          <i data-lucide="message-square-off" size="32"></i>
+          <div style="font-weight: 900; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-top: 15px;">No active threads in registry</div>
+        </div>
+      {% endif %}
+    </div>
+    
+    <!-- Section: Governance Log -->
+    <div class="adm-module">
+      <div class="mod-head">
+        <div class="mod-h">System Governance Log</div>
+        <i data-lucide="scroll-text" size="18" style="opacity: 0.3;"></i>
+      </div>
+      
+      {% if activity %}
+        {% for l in activity[:7] %}
+          <div class="audit-item">
+            <div>
+              <div class="audit-h">{{ (l.action|replace('_', ' ')|title) }}</div>
+              <div class="audit-s">{{ l.actor_role|default('STAFF') }} ACCESS AUTHORIZED</div>
+            </div>
+            <div class="audit-time">{{ l.created_at }}</div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div style="padding: 40px; text-align: center; opacity: 0.4;">
+          <i data-lucide="database-zap" size="32"></i>
+          <div style="font-weight: 900; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-top: 15px;">Awaiting activity manifestation</div>
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    if(window.lucide) lucide.createIcons();
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,324 @@
+{% extends 'superadmin/superadmin_base.html' %}
+{% block body %}
+
+<style>
+  /* ================================================================
+     SUPREME COMMAND INTERCOM: THREAD MONITOR (v36.5)
+     THEME: Obsidian Slate, Heritage Emerald & Royal Gold
+     REFINEMENT: Increased whitespace, balanced haptics, and padding fixes.
+     ================================================================ */
+
+  :root {
+    --c-bg: #f8fafc;
+    --c-card: #ffffff;
+    --c-slate: #0f172a;
+    --c-emerald: #004d39;
+    --c-gold: #b28e45;
+    --c-border: rgba(15, 23, 42, 0.08);
+    --c-muted: #64748b;
+    --c-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  /* --- Balanced Outer Wrapper --- */
+  .chat-wrap { 
+    padding: 20px 5px 40px; 
+    font-family: 'Inter', sans-serif; 
+    background-color: var(--c-bg); 
+  }
+
+  /* --- Cinematic Sovereign Header --- */
+  .chat-header {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-end;
+    margin-bottom: 30px; 
+    border-bottom: 1.5px solid var(--c-border); 
+    padding-bottom: 25px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .chat-h1 { font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 950; letter-spacing: -1.2px; color: var(--c-slate); }
+  .chat-sub { font-size: 10px; font-weight: 950; text-transform: uppercase; letter-spacing: 3px; color: var(--c-gold); display: block; margin-bottom: 8px; }
+
+  /* --- Command Terminal Card (Added Margin & Shadow Refinement) --- */
+  .chat-card { 
+    background: #ffffff; 
+    border-radius: 35px; 
+    border: 1.5px solid var(--c-border); 
+    box-shadow: 0 50px 100px -30px rgba(0,0,0,0.04), 0 10px 20px -5px rgba(0,0,0,0.02); 
+    overflow: hidden;
+    height: calc(100vh - 260px); 
+    min-height: 680px; 
+    display: flex; 
+    flex-direction: column;
+    position: relative;
+    z-index: 5;
+    margin: 0 10px; /* Sides theke ektu gapp dewar jonno */
+  }
+
+  /* --- Messaging Core: Blueprint Physics --- */
+  .chat-box { 
+    flex: 1; 
+    overflow-y: auto; 
+    padding: 50px 60px; /* Padding barano hoyeche whitespace baranor jonno */
+    background: #fcfbf9;
+    background-image: radial-gradient(var(--c-border) 1.2px, transparent 1.2px);
+    background-size: 32px 32px; /* Pattern ektu spread kora holo */
+    display: flex; 
+    flex-direction: column; 
+    gap: 24px; /* Message-er majhe gap barano hoyeche */
+    scroll-behavior: smooth;
+  }
+
+  /* Chat Bubbles */
+  .msg { display: flex; flex-direction: column; max-width: 75%; position: relative; }
+  .msg.me { align-self: flex-end; }
+  .msg.other { align-self: flex-start; }
+
+  .bubble { 
+    padding: 18px 26px; 
+    border-radius: 26px; 
+    font-size: 15px; 
+    line-height: 1.7; 
+    font-weight: 500;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.01); 
+    transition: 0.3s var(--c-ease);
+  }
+  .me .bubble { 
+    background: var(--c-slate); 
+    color: #fff; 
+    border-bottom-right-radius: 6px; 
+  }
+  .other .bubble { 
+    background: #fff; 
+    color: var(--c-slate); 
+    border: 1.5px solid #eef2f7; 
+    border-bottom-left-radius: 6px; 
+  }
+
+  /* --- Input Architecture (Added Breathing Room) --- */
+  .chat-footer {
+    padding: 30px 50px; 
+    background: #fff; 
+    border-top: 1.5px solid #f1f5f9;
+    display: flex; 
+    gap: 20px; 
+    align-items: center;
+  }
+  .in-chat {
+    flex: 1; 
+    height: 62px; /* Height barano hoyeche premium feel-er jonno */
+    border: 2px solid #eef2f7; 
+    border-radius: 20px;
+    padding: 0 30px; 
+    font-size: 15.5px; 
+    font-weight: 600; 
+    outline: none;
+    transition: 0.4s var(--c-ease); 
+    background: #fbfbfc;
+  }
+  .in-chat:focus { 
+    border-color: var(--c-gold); 
+    background: #fff; 
+    box-shadow: 0 15px 35px rgba(178,142,69,0.06); 
+    transform: translateY(-2px);
+  }
+
+  .btn-transmit {
+    height: 62px; 
+    padding: 0 40px; 
+    border-radius: 20px; 
+    background: var(--c-gold);
+    color: #fff; 
+    font-weight: 950; 
+    text-transform: uppercase; 
+    letter-spacing: 2px;
+    border: none; 
+    cursor: pointer; 
+    transition: 0.4s var(--c-ease);
+    display: flex; 
+    align-items: center; 
+    gap: 12px;
+  }
+  .btn-transmit:hover { 
+    background: var(--c-slate); 
+    transform: translateY(-3px) scale(1.02); 
+    box-shadow: 0 15px 30px rgba(15, 23, 42, 0.15);
+  }
+
+  /* --- Surveillance Overlays --- */
+  .read-only-shield {
+    padding: 30px; 
+    background: #fffbeb; 
+    border-top: 2px solid rgba(178, 142, 69, 0.1);
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 15px;
+    color: var(--c-gold); 
+    font-weight: 950; 
+    font-size: 11px; 
+    text-transform: uppercase; 
+    letter-spacing: 2.5px;
+  }
+
+  .nav-chip {
+    padding: 10px 22px; 
+    border-radius: 100px; 
+    background: #fff; 
+    border: 1.5px solid var(--c-border);
+    text-decoration: none; 
+    font-size: 11px; 
+    font-weight: 900; 
+    color: var(--c-muted);
+    text-transform: uppercase; 
+    letter-spacing: 1.5px; 
+    transition: 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-chip:hover { border-color: var(--c-gold); color: var(--c-gold); transform: translateY(-2px); }
+
+</style>
+
+<div class="chat-wrap wrap">
+  <header class="chat-header">
+    <div>
+      <span class="chat-sub">Sovereign Oversight Protocol</span>
+      <h1 class="chat-h1">Interaction Monitor <span style="font-family:'Inter'; font-weight:600; opacity:0.2; font-size:18px;">— থ্রেড #{{ head.id if head is mapping else head[0] }}</span></h1>
+      
+      <div style="margin-top:15px; display:flex; align-items:center; gap:20px;">
+        {% if readonly %}
+          <span class="nav-chip" style="background:#fffbeb; color:var(--c-gold); border-color:rgba(178,142,69,0.2);">
+            <i data-lucide="shield-eye" size="14"></i> Surveillance Mode
+          </span>
+          <div style="font-size:11.5px; font-weight:800; color:var(--c-muted);">
+            Buyer: <b style="color:var(--c-slate);">{{ head.buyer_name if head is mapping else head[8] }}</b> • 
+            Seller: <b style="color:var(--c-slate);">{{ head.seller_name if head is mapping else head[9] }}</b>
+            {% if (head.order_code if head is mapping else head[10]) %}
+              • Manifest: <b style="color:var(--m-gold);">#{{ head.order_code if head is mapping else head[10] }}</b>
+            {% endif %}
+          </div>
+        {% else %}
+          <span class="nav-chip" style="background:#f0fdf4; color:var(--c-emerald); border-color:rgba(0,77,57,0.1);">
+            <i data-lucide="message-square" size="14"></i> Active Support
+          </span>
+          <div style="font-size:11.5px; font-weight:800; color:var(--c-muted);">
+            User: <b style="color:var(--c-slate);">{{ head.name if head is mapping else head[7] }}</b> 
+            <span style="opacity:0.6; margin-left:5px;">({{ head.email if head is mapping else head[8] }})</span>
+            • Classification: <span style="color:var(--c-gold); font-weight:900;">{{ (head.type|upper) if head.type else 'GENERAL' }}</span>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div style="display:flex; gap:12px;">
+      <a class="nav-chip" href="/superadmin/support-inbox"><i data-lucide="arrow-left" size="14"></i> Return</a>
+      <a class="nav-chip" href="/superadmin/dashboard"><i data-lucide="layout-grid" size="14"></i> Hub</a>
+    </div>
+  </header>
+
+  <div class="chat-card">
+    <div id="chatLog" class="chat-box">
+      <!-- Conversation history poll result -->
+    </div>
+
+    {% if not readonly %}
+      <div class="chat-footer">
+        <input id="inp" class="in-chat" placeholder="Enter sovereign response manifest..." autocomplete="off" />
+        <button id="send" class="btn-transmit">
+          <span>Transmit</span>
+          <i data-lucide="send" size="16"></i>
+        </button>
+      </div>
+      <div id="status" style="padding: 0 50px 20px 50px; font-size:10px; font-weight:900; color:var(--c-gold); text-transform:uppercase; letter-spacing:1.5px; opacity:0.8;"></div>
+    {% else %}
+      <div class="read-only-shield">
+        <i data-lucide="lock" size="18"></i> 
+        Confidential Asset Oversight: Read-Only Privilege Active
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', () => { if(window.lucide) lucide.createIcons(); });
+
+  const cid = {{ (head.id if head is mapping else head[0]) | tojson }};
+  const readonly = {{ 'true' if readonly else 'false' }};
+  const log = document.getElementById('chatLog');
+  let afterId = 0;
+
+  function esc(s){ return (s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+  function add(role, body){
+    if(!log) return;
+    const row = document.createElement('div');
+    const me = (role==='admin' || role==='superadmin');
+    row.className = 'msg ' + (me ? 'me' : 'other');
+    
+    const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    
+    row.innerHTML = `
+      <div class="bubble">${esc(body)}</div>
+      <div style="font-size:9.5px; font-weight:800; color:var(--c-muted); margin-top:8px; align-self: ${me?'flex-end':'flex-start'}; opacity:0.7; letter-spacing:0.5px;">
+        ${role.toUpperCase()} • ${timestamp}
+      </div>
+    `;
+    
+    log.appendChild(row);
+    log.scrollTo({ top: log.scrollHeight, behavior: 'smooth' });
+  }
+
+  async function poll(){
+    try{
+      const res = await fetch(`/api/admin/support/messages?conversation_id=${cid}&after_id=${afterId}`);
+      const data = await res.json();
+      const msgs = data.messages || [];
+      for(const m of msgs){
+        afterId = Math.max(afterId, m.id||0);
+        add(m.role, m.body);
+      }
+    }catch(e){}
+    setTimeout(poll, 2500);
+  }
+
+  async function send(){
+    if(readonly) return;
+    const inp = document.getElementById('inp');
+    const status = document.getElementById('status');
+    const body = (inp.value||'').trim();
+    if(!body) return;
+    
+    inp.value='';
+    add('superadmin', body);
+    status.textContent = 'Transmitting Manifest...';
+    
+    try{
+      const res = await fetch('/api/admin/support/send', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({conversation_id: cid, body})
+      });
+      if(!res.ok) throw new Error();
+      status.textContent = 'Transmission Authorized.';
+      setTimeout(() => status.textContent = '', 2000);
+    }catch(e){
+      status.style.color = '#ef4444';
+      status.textContent = 'PROTOCOL ERROR: Transmission Failed.';
+    }
+  }
+
+  if(!readonly){
+    const sBtn = document.getElementById('send');
+    const sInp = document.getElementById('inp');
+    if(sBtn) sBtn.addEventListener('click', send);
+    if(sInp) sInp.addEventListener('keydown', (e)=>{ if(e.key==='Enter') send(); });
+  }
+
+  poll();
+</script>
+
+{% endblock %}

@@ -1,0 +1,251 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<style>
+  /* -------- SNAP-SCROLL & STABLE SIDEBAR: AUTHORITATIVE EDITION -------- */
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Inter:wght@400;600;700;800&family=Hind+Siliguri:wght@400;700&display=swap');
+
+  :root {
+    --p-green: #004d39;
+    --p-gold: #b28e45;
+    --p-dark: #0a0a0a;
+    --header-height: 120px;
+    --p-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  /* SNAP SCROLL FIX: Ensuring Footer Visibility */
+  html {
+    scroll-behavior: smooth;
+    scroll-snap-type: y proximity; /* Mandatory theke Proximity kora hoyeche jate footer allow kore */
+  }
+
+  .policy-master-wrap {
+    background-color: #fcfbf9;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+  }
+
+  /* SIDEBAR: STABLE CENTER LEFT */
+  .sidebar-container {
+    position: fixed;
+    left: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    width: 280px;
+    pointer-events: none;
+  }
+
+  .policy-sidebar-lux {
+    pointer-events: auto;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(40px);
+    border-radius: 30px;
+    padding: 30px;
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+  }
+
+  .sidebar-label {
+    font-weight: 900; font-size: 10px; text-transform: uppercase;
+    letter-spacing: 2px; color: var(--p-gold); margin-bottom: 20px;
+  }
+
+  .toc-link {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 0; color: #71717a; font-weight: 700;
+    text-decoration: none; font-size: 13px;
+    transition: all 0.4s var(--p-ease);
+    border-bottom: 1px solid rgba(0,0,0,0.02);
+  }
+  
+  .toc-link:hover, .toc-link.active { color: var(--p-dark); transform: translateX(8px); }
+  .toc-link.active { color: var(--p-green); border-bottom-color: var(--p-green); }
+
+  /* FULL SCREEN SECTIONS */
+  .policy-section-lux {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 100px 100px 100px 380px;
+    scroll-snap-align: start; /* Snap point */
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+    opacity: 0.2;
+    transition: opacity 0.8s ease;
+  }
+  
+  .policy-section-lux.active { opacity: 1; }
+
+  .policy-section-lux h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 900; color: var(--p-dark);
+    margin-bottom: 25px;
+    letter-spacing: -1.5px;
+  }
+
+  .bn-lux { font-family: 'Hind Siliguri'; font-size: 18px; color: #a1a1aa; margin-left: 15px; font-weight: 600; }
+
+  .policy-text {
+    max-width: 850px;
+    color: #1f2937;
+    font-size: 18px;
+    line-height: 1.8;
+    font-weight: 500;
+  }
+
+  .policy-list { margin: 30px 0; padding: 0; list-style: none; }
+  .policy-list li {
+    padding: 15px 0 15px 35px; position: relative;
+    font-weight: 700; font-size: 16px; color: var(--p-dark);
+    border-bottom: 1px solid rgba(0,0,0,0.02);
+  }
+  .policy-list li::before {
+    content: ""; position: absolute; left: 0; top: 24px; 
+    width: 20px; height: 2px; background: var(--p-gold);
+  }
+
+  /* Signature Block */
+  .signature-block {
+    margin-top: 50px;
+    padding-top: 30px;
+    border-top: 2px solid var(--p-gold);
+    max-width: 400px;
+  }
+  .sig-name { font-family: 'Playfair Display'; font-size: 24px; font-weight: 900; color: var(--p-dark); }
+  .sig-title { font-weight: 800; font-size: 12px; text-transform: uppercase; color: var(--p-gold); letter-spacing: 1px; margin-top: 5px; }
+
+  /* Progress Bar */
+  .reading-progress {
+    position: fixed; top: 0; left: 0; width: 0%; height: 6px;
+    background: linear-gradient(90deg, var(--p-green), var(--p-gold));
+    z-index: 2001;
+  }
+
+  /* Fix for letting the scroll reach the end */
+  .policy-footer-gap {
+    height: 0px; 
+    scroll-snap-align: end; /* This allows the snap to complete at the bottom */
+  }
+
+  @media (max-width: 1100px) {
+    .sidebar-container { display: none; }
+    .policy-section-lux { padding: 80px 30px; }
+  }
+</style>
+
+<div class="reading-progress" id="progressBar"></div>
+
+<div class="sidebar-container">
+  <aside class="policy-sidebar-lux">
+    <div class="sidebar-label">LEGAL PROTOCOL</div>
+    <nav id="sidebarNav">
+      <a href="#governance" class="toc-link active"><i data-lucide="shield-alert"></i> Governance</a>
+      <a href="#identity" class="toc-link"><i data-lucide="fingerprint"></i> Identity</a>
+      <a href="#provenance" class="toc-link"><i data-lucide="award"></i> Provenance</a>
+      <a href="#logistics" class="toc-link"><i data-lucide="anchor"></i> Logistics</a>
+      <a href="#compliance" class="toc-link"><i data-lucide="check-square"></i> Compliance</a>
+    </nav>
+  </aside>
+</div>
+
+<section class="policy-master-wrap">
+  
+  <article id="governance" class="policy-section-lux active">
+    <h2>Mandatory Governance <span class="bn-lux">আইনি শাসন</span></h2>
+    <div class="policy-text">
+      This document constitutes a <strong>legally binding agreement</strong> between you and Handmade Heritage. Accessing this platform implies absolute consent to these protocols. Any breach of these terms will result in immediate legal escalation and termination of access.
+    </div>
+  </article>
+
+  <article id="identity" class="policy-section-lux">
+    <h2>Strict Identity Protocol <span class="bn-lux">একাউন্ট সত্যতা</span></h2>
+    <div class="policy-text">
+      Handmade Heritage maintains a <strong>Zero-Tolerance Policy</strong> for fraudulent accounts. 
+      <ul class="policy-list">
+        <li>Every user is strictly liable for the security of their credentials.</li>
+        <li>Automated bots or non-human entities are prohibited and will be permanently banned.</li>
+        <li>Misrepresentation of identity is a direct violation of platform integrity.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article id="provenance" class="policy-section-lux">
+    <h2>Artisan Provenance <span class="bn-lux">পণ্যের সত্যতা</span></h2>
+    <div class="policy-text">
+      Authenticity is not optional. We exclusively host verified, master-crafted artifacts.
+      <ul class="policy-list">
+        <li>The sale of mass-produced industrial replicas is strictly forbidden.</li>
+        <li>Counterfeit items will be seized from the gallery without notice.</li>
+        <li>Sellers must provide indisputable evidence of artisan origin upon request.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article id="logistics" class="policy-section-lux">
+    <h2>Global Trade Logistics <span class="bn-lux">বৈশ্বিক লজিস্টিক</span></h2>
+    <div class="policy-text">
+      International commerce is governed by strict trade compliance. 
+      <ul class="policy-list">
+        <li>All customs duties and local taxes are the <strong>sole legal responsibility</strong> of the buyer.</li>
+        <li>Transaction finality is reached immediately upon payment authentication.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article id="compliance" class="policy-section-lux">
+    <h2>Legal Compliance <span class="bn-lux">আইনি সম্মতি</span></h2>
+    <div class="policy-text">
+      Handmade Heritage operates under the highest standards of digital and commercial safety. 
+      
+      <div class="signature-block">
+        <div class="sig-name">Md. Tarikul Islam</div>
+        <div class="sig-title">Owner of Handmade Heritage</div>
+      </div>
+    </div>
+  </article>
+
+  <div class="policy-footer-gap"></div>
+
+</section>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+
+    const sections = document.querySelectorAll('.policy-section-lux');
+    const navLinks = document.querySelectorAll('.toc-link');
+    const progressBar = document.getElementById('progressBar');
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          sections.forEach(s => s.classList.remove('active'));
+          entry.target.classList.add('active');
+
+          const currentId = entry.target.getAttribute('id');
+          navLinks.forEach(link => {
+            if (link.getAttribute('href') === `#${currentId}`) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+          });
+        }
+      });
+    }, { threshold: 0.5 });
+
+    sections.forEach(s => revealObserver.observe(s));
+
+    window.onscroll = () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      progressBar.style.width = scrolled + "%";
+    };
+  });
+</script>
+
+{% endblock %}

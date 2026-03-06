@@ -1,0 +1,263 @@
+{% extends "admin/admin_base.html" %}
+{% block body %}
+
+<style>
+  /* ================================================================
+     ARTISAN REGISTRY: ELITE SELLER GOVERNANCE (v9.5)
+     THEME: #f7f0e8 (Luxury Cream) | PALETTE: Slate, Sage & Gold
+     REFINEMENT: Supreme Rounding & High-Fidelity Breathing Room
+     ================================================================ */
+
+  :root {
+    --s-bg: #f7f0e8;
+    --s-surface: #fdfaf7;
+    --s-card: #ffffff;
+    --s-primary: #1a202c;
+    --s-emerald: #004d39;
+    --s-gold: #b28e45;
+    --s-border: rgba(172, 186, 196, 0.25);
+    --s-muted: #64748b;
+    --s-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* --- Hide redundant Base Title --- */
+  .super-topbar { display: none !important; }
+
+  .registry-wrap { 
+    padding: 20px 15px 60px; 
+    font-family: 'Inter', sans-serif; 
+    background-color: var(--s-bg);
+  }
+
+  /* --- Cinematic Header --- */
+  .reg-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 35px; border-bottom: 2px solid var(--s-border); padding-bottom: 25px;
+    padding-left: 10px; padding-right: 10px;
+  }
+  .reg-h1 { font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 950; letter-spacing: -1.5px; color: var(--s-primary); }
+  
+  /* --- Precision Filter Surface (Enhanced Rounding) --- */
+  .filter-surface {
+    display: flex; gap: 15px; flex-wrap: wrap; align-items: center;
+    background: var(--s-card); padding: 25px 40px; border-radius: 30px;
+    border: 1px solid var(--s-border); box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+    margin-bottom: 30px; margin-left: 10px; margin-right: 10px;
+  }
+  .in-lux {
+    border: 2px solid #eef2f6; border-radius: 14px; padding: 0 18px;
+    height: 48px; font-size: 14px; font-weight: 700; color: var(--s-primary); outline: none;
+    transition: 0.4s var(--s-ease); background: var(--s-surface);
+  }
+  .in-lux:focus { border-color: var(--s-gold); background: #fff; box-shadow: 0 12px 25px rgba(178, 142, 69, 0.05); transform: translateY(-2px); }
+
+  /* --- Data Architecture (Supreme Rounding) --- */
+  .reg-card { 
+    background: var(--s-card); border-radius: 40px; border: 1px solid var(--s-border); 
+    box-shadow: 0 40px 100px -20px rgba(0,0,0,0.05); overflow: hidden; 
+    margin: 0 10px;
+  }
+  
+  .table-lux { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .table-lux thead th {
+    background: #f8fafc; padding: 22px 30px; text-align: left;
+    font-weight: 950; text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--s-muted); border-bottom: 1.5px solid var(--s-border); font-size: 10px;
+  }
+  .table-lux tbody tr { border-bottom: 1px solid #f1f5f9; transition: 0.3s; }
+  .table-lux tbody tr:hover { background: rgba(0, 106, 78, 0.02); }
+  .table-lux td { padding: 24px 30px; vertical-align: middle; }
+
+  /* --- Status Badges --- */
+  .st-pill { 
+    padding: 6px 14px; border-radius: 10px; font-weight: 950; font-size: 10px; 
+    text-transform: uppercase; letter-spacing: 1px; display: inline-block; 
+    border: 1.5px solid transparent;
+  }
+  .st-pending { background: #fff7ed; color: #c2410c; border-color: #ffedd5; }
+  .st-approved { background: #ecfdf5; color: var(--s-emerald); border-color: #d1fae5; }
+  .st-rejected { background: #fef2f2; color: #b91c1c; border-color: #fee2e2; }
+
+  /* --- Action Buttons --- */
+  .btn-lux {
+    height: 42px; padding: 0 18px; border-radius: 12px; font-weight: 950; font-size: 11px;
+    cursor: pointer; border: 1.5px solid #e2e8f0; background: #fff; color: var(--s-primary);
+    text-transform: uppercase; letter-spacing: 1.5px; transition: 0.3s var(--s-ease);
+    display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+  }
+  .btn-lux:hover { border-color: var(--s-emerald); color: var(--s-emerald); transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.05); }
+  .btn-lux-ok { background: var(--s-primary); color: #fff; border: none; }
+  .btn-lux-ok:hover { background: var(--s-emerald); color: #fff; }
+  .btn-lux-bad { border-color: rgba(185, 28, 28, 0.15); color: #b91c1c; background: #fffafb; }
+  .btn-lux-bad:hover { background: #b91c1c; color: #fff; border-color: #b91c1c; }
+
+  /* --- Elite Modal (Refined) --- */
+  .m-overlay { position: fixed; inset: 0; background: rgba(26, 32, 44, 0.85); backdrop-filter: blur(15px); display: none; align-items: center; justify-content: center; padding: 40px; z-index: 1000; }
+  .m-overlay.on { display: flex; animation: luxFade 0.5s var(--s-ease); }
+  .m-card { 
+    width: min(550px, 100%); background: #fff; border-radius: 40px; 
+    box-shadow: 0 50px 150px rgba(0,0,0,0.4); padding: 45px; position: relative;
+  }
+  .m-h { font-family: 'Playfair Display'; font-size: 28px; font-weight: 900; margin-bottom: 12px; color: var(--s-primary); }
+  .m-ta { 
+    width: 100%; min-height: 120px; border: 2px solid #eef2f6; border-radius: 20px; 
+    padding: 20px; outline: none; font-size: 14px; margin-top: 20px; font-family: 'Inter';
+    transition: 0.3s;
+  }
+  .m-ta:focus { border-color: var(--s-emerald); background: #fcfbf9; }
+
+  @keyframes luxFade { from { opacity: 0; transform: scale(0.97) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+</style>
+
+<div class="registry-wrap wrap">
+  
+  <header class="reg-header">
+    <div>
+      <h1 class="reg-h1">Artisan Registry <span style="font-family:'Inter'; opacity:0.2; font-weight:600; font-size:20px;">— বিক্রেতা তালিকা</span></h1>
+      <div style="margin-top:12px; font-size:11px; font-weight:900; color:var(--s-gold); text-transform:uppercase; letter-spacing:2px;">
+        High-fidelity seller auditing & lifecycle governance
+      </div>
+    </div>
+    <a href="/admin/dashboard" class="btn-lux" style="color:var(--s-gold); border-color:var(--s-border); border-radius:100px; padding:10px 25px;">
+      <i data-lucide="layout-grid" size="14"></i> Command Dashboard
+    </a>
+  </header>
+
+  <!-- Filter Surface -->
+  <form class="filter-surface" method="get" action="/admin/sellers">
+    <div style="display:flex; align-items:center; gap:12px; flex: 1;">
+      <i data-lucide="search" size="18" style="color:var(--s-muted); opacity: 0.6;"></i>
+      <input class="in-lux" type="text" name="q" value="{{ q or '' }}" placeholder="Identify: Name, Email or Shop Brand" style="flex: 1;"/>
+    </div>
+    <select class="in-lux" name="kyc" style="min-width:220px;">
+      <option value="" {% if not kyc %}selected{% endif %}>All Verification States</option>
+      <option value="pending" {% if kyc=='pending' %}selected{% endif %}>Pending Audit</option>
+      <option value="approved" {% if kyc=='approved' %}selected{% endif %}>Approved Registry</option>
+      <option value="rejected" {% if kyc=='rejected' %}selected{% endif %}>Rejected / Flagged</option>
+    </select>
+    <button class="btn-lux btn-lux-ok" type="submit" style="height:48px; border-radius:14px; padding: 0 25px;">Execute Filter</button>
+  </form>
+
+  <!-- Registry Card -->
+  <div class="reg-card">
+    <div style="overflow-x:auto;">
+      <table class="table-lux" style="min-width:1100px;">
+        <thead>
+          <tr>
+            <th>Registry ID</th>
+            <th>Authorized Seller</th>
+            <th>Shop Origin</th>
+            <th>KYC Protocol</th>
+            <th>Payout Channel</th>
+            <th style="width:280px; text-align:right;">Governance Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if sellers %}
+            {% for s in sellers %}
+              <tr>
+                <td><span style="font-weight:900; color:var(--s-muted); font-family: 'JetBrains Mono';">#{{ s.id }}</span></td>
+                <td>
+                  <div style="font-weight:950; font-size:14.5px; color:var(--s-primary);">{{ s.name or 'Unnamed Entity' }}</div>
+                  <div style="font-weight:700; color:var(--s-muted); font-size:11px; margin-top:2px;">{{ s.email }}</div>
+                </td>
+                <td style="font-weight:800; color:var(--s-gold); font-size:13px; text-transform:uppercase; letter-spacing:0.5px;">{{ s.shop_name or 'NO_REGISTRY' }}</td>
+                <td>
+                  <span class="st-pill st-{{ s.verification_status|lower }}">
+                    {{ s.verification_status|upper }}
+                  </span>
+                </td>
+                <td>
+                  <div style="font-weight:900; color:var(--s-emerald); font-size:13px;">{{ s.payout_method or 'UNSET' }}</div>
+                  <div style="font-size:11px; color:var(--s-muted); font-weight:700; font-family: 'JetBrains Mono'; margin-top:2px;">{{ s.payout_account or '—' }}</div>
+                </td>
+                <td align="right">
+                  <div style="display:flex; gap:10px; justify-content:flex-end; align-items:center;">
+                    <a class="btn-lux" href="/admin/sellers/{{ s.id }}"><i data-lucide="shield-check" size="14"></i> Audit</a>
+                    
+                    {% if (s.verification_status or 'pending')|lower == 'pending' %}
+                      <form method="post" action="/admin/kyc/{{ s.id }}/approve" style="margin:0;">
+                        <button class="btn-lux btn-lux-ok" type="submit">Verify</button>
+                      </form>
+                      <button class="btn-lux btn-lux-bad" type="button" onclick="openReject({{ s.id }}, '{{ (s.name or 'Seller entity')|e }}')">Flag</button>
+                    {% else %}
+                      <div style="font-size:10px; font-weight:950; color:var(--s-muted); text-transform:uppercase; letter-spacing:1.5px; background:var(--s-bg); padding:6px 14px; border-radius:100px;">
+                        <i data-lucide="lock" size="12" style="vertical-align:middle; margin-right:4px;"></i> Synchronized
+                      </div>
+                    {% endif %}
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="6" style="padding:120px 0; text-align:center;">
+                <i data-lucide="users-2" size="64" style="color:var(--s-border); margin-bottom:20px; opacity:0.5;"></i>
+                <div style="font-weight:900; color:#cbd5e1; text-transform:uppercase; letter-spacing:5px; font-size:12px;">No Entities Detected in Registry</div>
+              </td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Rejection Modal -->
+<div class="m-overlay" id="rejectModal">
+  <div class="m-card">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+      <div>
+        <div class="m-h">Flag Acquisition</div>
+        <div id="rejectMeta" style="font-size:11px; font-weight:900; color:var(--s-gold); text-transform:uppercase; letter-spacing:1.5px;"></div>
+      </div>
+      <button class="btn-lux" style="border:none; background:none; font-size:24px; padding:0;" onclick="closeReject()">✕</button>
+    </div>
+
+    <form id="rejectForm" method="post" action="">
+      <div style="margin-top:30px;">
+        <label style="font-weight:950; font-size:10px; text-transform:uppercase; letter-spacing:2px; color:var(--s-muted); padding-left:5px;">Protocol Violation Reason</label>
+        <select class="in-lux" name="reason" style="width:100%; margin: 15px 0 20px 0; height:52px;">
+          <option value="">Select Primary Protocol Violation</option>
+          <option value="Document unclear">Image Resolution: Ineligible Fidelity</option>
+          <option value="Name mismatch">Entity Discrepancy: Identity Mismatch</option>
+          <option value="NID mismatch">Credential Error: Fiscal ID Conflict</option>
+          <option value="Missing documents">Registry Incomplete: Missing Assets</option>
+          <option value="Suspected fraud">Security Protocol: Flagged Activity</option>
+        </select>
+        <textarea class="m-ta" name="note" placeholder="Provide clinical audit notes for the artisan registry..."></textarea>
+      </div>
+      <div style="display:flex; gap:15px; justify-content:flex-end; margin-top:40px;">
+        <button class="btn-lux" type="button" onclick="closeReject()" style="height:48px; border-radius:14px; padding: 0 25px;">Abort Action</button>
+        <button class="btn-lux btn-lux-bad" type="submit" style="background:#b91c1c; color:#fff; border:none; padding:0 30px; height:48px; border-radius:14px;">Authorize Rejection</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  function openReject(uid, name){
+    const m = document.getElementById('rejectModal');
+    const f = document.getElementById('rejectForm');
+    const meta = document.getElementById('rejectMeta');
+    f.action = '/admin/kyc/' + uid + '/reject';
+    meta.textContent = 'Target: ' + (name || 'Seller') + ' • Registry ID #' + uid;
+    m.classList.add('on');
+    if(window.lucide) lucide.createIcons();
+  }
+  function closeReject(){
+    const m = document.getElementById('rejectModal');
+    m.classList.remove('on');
+  }
+  window.addEventListener('DOMContentLoaded', () => {
+    if(window.lucide) lucide.createIcons();
+  });
+  // Close on Esc
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape') closeReject();
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>{{ title or 'Super Admin' }} • Handmade Heritage</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Playfair+Display:wght@900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --h-bg: #f7f0e8;
+      --h-surface: #fdfaf7; 
+      --h-card: #ffffff;      
+      --h-slate: #ACBAC4;
+      --h-sage: #006a4e; 
+      --h-dark: #1a202c;
+      --h-accent: #FF6A2A;
+      --h-border: rgba(172, 186, 196, 0.25);
+      --h-shadow: 0 20px 50px rgba(0,0,0,0.05);
+      --h-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background-color: var(--h-bg); font-family: 'Inter', sans-serif; color: var(--h-dark); overflow-x: hidden; }
+
+    /* Layout */
+    .admin-container { display: flex; min-height: 100vh; position: relative; }
+
+    /* --- SIDEBAR --- */
+    .super-sidebar {
+      width: 270px;
+      background: var(--h-surface);
+      border-right: 1px solid var(--h-border);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 30px 18px;
+      z-index: 100;
+      transition: width 0.3s var(--h-ease);
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 35px;
+      padding: 0 10px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-mark {
+      width: 40px; height: 40px; border-radius: 12px;
+      background: var(--h-dark); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 18px; flex-shrink: 0;
+    }
+
+    .brand-title { font-family: 'Playfair Display'; font-size: 18px; font-weight: 900; line-height: 1.1; }
+    .brand-sub { font-size: 10px; font-weight: 800; color: var(--h-slate); text-transform: uppercase; letter-spacing: 1px; }
+
+    /* Navigation Groups */
+    .nav-container { flex: 1; overflow-y: auto; padding-right: 5px; }
+    .nav-container::-webkit-scrollbar { width: 4px; }
+    .nav-container::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.05); border-radius: 10px; }
+
+    .nav-group { margin-bottom: 22px; }
+    .nav-title { 
+      font-size: 9px; font-weight: 950; text-transform: uppercase; 
+      letter-spacing: 1.8px; color: var(--h-slate); margin-bottom: 10px; padding-left: 12px; opacity: 0.7;
+    }
+
+    .nav-link {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 14px; border-radius: 12px;
+      text-decoration: none; color: #5a67d8; /* Muted Blue-Grey */
+      color: var(--h-dark);
+      font-weight: 700; font-size: 13.5px;
+      transition: all 0.25s var(--h-ease);
+      margin-bottom: 4px;
+      opacity: 0.8;
+    }
+
+    .nav-link i { width: 18px; stroke-width: 2.5px; opacity: 0.7; }
+    
+    .nav-link:hover { 
+      background: rgba(0,106,78, 0.06); 
+      color: var(--h-sage);
+      opacity: 1;
+      transform: translateX(4px);
+    }
+
+    /* Logic for Active Links (Template based) */
+    .nav-link.active { 
+      background: var(--h-dark); 
+      color: white !important; 
+      opacity: 1;
+      box-shadow: 0 8px 20px -5px rgba(0,0,0,0.2); 
+    }
+    .nav-link.active i { color: var(--h-accent); opacity: 1; }
+
+    /* Sidebar Bottom Section */
+    .sidebar-footer {
+      border-top: 1px solid rgba(0,0,0,0.05);
+      padding-top: 20px;
+      margin-top: 10px;
+    }
+
+    .user-profile-pill {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px; background: white; border: 1px solid var(--h-border);
+      border-radius: 16px; margin-bottom: 15px;
+      text-decoration: none; color: inherit;
+      transition: 0.2s;
+    }
+    .user-profile-pill:hover { border-color: var(--h-slate); transform: translateY(-2px); }
+
+    .avatar-box { 
+      width: 34px; height: 34px; border-radius: 10px; 
+      background: #f1f5f9; border: 1px solid var(--h-border);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; flex-shrink: 0;
+    }
+    .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
+
+    .user-info { overflow: hidden; }
+    .user-name { font-weight: 900; font-size: 12px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-role { font-size: 10px; color: var(--h-slate); font-weight: 700; }
+
+    /* --- MAIN CONTENT --- */
+    .super-main { flex: 1; padding: 40px; max-width: calc(100vw - 270px); }
+    
+    .header-area { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .page-title { font-family: 'Playfair Display'; font-size: 32px; font-weight: 900; }
+
+    @media (max-width: 1200px) {
+      .super-sidebar { width: 80px; padding: 30px 12px; }
+      .brand-text-block, .nav-title, .nav-link span, .user-info, .brand-sub { display: none; }
+      .nav-link { justify-content: center; padding: 15px; }
+      .super-main { max-width: calc(100vw - 80px); }
+    }
+  </style>
+  <link rel="stylesheet" href="/static/css/admin_shell.css">
+</head>
+<body>
+
+<div class="admin-container">
+  
+  <aside class="super-sidebar">
+    <a href="/" class="brand-section">
+      <div class="brand-mark">HA</div>
+      <div class="brand-text-block">
+        <div class="brand-title">Super Admin</div>
+        <div class="brand-sub">Oversight Panel</div>
+      </div>
+    </a>
+
+    <div class="nav-container">
+      <div class="nav-group">
+        <div class="nav-title">System Overview</div>
+        <a href="/superadmin/dashboard" class="nav-link {{ 'active' if request.path == '/superadmin/dashboard' }}">
+          <i data-lucide="layout-dashboard"></i> <span>Overview</span>
+        </a>
+        <a href="/superadmin/admins" class="nav-link {{ 'active' if request.path.startswith('/superadmin/admins') }}">
+          <i data-lucide="users"></i> <span>Manage Admins</span>
+        </a>
+        <a href="/superadmin/settings" class="nav-link {{ 'active' if request.path.startswith('/superadmin/settings') }}">
+          <i data-lucide="sliders"></i> <span>Global Settings</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-title">Financials</div>
+        <a href="/superadmin/ledger" class="nav-link {{ 'active' if request.path.startswith('/superadmin/ledger') }}">
+          <i data-lucide="banknote"></i> <span>Master Ledger</span>
+        </a>
+        <a href="/superadmin/seller-payouts" class="nav-link {{ 'active' if request.path.startswith('/superadmin/seller-payouts') }}">
+          <i data-lucide="wallet"></i> <span>Seller Payouts</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-title">Integrity</div>
+        <a href="/superadmin/audit" class="nav-link {{ 'active' if request.path.startswith('/superadmin/audit') }}">
+          <i data-lucide="scroll-text"></i> <span>Audit Logs</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-title">Messaging</div>
+        <a href="/superadmin/messages" class="nav-link {{ 'active' if request.path.startswith('/superadmin/messages') }}">
+          <i data-lucide="message-square"></i> <span>Inbox Hub</span>
+        </a>
+        <a href="/superadmin/support-inbox" class="nav-link {{ 'active' if request.path.startswith('/superadmin/support-inbox') }}">
+          <i data-lucide="life-buoy"></i> <span>Support Tickets</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <a href="/superadmin/profile" class="user-profile-pill">
+        <div class="avatar-box">
+          {% if admin and admin.photo_url %}
+            <img src="{{ admin.photo_url }}" alt="Profile">
+          {% else %}
+            <i data-lucide="user" style="width:18px; color:var(--h-slate);"></i>
+          {% endif %}
+        </div>
+        <div class="user-info">
+          <span class="user-name">{{ admin.name if admin else 'Super Admin' }}</span>
+          <span class="user-role">Master Access</span>
+        </div>
+      </a>
+      
+      <a href="/superadmin/profile" class="nav-link {{ 'active' if request.path == '/superadmin/profile' }}">
+        <i data-lucide="settings"></i> <span>My Profile</span>
+      </a>
+      <a href="/admin/logout" class="nav-link" style="color: #ef4444; opacity: 1;">
+        <i data-lucide="log-out"></i> <span>Log Out</span>
+      </a>
+    </div>
+  </aside>
+
+  <main class="super-main">
+
+    <div class="content-body">
+      <div class="super-topbar">
+        <div>
+          <div class="title">{{ page_title }}</div>
+        </div>
+        <div style="display:flex; gap:10px;">{% block topbar_right %}{% endblock %}</div>
+      </div>
+
+      {% block body %}{% endblock %}
+    </div>
+  </main>
+
+</div>
+
+<script>
+  // Initialize Icons
+  lucide.createIcons();
+
+  // Automatic Sidebar Active State (for non-jinja environments/testing)
+  document.querySelectorAll('.nav-link').forEach(link => {
+    if(link.getAttribute('href') === window.location.pathname) {
+      link.classList.add('active');
+    }
+  });
+</script>
+
+</body>
+</html>

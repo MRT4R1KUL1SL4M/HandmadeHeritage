@@ -1,0 +1,298 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+  :root {
+    --bg-silk: #fdfdfb; 
+    --accent-gold: #b8860b; 
+    --obsidian: #1c1c1e; 
+    --border-subtle: rgba(0, 0, 0, 0.08);
+  }
+
+  body {
+    background-color: var(--bg-silk);
+    font-family: 'Inter', sans-serif;
+    color: var(--obsidian);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .aura-bg {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at 50% -10%, #f3efea 0%, #fdfdfb 100%);
+    z-index: -1;
+  }
+
+  .main-wrapper {
+    max-width: 1250px;
+    margin: 80px auto;
+    padding: 0 24px;
+  }
+
+  /* Header Section */
+  .wish-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 50px;
+  }
+
+  .wish-header h2 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 45px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    margin: 0;
+  }
+
+  .btn-elite {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    background: var(--obsidian);
+    color: #fff;
+    text-decoration: none;
+    transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .btn-elite:hover {
+    background: #000;
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+  }
+
+  /* Wishlist Grid */
+  .wish-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+  }
+
+  /* Master Product Card */
+  .p-card {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid var(--border-subtle);
+    border-radius: 32px;
+    padding: 20px;
+    backdrop-filter: blur(20px);
+    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    animation: fadeIn 0.6s ease backwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .p-card:hover {
+    transform: translateY(-12px);
+    border-color: var(--accent-gold);
+    box-shadow: 0 30px 60px -15px rgba(184, 134, 11, 0.1);
+  }
+
+  /* Image Container with Floating Vector */
+  .p-img-box {
+    aspect-ratio: 1/1;
+    border-radius: 24px;
+    overflow: hidden;
+    background: #f9f7f2;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .p-img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: 0.6s;
+  }
+
+  .p-card:hover .p-img-box img { transform: scale(1.1); }
+
+  /* Animated Floating Vector (Emoji/Icon) */
+  .floating-vector {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    font-size: 24px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: 0.4s ease;
+    z-index: 5;
+    background: rgba(255,255,255,0.9);
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  }
+
+  .p-card:hover .floating-vector {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Text & Pricing */
+  .p-maker {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent-gold);
+    margin-bottom: 6px;
+  }
+
+  .p-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--obsidian);
+    margin-bottom: 8px;
+  }
+
+  .p-price {
+    font-size: 16px;
+    font-weight: 700;
+    color: #666;
+  }
+
+  /* Action Buttons */
+  .p-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .btn-p {
+    flex: 1;
+    padding: 12px;
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: 800;
+    text-align: center;
+    text-decoration: none;
+    transition: 0.3s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-view { background: var(--obsidian); color: #fff; }
+  .btn-view:hover { background: #000; }
+
+  .btn-rm { background: #fdfaf5; color: #eb5757; border: 1.5px solid rgba(235, 87, 87, 0.1); }
+  .btn-rm:hover { background: #fee2e2; border-color: #eb5757; }
+
+</style>
+
+<div class="aura-bg"></div>
+
+<div class="main-wrapper">
+  <div style="display:flex;justify-content:flex-start;gap:10px;margin-bottom:18px;">
+    <button class="btn" type="button" onclick="history.back()" style="border-radius:999px;display:inline-flex;align-items:center;gap:8px;">
+      <i data-lucide="arrow-left"></i> Back
+    </button>
+  </div>
+  <header class="wish-header">
+    <div>
+      <p style="font-size:12px; font-weight:900; color:var(--accent-gold); letter-spacing:4px; text-transform:uppercase; margin-bottom:12px;">Curated Gallery</p>
+      <h2>Wishlist <span style="font-weight:300; opacity:0.3;">/ পছন্দের তালিকা</span></h2>
+    </div>
+    <a class="btn-elite" href="/shop">
+      <i data-lucide="shopping-bag" size="16"></i> Continue Shopping
+    </a>
+  </header>
+
+  <div id="wishGrid" class="wish-grid"></div>
+  
+  <div id="wishEmpty" class="empty-state" style="display:none; text-align: center; padding: 120px 0;">
+    <div style="font-size: 64px; margin-bottom: 24px; opacity: 0.2;">✨</div>
+    <p style="font-family:'Outfit'; font-size: 20px; font-weight: 800; color: #999; letter-spacing: 1px;">YOUR CURATION IS EMPTY</p>
+  </div>
+</div>
+
+<script>
+  const KEY_WISH = "hh_wishlist";
+  function loadLS(k, d){ try{ return JSON.parse(localStorage.getItem(k)||JSON.stringify(d)); }catch(e){ return d; } }
+  function saveLS(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+  function money(u){ return `$${Number(u||0).toFixed(2)}`; }
+
+  async function fetchProductsByIds(ids){
+    if(!ids.length) return [];
+    const res = await fetch('/api/products?limit=200');
+    const all = await res.json().catch(()=>[]);
+    const set = new Set(ids.map(String));
+    return (all||[]).filter(p => set.has(String(p.id)));
+  }
+
+  async function loadWishlist(){
+    const grid = document.getElementById('wishGrid');
+    const empty = document.getElementById('wishEmpty');
+    grid.innerHTML='';
+
+    let backendItems = [];
+    try{
+      const r = await fetch('/api/wishlist');
+      const d = await r.json().catch(()=>({items:[]}));
+      backendItems = d.items || [];
+    }catch(e){ backendItems = []; }
+
+    let items = [];
+    if(backendItems.length){
+      items = backendItems;
+    }else{
+      const ids = loadLS(KEY_WISH, []);
+      items = await fetchProductsByIds(ids);
+    }
+
+    if(!items.length){
+      empty.style.display='block';
+      return;
+    }
+    empty.style.display='none';
+
+    items.forEach((p, index) => {
+      const el = document.createElement('div');
+      el.className='p-card';
+      el.style.animationDelay = `${index * 0.1}s`;
+      el.innerHTML = `
+        <div class="floating-vector">🛡️</div>
+        <div class="p-img-box">
+          <img src="${p.img||''}" alt="${p.title||''}" />
+        </div>
+        <div class="p-maker">${p.maker||'Master Artisan'}</div>
+        <div class="p-title">${p.title||'Artisan Piece'}</div>
+        <div class="p-price">${money(p.usd)}</div>
+        <div class="p-actions">
+          <a class="btn-p btn-view" href="/product?id=${p.id}">View Details</a>
+          <button class="btn-p btn-rm" data-rm="${p.id}"><i data-lucide="trash-2" size="14"></i></button>
+        </div>
+      `;
+      grid.appendChild(el);
+    });
+
+    lucide.createIcons();
+
+    grid.querySelectorAll('button[data-rm]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const pid = btn.getAttribute('data-rm');
+        try{ await fetch('/api/wishlist/toggle', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({product_id: pid})}); }catch(e){}
+        const w = loadLS(KEY_WISH, []);
+        const i = w.indexOf(pid);
+        if(i>=0){ w.splice(i,1); saveLS(KEY_WISH, w); }
+        loadWishlist();
+      });
+    });
+  }
+
+  loadWishlist();
+  lucide.createIcons();
+</script>
+{% endblock %}

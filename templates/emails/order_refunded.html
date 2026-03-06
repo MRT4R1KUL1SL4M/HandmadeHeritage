@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0; padding:0; background-color:#f7f0e8; font-family:'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-font-smoothing:antialiased;">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#f7f0e8;">
+    <tr>
+      <td align="center" style="padding: 60px 20px;">
+        
+        <!-- Main Card Shell -->
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width:580px; background-color:#fdfaf7; border: 1px solid rgba(172, 186, 196, 0.3); border-radius: 8px; box-shadow: 0 40px 120px rgba(0,0,0,0.06); overflow:hidden;">
+          
+          <!-- Premium Gradient Accent -->
+          <tr>
+            <td height="8" style="background: linear-gradient(90deg, #ACBAC4, #9CAB84);"></td>
+          </tr>
+
+          <!-- Branding Section -->
+          <tr>
+            <td align="center" style="padding: 50px 40px 10px 40px;">
+              <div style="font-family: 'Times New Roman', Times, serif; font-size: 32px; font-weight: 900; color: #1a202c; letter-spacing: -1px; line-height: 1;">Handmade Heritage.</div>
+              <div style="height: 1px; width: 60px; background-color: #ACBAC4; margin-top: 25px;"></div>
+            </td>
+          </tr>
+
+          <!-- Content Section -->
+          <tr>
+            <td style="padding: 40px 60px; text-align: center;">
+              <div style="font-size: 10px; font-weight: 950; letter-spacing: 4px; color: #ACBAC4; text-transform: uppercase; margin-bottom: 30px;">Financial Settlement Authorized</div>
+              
+              <h1 style="margin:0 0 20px 0; font-family: 'Georgia', serif; font-size: 24px; font-weight: 400; font-style: italic; color: #1a202c;">Greetings, {{ buyer_name }}</h1>
+              
+              <p style="margin:0 0 35px 0; font-size: 15px; line-height: 1.8; color: #4a5568; font-weight: 500; letter-spacing: 0.1px;">
+                We are writing to confirm that a financial adjustment has been authorized for your curated acquisition, order <b style="color:#1a202c;">#{{ order_code }}</b>. Our treasury registry has processed a refund sequence for your account.
+              </p>
+
+              <!-- Status Manifest Block -->
+              <div style="background-color: #f7f0e8; border: 1.5px solid rgba(172, 186, 196, 0.4); border-radius: 12px; padding: 30px 20px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,77,57,0.02);">
+                <div style="font-size: 10px; font-weight: 900; color: #ACBAC4; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;">Authorization Level</div>
+                <span style="font-family: 'Inter', sans-serif; font-weight: 800; font-size: 24px; color: #1a202c; display: block; text-transform: uppercase; letter-spacing: 1px;">{{ status_label }}</span>
+                
+                {% if note %}
+                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed rgba(172, 186, 196, 0.5); text-align: left;">
+                  <div style="font-size: 9px; font-weight: 900; color: #9CAB84; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 5px;">Concierge Note</div>
+                  <div style="font-size: 13px; color: #4a5568; line-height: 1.5; font-style: italic;">"{{ note }}"</div>
+                </div>
+                {% endif %}
+              </div>
+
+              {% if track_url %}
+              <p style="margin:0 0 15px 0;">
+                <a href="{{ track_url }}" style="display:inline-block; background-color:#1a202c; color:#ffffff; text-decoration:none; padding:20px 45px; border: 1px solid #ACBAC4; border-radius:4px; font-weight:900; font-size:13px; text-transform:uppercase; letter-spacing:3px; box-shadow: 0 20px 40px rgba(0,0,0,0.15);">
+                  View Order Summary
+                </a>
+              </p>
+              {% endif %}
+
+              <p style="margin:25px 0 0 0; font-size:11px; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:1px; line-height: 1.6;">
+                Refund sequence confirmed. <br>Please allow several business cycles for the adjustment to reflect in your financial ledger.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Signature Block -->
+          <tr>
+            <td align="center" style="padding: 0 60px 60px 60px;">
+              <table border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td align="center" style="padding-top: 25px; border-top: 1px solid #f1f1f1;">
+                    <div style="font-family: 'Georgia', serif; font-size: 32px; font-style: italic; color: #1a202c; margin-bottom: 8px; font-weight: 700;">
+                      Md. Tarikul Islam
+                    </div>
+                    <div style="font-size: 11px; font-weight: 950; letter-spacing: 3px; color: #9CAB84; text-transform: uppercase;">
+                      Owner of Handmade Heritage
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Legal Footer -->
+          <tr>
+            <td style="padding: 40px; background-color: #1a202c; text-align: center;">
+              <p style="margin:0; font-size: 11px; color: #718096; line-height: 1.8; letter-spacing: 0.5px; font-weight: 500;">
+                If you have inquiries regarding this settlement, connect with our concierge via the <a href="{{ support_url|default('#') }}" style="color:#ACBAC4; text-decoration: none;">Support Terminal</a>. <br> 
+                Handmade Heritage &copy; 2026. Global Treasury Hub.
+              </p>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Tagline -->
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width:580px; margin-top: 30px;">
+          <tr>
+            <td align="center" style="font-size: 10px; color: #ACBAC4; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">
+              PRESERVING TRADITIONS • WEAVING STORIES • WORLDWIDE
+            </td>
+          </tr>
+        </table>
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

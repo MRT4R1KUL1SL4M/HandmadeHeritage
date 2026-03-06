@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<div class="admin-auth-wrap">
+
+<style>
+  /* ================================================================
+     THE ADMIN CONTROL CENTER: SOVEREIGN EDITION V3
+     THEME: #f7f0e8 (Luxury Cream) | TEXTURE: Film Grain
+     PALETTE: #ACBAC4 (Slate Blue) | #9CAB84 (Sage Green)
+     ================================================================ */
+
+  :root {
+    --a-accent: #1a202c;
+    --a-slate: #ACBAC4;
+    --a-sage: #9CAB84;
+    --a-bg: #f7f0e8;
+    --a-surface: #fdfaf7;
+    --a-glass: rgba(253, 250, 247, 0.7);
+    --a-border: rgba(172, 186, 196, 0.35);
+    --a-shadow-deep: 0 60px 120px -30px rgba(0, 0, 0, 0.12);
+    --p-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  .admin-auth-wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background-color: var(--a-bg);
+    position: relative;
+    overflow: hidden;
+    perspective: 2000px;
+  }
+
+  /* --- Premium Grain & Mesh System --- */
+  .admin-auth-wrap::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.07'/%3E%3C/svg%3E");
+    opacity: 0.25; mix-blend-mode: multiply;
+  }
+
+  .mesh-bg {
+    position: absolute; inset: 0;
+    background: 
+      radial-gradient(at 10% 10%, rgba(172, 186, 196, 0.2) 0px, transparent 40%),
+      radial-gradient(at 90% 90%, rgba(156, 171, 132, 0.2) 0px, transparent 40%);
+    z-index: 0;
+  }
+
+  /* Floating Decorative Orbs */
+  .orb {
+    position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4; z-index: 1;
+  }
+  .orb-1 { top: 10%; right: 10%; width: 300px; height: 300px; background: var(--a-slate); }
+  .orb-2 { bottom: 10%; left: 10%; width: 400px; height: 400px; background: var(--a-sage); }
+
+  .auth-shell {
+    width: 100%; max-width: 1050px;
+    display: grid; grid-template-columns: 1fr 0.85fr;
+    background: var(--a-glass);
+    backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px);
+    border: 1px solid var(--a-border);
+    border-radius: 48px;
+    box-shadow: var(--a-shadow-deep);
+    overflow: hidden;
+    position: relative; z-index: 10;
+    opacity: 0; transform: translateY(60px);
+    animation: adminEnter 1.4s var(--p-ease) forwards;
+    transition: transform 0.4s var(--p-ease);
+  }
+
+  @keyframes adminEnter { to { opacity: 1; transform: translateY(0); } }
+
+  /* --- Hero Side: Refined Typography --- */
+  .hero-side {
+    padding: 80px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+    border-right: 1px solid rgba(0,0,0,0.03);
+    display: flex; flex-direction: column; justify-content: center;
+  }
+
+  .status-badge {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 12px 22px; border-radius: 100px;
+    background: #fff; border: 1px solid var(--a-border);
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 800;
+    color: var(--a-accent); margin-bottom: 40px; width: fit-content;
+    letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+  }
+  .dot-pulse { width: 8px; height: 8px; background: var(--a-sage); border-radius: 50%; box-shadow: 0 0 15px var(--a-sage); animation: blink 2.5s infinite; }
+  @keyframes blink { 50% { opacity: 0.2; transform: scale(0.8); } }
+
+  .hero-h1 { font-family: 'Playfair Display', serif; font-size: 52px; font-weight: 900; line-height: 1.05; color: var(--a-accent); letter-spacing: -2px; }
+  .hero-p { color: #64748b; font-size: 16px; margin: 25px 0 45px; line-height: 1.8; max-width: 350px; font-weight: 500; }
+
+  .tech-item {
+    display: flex; align-items: center; gap: 18px; padding: 18px; margin-bottom: 14px;
+    background: rgba(255,255,255,0.5); border: 1px solid var(--a-border);
+    border-radius: 24px; font-size: 13.5px; font-weight: 800; color: var(--a-accent);
+    transition: 0.3s;
+  }
+  .tech-item:hover { transform: translateX(10px); background: #fff; border-color: var(--a-slate); }
+
+  /* --- Form Side: Minimalist Luxury --- */
+  .form-side { padding: 80px; background: var(--a-surface); display: flex; flex-direction: column; justify-content: center; }
+  .form-h2 { font-family: 'Playfair Display'; font-size: 32px; font-weight: 900; color: var(--a-accent); margin-bottom: 45px; text-align: center; }
+
+  .field-group { margin-bottom: 32px; position: relative; }
+  .label-flex { display: flex; justify-content: space-between; margin-bottom: 12px; font-weight: 900; font-size: 11px; text-transform: uppercase; color: var(--a-slate); letter-spacing: 2px; }
+
+  .input-lux {
+    width: 100%; height: 64px; padding: 0 24px; border-radius: 20px;
+    border: 1.5px solid rgba(172, 186, 196, 0.4); background: #fff;
+    font-size: 16px; font-weight: 700; color: var(--a-accent);
+    transition: all 0.4s var(--p-ease);
+  }
+  .input-lux:focus { outline: none; border-color: var(--a-accent); box-shadow: 0 15px 35px rgba(0,0,0,0.05); transform: translateY(-3px); }
+
+  .pass-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
+  .eye-btn-lux {
+    position: absolute; right: 15px; height: 44px; width: 44px;
+    background: transparent; border: none; cursor: pointer; color: var(--a-slate);
+    display: flex; align-items: center; justify-content: center; transition: 0.3s;
+  }
+  .eye-btn-lux:hover { color: var(--a-accent); }
+
+  .btn-submit {
+    width: 100%; height: 68px; border-radius: 20px;
+    background: var(--a-accent); color: white;
+    font-weight: 900; font-size: 18px; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+    transition: all 0.5s var(--p-ease);
+    margin-top: 25px; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.2);
+  }
+  .btn-submit:hover { background: #000; transform: translateY(-5px); box-shadow: 0 30px 60px -10px rgba(0,0,0,0.3); }
+
+  .alert-lux {
+    background: rgba(239, 68, 68, 0.08); color: #ef4444; padding: 18px; border-radius: 20px;
+    font-size: 13.5px; font-weight: 800; margin-bottom: 30px; border: 1px solid rgba(239, 68, 68, 0.15);
+    display: flex; align-items: center; gap: 12px; animation: shake 0.6s var(--p-ease);
+  }
+  @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+
+  .mono-footer { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--a-slate); margin-top: 50px; text-align: center; text-transform: uppercase; letter-spacing: 2px; line-height: 1.8; opacity: 0.7; }
+
+  @media (max-width: 950px) { .auth-shell { grid-template-columns: 1fr; border-radius: 0; height: 100vh; } .hero-side { display: none; } .admin-auth-wrap { padding: 0; } }
+</style>
+
+<div class="mesh-bg"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<section class="auth-shell" id="luxCard">
+  <aside class="hero-side">
+    <div>
+      <div class="status-badge">
+        <div class="dot-pulse"></div>
+        COMMAND_ENCRYPTED_AUTH
+      </div>
+      <h1 class="hero-h1">Gallery <br>Command.</h1>
+      <p class="hero-p">Welcome to the sovereign nexus of Handmade Heritage. Authenticate to access the master archives.</p>
+    </div>
+
+    <div class="tech-list">
+      <div class="tech-item"><i data-lucide="shield-check" width="20" color="#ACBAC4"></i> Core Protection</div>
+      <div class="tech-item"><i data-lucide="database" width="20" color="#9CAB84"></i> Asset Vault V2</div>
+      <div class="tech-item"><i data-lucide="zap" width="20" color="#1a202c"></i> Instant Telemetry</div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 40px;">
+      <a href="/" style="font-weight: 900; color: var(--a-accent); text-decoration: none; font-size: 12px; letter-spacing: 1.5px; border-bottom: 2px solid var(--a-sage);">← RETURN TO SITE</a>
+      <span style="font-family:'JetBrains Mono'; font-size: 11px; opacity:0.5;">ARCH_V2.6</span>
+    </div>
+  </aside>
+
+  <div class="form-side">
+    <h2 class="form-h2">Authorization</h2>
+
+    {% if error %}
+      <div class="alert-lux">
+        <i data-lucide="lock" width="20"></i>
+        <span>{{ error }}</span>
+      </div>
+    {% endif %}
+
+    <form id="adminLoginForm" method="post" action="/admin/login">
+      <div class="field-group">
+        <div class="label-flex">
+          <span>Identifier</span>
+          <i data-lucide="fingerprint" width="14"></i>
+        </div>
+        <input class="input-lux" name="email" type="email" placeholder="Sovereign ID" required />
+      </div>
+
+      <div class="field-group">
+        <div class="label-flex">
+          <span>Encryption Key</span>
+          <i data-lucide="key-round" width="14"></i>
+        </div>
+        <div class="pass-wrapper">
+          <input id="password" class="input-lux" name="password" type="password" placeholder="••••••••" required />
+          <button class="eye-btn-lux" type="button" onclick="togglePass('password')">
+            <i id="eye-icon" data-lucide="eye" width="22"></i>
+          </button>
+        </div>
+      </div>
+
+      <button id="submitBtn" class="btn-submit" type="submit">
+        <span>Verify Credentials</span>
+        <i data-lucide="arrow-right" width="20"></i>
+      </button>
+
+      <p class="mono-footer">
+        Handmade Heritage Global Command <br>
+        Encrypted Session Protocol 
+      </p>
+    </form>
+  </div>
+</section>
+
+<script>
+  // Soft 3D Tilt for Luxury Feedback
+  const card = document.getElementById('luxCard');
+  document.addEventListener('mousemove', (e) => {
+    if(!card || window.innerWidth < 950) return;
+    const x = e.clientX;
+    const y = e.clientY;
+    const middleX = window.innerWidth / 2;
+    const middleY = window.innerHeight / 2;
+    const rX = ((y - middleY) / middleY) * -3; 
+    const rY = ((x - middleX) / middleX) * 3;
+    
+    card.style.transform = `rotateX(${rX}deg) rotateY(${rY}deg)`;
+  });
+
+  function togglePass(id) {
+    const input = document.getElementById(id);
+    const icon = document.getElementById('eye-icon');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.setAttribute('data-lucide', 'eye-off');
+    } else {
+      input.type = 'password';
+      icon.setAttribute('data-lucide', 'eye');
+    }
+    if(window.lucide) lucide.createIcons();
+  }
+
+  document.getElementById('adminLoginForm').addEventListener('submit', function() {
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span style="font-family:JetBrains Mono; font-size:14px;">ESTABLISHING_LINK...</span>';
+    btn.style.background = '#000';
+  });
+
+  window.addEventListener('DOMContentLoaded', () => {
+    if(window.lucide) lucide.createIcons();
+  });
+</script>
+
+</div>
+
+{% endblock %}

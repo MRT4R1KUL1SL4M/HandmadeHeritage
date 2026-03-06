@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<style>
+  /* ================================================================
+     THE SECURITY VAULT: ELITE HYBRID RECOVERY (v17.0)
+     PRECISION: Glass Physics | Double Manifest | Eye Discovery
+  */
+
+  :root {
+    --v-green: #004d39; 
+    --v-gold: #b28e45;
+    --v-dark: #0a0a0a;
+    --v-glass: rgba(255, 255, 255, 0.97);
+    --v-border: rgba(15, 23, 42, 0.06);
+    --v-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  .vx-master-wrap {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 40px 20px; background-color: #fcfbf9;
+    position: relative; overflow: hidden;
+  }
+
+  /* Parallax Ambient Background */
+  .ambient-mesh { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(140px); opacity: 0.18; animation: drift 30s infinite alternate; }
+  .blob-1 { width: 900px; height: 900px; background: var(--v-green); top: -20%; left: -10%; }
+  .blob-2 { width: 700px; height: 700px; background: var(--v-gold); bottom: -15%; right: -5%; }
+  @keyframes drift { from { transform: translate(0,0); } to { transform: translate(80px, 60px) scale(1.1); } }
+
+  .vx-shell { width: 100%; max-width: 500px; position: relative; z-index: 10; perspective: 2000px; }
+
+  /* Main Vault Card */
+  .vx-card {
+    background: var(--v-glass); backdrop-filter: blur(60px);
+    border: 1.5px solid var(--v-border); border-radius: 40px;
+    padding: 60px 50px; box-shadow: 0 50px 100px -20px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease-out;
+  }
+
+  .form-h1 { font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 900; color: var(--v-dark); text-align: center; margin-bottom: 12px; letter-spacing: -2px; }
+  .form-sub { text-align: center; color: #94a3b8; font-weight: 600; font-size: 13px; margin-bottom: 45px; line-height: 1.8; }
+
+  /* Phase Logic */
+  .phase-box { display: none; }
+  .phase-box.active { display: block; animation: luxReveal 0.8s var(--v-ease); }
+  @keyframes luxReveal { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+  .field-lux { margin-bottom: 28px; position: relative; }
+  .label-lux { font-weight: 950; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--v-dark); margin-bottom: 12px; display: block; }
+  
+  .input-wrap {
+    display: flex; align-items: center; background: #fff; border-radius: 20px;
+    border: 1.5px solid #e2e8f0; padding: 0 20px; height: 65px; transition: 0.4s var(--v-ease);
+    position: relative;
+  }
+  .input-wrap:focus-within { border-color: var(--v-green); transform: translateY(-2px); box-shadow: 0 15px 35px rgba(0,77,57,0.06); }
+  .lux-inp { border: none; outline: none; background: none; width: 100%; font-weight: 700; font-size: 15px; color: var(--v-dark); }
+
+  /* Eye Button */
+  .eye-toggle {
+    position: absolute; right: 15px; height: 40px; width: 40px;
+    display: grid; place-items: center; cursor: pointer; color: #94a3b8;
+    transition: 0.3s; border-radius: 12px;
+  }
+  .eye-toggle:hover { color: var(--v-green); background: #f8fafc; }
+
+  /* OTP Field */
+  .otp-field { font-family: 'Inter'; letter-spacing: 10px; font-size: 22px; text-align: center; font-weight: 900; }
+
+  .btn-lux {
+    width: 100%; height: 65px; border-radius: 20px; background: var(--v-dark); color: white;
+    font-weight: 900; font-size: 14px; border: none; cursor: pointer;
+    text-transform: uppercase; letter-spacing: 2.5px;
+    display: flex; align-items: center; justify-content: center; gap: 12px; transition: 0.5s var(--v-ease);
+  }
+  .btn-lux:hover:not(:disabled) { background: var(--v-green); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0, 77, 57, 0.25); }
+
+  .vx-msg { margin-top: 25px; text-align: center; font-size: 12px; font-weight: 800; padding: 18px; border-radius: 16px; display: none; line-height: 1.6; }
+  .vx-msg.active { display: block; background: #fff; border: 1.5px solid var(--v-green); color: var(--v-green); box-shadow: 0 10px 30px rgba(0,77,57,0.04); }
+  .vx-msg.error { border-color: #ef4444; color: #ef4444; }
+
+  .back-link { display: block; text-align: center; margin-top: 40px; text-decoration: none; color: #cbd5e1; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
+  .back-link:hover { color: var(--v-green); transform: translateX(-5px); }
+
+</style>
+
+<section class="vx-master-wrap">
+  <div class="ambient-mesh">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <div class="vx-shell">
+    <div class="vx-card" id="vaultCard">
+      
+      <h1 class="form-h1">Vault Recovery</h1>
+      <p class="form-sub" id="statusText">Authorize access to your artisan registry.</p>
+
+      <div id="phase1" class="phase-box active">
+        <div class="field-lux">
+          <label class="label-lux">Registry Email</label>
+          <div class="input-wrap">
+            <i data-lucide="mail" size="18" color="#cbd5e1" style="margin-right:12px;"></i>
+            <input id="fpEmail" class="lux-inp" placeholder="collector@heritage.com" type="email" />
+          </div>
+        </div>
+        <button id="btnSend" class="btn-lux">Transmit Manifest <i data-lucide="send" size="16"></i></button>
+      </div>
+
+      <div id="phase2" class="phase-box">
+        <div class="field-lux">
+          <label class="label-lux">Authentication Code</label>
+          <div class="input-wrap">
+            <input id="otpCode" class="lux-inp otp-field" placeholder="••••••" maxlength="6" />
+          </div>
+        </div>
+
+        <div class="field-lux">
+          <label class="label-lux">New Security Manifest</label>
+          <div class="input-wrap">
+            <i data-lucide="key-round" size="18" color="#cbd5e1" style="margin-right:12px;"></i>
+            <input id="newPass" class="lux-inp pass-field" type="password" placeholder="New Password" />
+            <div class="eye-toggle" onclick="toggleEye('newPass')"><i data-lucide="eye" size="18"></i></div>
+          </div>
+        </div>
+
+        <div class="field-lux">
+          <label class="label-lux">Confirm Manifest</label>
+          <div class="input-wrap">
+            <i data-lucide="shield-check" size="18" color="#cbd5e1" style="margin-right:12px;"></i>
+            <input id="confirmPass" class="lux-inp pass-field" type="password" placeholder="Confirm Password" />
+            <div class="eye-toggle" onclick="toggleEye('confirmPass')"><i data-lucide="eye" size="18"></i></div>
+          </div>
+        </div>
+
+        <button id="btnReset" class="btn-lux">Update Registry <i data-lucide="lock" size="16"></i></button>
+      </div>
+
+      <div id="vxMsg" class="vx-msg"></div>
+
+      <a class="back-link" href="/login"><i data-lucide="chevron-left" size="14" style="vertical-align: middle;"></i> Return to Gateway</a>
+
+    </div>
+  </div>
+</section>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  (function(){
+    const $ = (id) => document.getElementById(id);
+    const card = $('vaultCard');
+    
+    // Parallax Effect
+    document.addEventListener('mousemove', (e) => {
+      const x = (window.innerWidth / 2 - e.pageX) / 70;
+      const y = (window.innerHeight / 2 - e.pageY) / 70;
+      card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+    });
+
+    // Eye Toggle Logic
+    window.toggleEye = (id) => {
+      const inp = $(id);
+      const icon = event.currentTarget.querySelector('i');
+      if(inp.type === 'password') {
+        inp.type = 'text';
+        icon.setAttribute('data-lucide', 'eye-off');
+      } else {
+        inp.type = 'password';
+        icon.setAttribute('data-lucide', 'eye');
+      }
+      lucide.createIcons();
+    };
+
+    // Phase 1 Logic
+    $('btnSend').onclick = async () => {
+      const email = ($('fpEmail').value||'').trim();
+      if(!email) return showMsg('Identifier required.', true);
+
+      $('btnSend').disabled = true;
+      $('btnSend').textContent = 'Transmitting...';
+
+      try {
+        const res = await fetch('/api/forgot', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({email})
+        });
+        showMsg('Authorization code sent to your registry.');
+        $('statusText').textContent = "Verify your identity to unlock the vault.";
+        
+        $('phase1').classList.remove('active');
+        setTimeout(() => {
+          $('phase1').style.display = 'none';
+          $('phase2').classList.add('active');
+        }, 400);
+      } catch(e) {
+        showMsg('Protocol Error.', true);
+        $('btnSend').disabled = false;
+      }
+    };
+
+    // Phase 2 Logic
+    $('btnReset').onclick = async () => {
+      const email = ($('fpEmail').value||'').trim();
+      const code = ($('otpCode').value||'').trim();
+      const p1 = ($('newPass').value||'').trim();
+      const p2 = ($('confirmPass').value||'').trim();
+
+      if(!code || !p1 || !p2) return showMsg('Manifest incomplete.', true);
+      if(p1 !== p2) return showMsg('Passwords do not match.', true);
+
+      $('btnReset').disabled = true;
+      $('btnReset').textContent = 'Updating...';
+
+      try {
+        const res = await fetch('/api/reset-with-code', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({email, code, new_password: p1})
+        });
+        if(res.ok) {
+          showMsg('Vault updated. Redirecting...');
+          setTimeout(() => window.location.href = '/login', 2000);
+        } else {
+          const data = await res.json();
+          showMsg(data.error || 'Invalid code.', true);
+          $('btnReset').disabled = false;
+        }
+      } catch(e) {
+        showMsg('System error.', true);
+        $('btnReset').disabled = false;
+      }
+    };
+
+    function showMsg(t, err=false) {
+      const m = $('vxMsg');
+      m.innerHTML = t;
+      m.className = 'vx-msg active' + (err ? ' error' : '');
+    }
+
+    lucide.createIcons();
+  })();
+</script>
+
+{% endblock %}

@@ -1,0 +1,330 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+
+<style>
+  /* -------- ULTRA-COMPACT PREMIUM CART MASTERPIECE -------- */
+  :root {
+    --p-green: #004d39;
+    --p-gold: #b28e45;
+    --p-dark: #0a0a0a;
+    --p-glass: rgba(255, 255, 255, 0.96);
+    --p-border: rgba(0, 0, 0, 0.04);
+    --p-shadow-lux: 0 40px 120px -20px rgba(0, 0, 0, 0.1);
+    --p-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  .cart-master-wrap {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    min-height: 100vh;
+    padding: 25px 0 60px;
+    background-color: #fcfbf9;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Ambient Mesh Background */
+  .cart-master-wrap::before {
+    content: ""; position: absolute; top: -10%; left: -10%; width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(178, 142, 69, 0.04) 0%, transparent 70%);
+    filter: blur(80px); z-index: 0; pointer-events: none;
+  }
+
+  .cart-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 10; }
+
+  /* Compact Header */
+  .cart-header-lux {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 25px;
+    animation: fadeEnter 0.8s var(--p-ease) forwards;
+  }
+
+  .h1-lux {
+    font-family: 'Playfair Display', serif;
+    font-size: 34px; font-weight: 900; color: var(--p-dark);
+    letter-spacing: -1px;
+  }
+
+  /* One-Page Grid Layout */
+  .cart-grid {
+    display: grid; grid-template-columns: 1fr 380px;
+    gap: 20px; align-items: start;
+  }
+
+  .glass-surface {
+    background: var(--p-glass);
+    backdrop-filter: blur(40px);
+    border: 1px solid var(--p-border);
+    border-radius: 28px;
+    padding: 30px;
+    box-shadow: var(--p-shadow-lux);
+  }
+
+  /* List Container with Sleek Scroll */
+  #cartItems { 
+    max-height: 60vh; overflow-y: auto; padding-right: 15px;
+  }
+  #cartItems::-webkit-scrollbar { width: 3px; }
+  #cartItems::-webkit-scrollbar-thumb { background: #e4e4e7; border-radius: 10px; }
+
+  /* Item Entry - Editorial Design */
+  .item-entry {
+    display: grid; grid-template-columns: 90px 1fr auto;
+    gap: 20px; padding: 18px 0;
+    border-bottom: 1.5px solid rgba(0, 0, 0, 0.02);
+    transition: all 0.4s var(--p-ease);
+  }
+  .item-entry:hover { transform: translateX(8px); }
+
+  .item-visual {
+    width: 90px; height: 105px; border-radius: 16px;
+    overflow: hidden; border: 1px solid rgba(0,0,0,0.05);
+    background: #fff;
+  }
+  .item-visual img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--p-ease); }
+  .item-entry:hover .item-visual img { transform: scale(1.1); }
+
+  .item-info h3 { font-size: 17px; font-weight: 800; color: var(--p-dark); margin: 0; letter-spacing: -0.2px; }
+  .bilingual-tag { font-size: 13px; color: #a1a1aa; font-family: 'Hind Siliguri'; margin-top: 4px; display: block; font-weight: 500; }
+
+  /* Qty Controls - Soft Haptic Style */
+  .qty-master {
+    display: flex; align-items: center; gap: 12px;
+    background: #f8f8f6; padding: 5px; border-radius: 12px;
+    width: fit-content; margin-top: 15px;
+    border: 1px solid rgba(0,0,0,0.02);
+  }
+  .qty-trigger {
+    width: 28px; height: 28px; border-radius: 8px; border: none;
+    background: #fff; color: var(--p-dark); font-weight: 900;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s var(--p-ease); box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+  }
+  .qty-trigger:hover { background: var(--p-dark); color: #fff; transform: scale(1.1); }
+  .qty-trigger:active { transform: scale(0.9); }
+
+  /* Sidebar Premium Dropdown */
+  .summary-tower { position: sticky; top: 20px; }
+  .summary-title { font-size: 14px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 25px; color: #a1a1aa; }
+
+  .lux-select-wrap {
+    background: #fdfdfd; padding: 16px; border-radius: 18px; margin-bottom: 15px; border: 1.5px solid var(--p-border);
+    transition: border-color 0.3s;
+  }
+  .lux-select-wrap:focus-within { border-color: var(--p-gold); }
+
+  #shipRegion {
+    width: 100%; background: transparent; border: none; 
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px; font-weight: 800; cursor: pointer; 
+    outline: none; color: var(--p-dark); margin-top: 6px;
+  }
+
+  .cost-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-weight: 700; color: #71717a; font-size: 14px; }
+  
+  .total-highlight {
+    margin-top: 25px; padding: 25px; background: #000; border-radius: 20px;
+    display: flex; justify-content: space-between; align-items: center; color: #fff;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  }
+  .total-highlight span:last-child { font-size: 26px; font-weight: 900; color: var(--p-gold); }
+
+  /* Iconic Action Button */
+  .btn-liquid {
+    width: 100%; height: 62px; background: var(--p-green); color: #fff;
+    border-radius: 18px; border: none; font-size: 17px; font-weight: 800;
+    margin-top: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px;
+    transition: all 0.5s var(--p-ease);
+    position: relative; overflow: hidden;
+  }
+  .btn-liquid:hover { transform: translateY(-4px); box-shadow: 0 25px 50px rgba(0, 77, 57, 0.25); filter: brightness(1.1); }
+  .btn-liquid:active { transform: scale(0.98); }
+
+  @keyframes fadeEnter { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 1024px) { .cart-grid { grid-template-columns: 1fr; } .summary-tower { position: relative; top: 0; } }
+</style>
+
+<div class="cart-master-wrap">
+  <div class="cart-container">
+    
+    <header class="cart-header-lux">
+      <div>
+        <h1 class="h1-lux">Treasury Bag</h1>
+        <p style="font-weight: 800; color: #a1a1aa; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;">Authenticated Collection • 2026</p>
+      </div>
+      <div style="display: flex; gap: 12px;">
+        <a href="/shop" class="btn" style="padding: 12px 20px; border-radius: 14px; background: #fff; font-weight: 800; font-size: 12px; color: var(--p-dark); text-decoration: none; border: 1.5px solid var(--p-border); display: flex; align-items: center; gap: 10px; transition: 0.3s;">
+          <i data-lucide="shopping-basket" size="16"></i> Shop
+        </a>
+        <button id="clearBtn" style="padding: 12px; border-radius: 14px; background: rgba(239,68,68,0.04); color: #ef4444; border: 1px solid rgba(239,68,68,0.1); cursor: pointer; transition: 0.3s;">
+          <i data-lucide="trash-2" size="18"></i>
+        </button>
+      </div>
+    </header>
+
+    <div class="cart-grid">
+      <section class="glass-surface">
+        <div id="cartEmpty" style="display:none; text-align: center; padding: 60px 0;">
+          <i data-lucide="shopping-bag" size="48" color="#e4e4e7"></i>
+          <h2 style="font-family:'Playfair Display'; font-size: 26px; font-weight: 900; margin-top: 15px; color: var(--p-dark);">Your bag is empty</h2>
+          <a href="/shop" class="btn-liquid" style="width: auto; display: inline-flex; padding: 0 40px; margin-top: 20px; text-decoration: none;">Browse Art</a>
+        </div>
+        
+        <div id="cartItems">
+          </div>
+      </section>
+
+      <aside class="glass-surface summary-tower">
+        <h3 class="summary-title">Acquisition Summary</h3>
+        
+        <div class="lux-select-wrap">
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+            <i data-lucide="globe" size="14" color="#b28e45"></i>
+            <label style="font-size: 10px; font-weight: 900; text-transform: uppercase; color: #a1a1aa; letter-spacing: 0.5px;">Destination</label>
+          </div>
+          <select id="shipRegion">
+            <option value="BD">Bangladesh (Local)</option>
+            <option value="INTL">International Priority</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom: 25px;">
+          <div style="display: flex; gap: 10px;">
+            <input id="promoInput" placeholder="VOUCHER CODE" style="flex:1; height: 50px; border-radius: 14px; border: 1.5px solid var(--p-border); padding: 0 18px; font-weight: 700; outline: none; font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">
+            <button id="applyPromo" style="padding: 0 22px; border-radius: 14px; background: var(--p-dark); color: #fff; border: none; font-weight: 900; font-size: 12px; cursor: pointer; transition: 0.3s;">Apply</button>
+          </div>
+          <div id="promoMsg" style="font-size: 11px; margin-top: 10px; font-weight: 800;"></div>
+        </div>
+
+        <div class="price-stack">
+          <div class="cost-row">
+            <span><i data-lucide="tag" size="14" style="margin-right:8px; vertical-align:middle; opacity:0.6;"></i> Subtotal</span>
+            <span id="subTotal" class="money" data-usd="0"></span>
+          </div>
+          <div class="cost-row">
+            <span><i data-lucide="sparkles" size="14" style="margin-right:8px; vertical-align:middle; color:var(--p-gold);"></i> Privilege</span>
+            <span id="discount" class="money" data-usd="0" style="color: #10b981;"></span>
+          </div>
+          <div class="cost-row">
+            <span><i data-lucide="truck" size="14" style="margin-right:8px; vertical-align:middle; opacity:0.6;"></i> Logistics</span>
+            <span id="shipping" class="money" data-usd="0"></span>
+          </div>
+          
+          <div class="total-highlight">
+            <span style="font-weight: 800; font-size: 16px; letter-spacing: 1px;">TOTAL DUE</span>
+            <span id="grandTotal" class="money" data-usd="0"></span>
+          </div>
+        </div>
+
+        <button id="checkoutBtn" class="btn-liquid">
+          <span>Authorize Checkout</span>
+          <i data-lucide="shield-check" size="20"></i>
+        </button>
+
+        <p style="text-align: center; margin-top: 25px; font-size: 10px; font-weight: 700; color: #a1a1aa; letter-spacing: 1px;">
+          <i data-lucide="lock" size="10" style="vertical-align: middle;"></i> 256-BIT ENCRYPTION ACTIVE
+        </p>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<script>
+  let promoSession = { code: '', discount: 0 };
+  const get = (id) => document.getElementById(id);
+
+  async function api(url, body=null){
+    const opt = body ? {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)} : {};
+    const res = await fetch(url, opt);
+    return res.json();
+  }
+
+  function renderItem(it) {
+    return `
+      <div class="item-entry" id="item-${it.id}">
+        <div class="item-visual"><img src="${it.img || ''}" alt="${it.title}"></div>
+        <div class="item-info">
+          <h3>${it.title}</h3>
+          <span class="bilingual-tag">${it.bn || 'Authenticated Masterpiece'}</span>
+          <div class="qty-master">
+            <button class="qty-trigger" onclick="updateQty('${it.id}', ${it.qty - 1})"><i data-lucide="minus" size="14"></i></button>
+            <span style="font-weight:950; font-size:15px; min-width:22px; text-align:center;">${it.qty}</span>
+            <button class="qty-trigger" onclick="updateQty('${it.id}', ${it.qty + 1})"><i data-lucide="plus" size="14"></i></button>
+          </div>
+        </div>
+        <div style="text-align:right; display:flex; flex-direction:column; justify-content:space-between; align-items:flex-end;">
+          <button onclick="removeItem('${it.id}')" style="background:none; border:none; cursor:pointer; color:#d4d4d8; transition:0.3s;" onmouseover="this.style.color='#ef4444'"><i data-lucide="trash-2" size="18"></i></button>
+          <div style="font-size:20px; font-weight:950; color:var(--p-dark); letter-spacing:-0.5px;"><span class="money" data-usd="${Number(it.line_total)||0}"></span></div>
+        </div>
+      </div>`;
+  }
+
+  async function updateWorldView(){
+    const data = await api('/api/cart');
+    const items = data.items || [];
+    const subtotal = Number(data.total || 0);
+
+    if(!items.length) {
+      get('cartEmpty').style.display = 'block';
+      get('cartItems').innerHTML = '';
+      ['subTotal','discount','shipping','grandTotal'].forEach(id => get(id).setAttribute('data-usd', '0'));
+      if(window.applyCurrencyUI) window.applyCurrencyUI();
+      lucide.createIcons();
+      return;
+    }
+
+    get('cartEmpty').style.display = 'none';
+    get('cartItems').innerHTML = items.map(renderItem).join('');
+
+    let disc = 0;
+    if(promoSession.code === 'WELCOME10') disc = subtotal * 0.1;
+    const region = get('shipRegion').value;
+    const shipping = region === 'INTL' ? (subtotal > 300 ? 0 : 45) : (subtotal > 150 ? 0 : 15);
+    
+    get('subTotal').setAttribute('data-usd', String(subtotal));
+    get('discount').setAttribute('data-usd', String(-disc));
+    get('shipping').setAttribute('data-usd', String(shipping));
+    get('grandTotal').setAttribute('data-usd', String(subtotal - disc + shipping));
+    
+    lucide.createIcons();
+    if(window.applyCurrencyUI) window.applyCurrencyUI();
+  }
+
+  window.updateQty = async (id, q) => {
+    if(q < 1) return removeItem(id);
+    await api('/api/cart/set', {product_id:id, qty:q});
+    updateWorldView();
+  };
+
+  window.removeItem = async (id) => {
+    const target = document.getElementById(`item-${id}`);
+    if(target) { target.style.opacity = '0'; target.style.transform = 'scale(0.95) translateX(20px)'; }
+    setTimeout(async () => {
+        await api('/api/cart/remove', {product_id:id});
+        updateWorldView();
+    }, 400);
+  };
+
+  get('applyPromo').onclick = () => {
+    const val = get('promoInput').value.toUpperCase();
+    if(val === 'WELCOME10') {
+      promoSession.code = val;
+      get('promoMsg').textContent = 'PRIVILEGE AUTHENTICATED';
+      get('promoMsg').style.color = '#10b981';
+    } else {
+      get('promoMsg').textContent = 'INVALID VOUCHER';
+      get('promoMsg').style.color = '#ef4444';
+    }
+    updateWorldView();
+  };
+
+  get('clearBtn').onclick = async () => { if(confirm('Permanently clear Treasury Bag?')){ await api('/api/cart/clear'); updateWorldView(); } };
+  get('shipRegion').onchange = updateWorldView;
+  get('checkoutBtn').onclick = () => { window.location.href = '/checkout'; };
+
+  document.addEventListener('DOMContentLoaded', updateWorldView);
+</script>
+
+{% endblock %}

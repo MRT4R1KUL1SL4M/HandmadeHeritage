@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<style>
+  /* -------- RETURNS & CLAIMS: THE CLEAN AUTHORITATIVE MANIFESTO -------- */
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Inter:wght@400;600;700;800&family=Hind+Siliguri:wght@400;700&display=swap');
+
+  :root {
+    --p-green: #004d39;
+    --p-gold: #b28e45;
+    --p-dark: #0a0a0a;
+    --header-height: 120px;
+    --p-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-snap-type: y proximity;
+  }
+
+  .policy-master-wrap {
+    background-color: #fcfbf9;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+  }
+
+  /* SIDEBAR: STABLE CENTER LEFT */
+  .sidebar-container {
+    position: fixed;
+    left: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    width: 280px;
+    pointer-events: none;
+  }
+
+  .policy-sidebar-lux {
+    pointer-events: auto;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(40px);
+    border-radius: 30px;
+    padding: 30px;
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+  }
+
+  .sidebar-label {
+    font-weight: 900; font-size: 10px; text-transform: uppercase;
+    letter-spacing: 2px; color: var(--p-gold); margin-bottom: 20px;
+  }
+
+  .toc-link {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 0; color: #71717a; font-weight: 700;
+    text-decoration: none; font-size: 13px;
+    transition: all 0.4s var(--p-ease);
+    border-bottom: 1px solid rgba(0,0,0,0.02);
+  }
+  
+  .toc-link:hover, .toc-link.active { color: var(--p-dark); transform: translateX(8px); }
+  .toc-link.active { color: var(--p-green); border-bottom-color: var(--p-green); }
+
+  /* FULL SCREEN SECTIONS */
+  .policy-section-lux {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 100px 100px 100px 380px;
+    scroll-snap-align: start;
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+    opacity: 0.15;
+    transition: opacity 0.8s ease;
+  }
+  
+  .policy-section-lux.active { opacity: 1; }
+
+  .policy-section-lux h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 900; color: var(--p-dark);
+    margin-bottom: 25px;
+    letter-spacing: -1.5px;
+  }
+
+  .bn-lux { font-family: 'Hind Siliguri'; font-size: 18px; color: #a1a1aa; margin-left: 15px; font-weight: 600; }
+
+  /* FIRM TYPOGRAPHY (CLEAN) */
+  .policy-text {
+    max-width: 850px;
+    color: #1a1a1a;
+    font-size: 19px;
+    line-height: 1.8;
+    font-weight: 500;
+  }
+
+  .policy-list { margin: 30px 0; padding: 0; list-style: none; }
+  .policy-list li {
+    padding: 15px 0 15px 35px; position: relative;
+    font-weight: 700;
+    font-size: 17px; color: var(--p-dark);
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+  }
+  .policy-list li::before {
+    content: ""; position: absolute; left: 0; top: 24px; 
+    width: 20px; height: 3px; background: var(--p-gold);
+  }
+
+  .strong-auth { color: var(--p-green); font-weight: 800; }
+
+  .firm-alert {
+    background: #fff; border-left: 5px solid #ef4444;
+    padding: 30px; border-radius: 0 20px 20px 0; margin-top: 35px;
+    font-weight: 800; color: #b91c1c; font-size: 18px;
+    box-shadow: 0 15px 35px rgba(239, 68, 68, 0.08);
+    text-transform: uppercase;
+  }
+
+  /* Signature Architecture */
+  .signature-block {
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 2px solid var(--p-gold);
+    max-width: 450px;
+  }
+  .sig-name { font-family: 'Playfair Display'; font-size: 28px; font-weight: 900; color: var(--p-dark); }
+  .sig-title { font-weight: 800; font-size: 12px; text-transform: uppercase; color: var(--p-gold); letter-spacing: 2px; margin-top: 8px; }
+
+  .reading-progress {
+    position: fixed; top: 0; left: 0; width: 0%; height: 6px;
+    background: linear-gradient(90deg, var(--p-green), var(--p-gold));
+    z-index: 2001;
+  }
+
+  .policy-footer-gap { height: 0px; scroll-snap-align: end; }
+
+  @media (max-width: 1100px) {
+    .sidebar-container { display: none; }
+    .policy-section-lux { padding: 80px 30px; }
+  }
+</style>
+
+<div class="reading-progress" id="progressBar"></div>
+
+<div class="sidebar-container">
+  <aside class="policy-sidebar-lux">
+    <div class="sidebar-label">COMMAND CENTER</div>
+    <nav id="sidebarNav">
+      <a href="#window" class="toc-link active"><i data-lucide="calendar-clock"></i> Term Limit</a>
+      <a href="#eligibility" class="toc-link"><i data-lucide="shield-check"></i> Eligibility</a>
+      <a href="#integrity" class="toc-link"><i data-lucide="package-check"></i> Integrity</a>
+      <a href="#audit" class="toc-link"><i data-lucide="search-code"></i> Audit Process</a>
+      <a href="#refunds" class="toc-link"><i data-lucide="banknote"></i> Capital</a>
+      <a href="#authority" class="toc-link"><i data-lucide="gavel"></i> Authority</a>
+    </nav>
+  </aside>
+</div>
+
+<section class="policy-master-wrap">
+  
+  <article id="window" class="policy-section-lux active">
+    <h2>Strict 7-Day Threshold <span class="bn-lux">ফেরতের সময়সীমা</span></h2>
+    <div class="policy-text">
+      Handmade Heritage enforces a <span class="strong-auth">MANDATORY 7-DAY LIMIT</span> for return initiations. This window begins precisely at the timestamp of carrier-confirmed delivery. Requests submitted after this 168-hour period will be <span class="strong-auth">SUMMARILY REJECTED</span> without exception.
+    </div>
+  </article>
+
+  <article id="eligibility" class="policy-section-lux">
+    <h2>Legal Eligibility <span class="bn-lux">যোগ্যতা</span></h2>
+    <div class="policy-text">
+      As artifacts are curated for their unique variations, Buyer's Remorse is not a valid ground for return. Approvals are strictly limited to:
+      <ul class="policy-list">
+        <li>VERIFIED PHYSICAL DAMAGE incurred during logistics.</li>
+        <li>DISCREPANCY between the Order Manifest and delivered artifact.</li>
+        <li>MAJOR STRUCTURAL DEFECTS rendering the item unusable.</li>
+      </ul>
+      <div class="firm-alert">
+        COMMISSIONED, CUSTOM-MADE, OR PERSONALIZED MASTERPIECES ARE ABSOLUTELY NON-RETURNABLE.
+      </div>
+    </div>
+  </article>
+
+  <article id="integrity" class="policy-section-lux">
+    <h2>Artifact Integrity <span class="bn-lux">পণ্যের অক্ষত অবস্থা</span></h2>
+    <div class="policy-text">
+      Returned items must be in <span class="strong-auth">PRISTINE ARTISAN CONDITION</span>. 
+      <ul class="policy-list">
+        <li>Removal of security seals or artisan hallmarks VOIDS ALL CLAIMS.</li>
+        <li>Used, washed, or altered items will be returned to the sender at their own expense.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article id="audit" class="policy-section-lux">
+    <h2>Mandatory Evidence Audit <span class="bn-lux">প্রমাণ যাচাই</span></h2>
+    <div class="policy-text">
+      Claims must be supported by <span class="strong-auth">CLEAR PHOTOGRAPHIC EVIDENCE</span>. 
+      <ul class="policy-list">
+        <li>Damage reports MUST be submitted within 24 hours of receipt.</li>
+        <li>Include 360-degree high-resolution photos of the packaging and artifact.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article id="refunds" class="policy-section-lux">
+    <h2>Capital Restoration <span class="bn-lux">রিফান্ড লজিক</span></h2>
+    <div class="policy-text">
+      Financial restoration is only triggered upon successful completion of our <span class="strong-auth">Physical Verification Audit</span>.
+      <ul class="policy-list">
+        <li>Audit Duration: 48 to 72 hours post-receipt.</li>
+        <li>Restoration Cycle: 3 to 10 business days based on your financial institution.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article id="authority" class="policy-section-lux">
+    <h2>Binding Authority <span class="bn-lux">চূড়ান্ত সম্মতি</span></h2>
+    <div class="policy-text">
+      By utilizing this platform, you grant absolute authority to Handmade Heritage to adjudicate all claims. Fraudulent claim attempts will result in permanent blacklist and potential legal action.
+
+      <div class="signature-block">
+        <div class="sig-name">Md. Tarikul Islam</div>
+        <div class="sig-title">Owner of Handmade Heritage</div>
+      </div>
+    </div>
+  </article>
+
+  <div class="policy-footer-gap"></div>
+
+</section>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+
+    const sections = document.querySelectorAll('.policy-section-lux');
+    const navLinks = document.querySelectorAll('.toc-link');
+    const progressBar = document.getElementById('progressBar');
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          sections.forEach(s => s.classList.remove('active'));
+          entry.target.classList.add('active');
+
+          const currentId = entry.target.getAttribute('id');
+          navLinks.forEach(link => {
+            if (link.getAttribute('href') === `#${currentId}`) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+          });
+        }
+      });
+    }, { threshold: 0.5 });
+
+    sections.forEach(s => revealObserver.observe(s));
+
+    window.onscroll = () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      progressBar.style.width = scrolled + "%";
+    };
+  });
+</script>
+
+{% endblock %}

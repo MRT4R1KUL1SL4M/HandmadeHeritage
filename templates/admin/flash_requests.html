@@ -1,0 +1,105 @@
+{% extends 'admin/admin_base.html' %}
+{% block body %}
+
+<div class="page-head">
+  <div>
+    <div class="kicker">Operations</div>
+    <h1 style="font-family:'Playfair Display',serif; font-weight:900; letter-spacing:-1px;">Flash Dispatch Requests</h1>
+    <div class="muted" style="margin-top:10px;">Sellers request limited-time discounts. Approve to push items into Home → Flash Dispatch.</div>
+  </div>
+  <div class="head-actions" style="display:flex; gap:10px; flex-wrap:wrap;">
+    <a class="pill" href="/admin/flash-requests?status=pending" style="text-decoration:none;">Pending</a>
+    <a class="pill" href="/admin/flash-requests?status=approved" style="text-decoration:none;">Approved</a>
+    <a class="pill" href="/admin/flash-requests?status=rejected" style="text-decoration:none;">Rejected</a>
+    <a class="pill" href="/admin/flash-requests?status=cancelled" style="text-decoration:none;">Cancelled</a>
+    <a class="pill" href="/admin/flash-requests?status=all" style="text-decoration:none;">All</a>
+  </div>
+</div>
+
+<style>
+  .pill { padding:10px 14px; border-radius:999px; border:1px solid var(--h-border); background: var(--h-card); font-weight:900; font-size:12px; letter-spacing:1px; text-transform:uppercase; }
+  .table-card { background: var(--h-card); border:1px solid var(--h-border); border-radius: 22px; box-shadow: var(--h-shadow); overflow:hidden; }
+  table { width:100%; border-collapse: collapse; }
+  th, td { padding:14px 16px; border-bottom:1px solid var(--h-border); vertical-align:top; }
+  th { font-size:11px; text-transform:uppercase; letter-spacing:1.6px; color:#64748b; font-weight:900; background: rgba(172,186,196,0.10); }
+  .tag { display:inline-flex; align-items:center; padding:6px 10px; border-radius:999px; font-weight:900; font-size:11px; letter-spacing:1px; text-transform:uppercase; border:1px solid var(--h-border); }
+  .tag.pending { background:#fff7ed; color:#b45309; }
+  .tag.approved { background:#ecfdf5; color:#065f46; }
+  .tag.rejected, .tag.cancelled { background:#fef2f2; color:#991b1b; }
+  .mini { font-size:12px; color:#64748b; font-weight:700; line-height:1.35; }
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:10px 12px; border-radius: 14px; border:1px solid var(--h-border); background:#fff; font-weight:900; cursor:pointer; }
+  .btn-approve { background:#ecfdf5; color:#065f46; border-color: rgba(6,95,70,0.18); }
+  .btn-reject { background:#fef2f2; color:#991b1b; border-color: rgba(153,27,27,0.18); }
+  .note { width: 240px; max-width: 240px; }
+  .note input { width: 100%; padding:10px 12px; border-radius: 14px; border:1px solid var(--h-border); background:#fff; font-weight:800; }
+  .p-row { display:flex; gap:12px; align-items:center; }
+  .thumb { width:44px; height:44px; border-radius: 14px; background: rgba(172,186,196,0.18); border:1px solid var(--h-border); object-fit:cover; }
+</style>
+
+<div class="table-card" style="margin-top:18px;">
+  <table>
+    <thead>
+      <tr>
+        <th>Request</th>
+        <th>Product</th>
+        <th>Seller</th>
+        <th>Offer</th>
+        <th>Ends</th>
+        <th>Status</th>
+        <th style="width:380px;">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in items %}
+      <tr>
+        <td>
+          <div style="font-weight:900;">#{{ r.id }}</div>
+          <div class="mini">{{ r.created_at }}</div>
+        </td>
+        <td>
+          <div class="p-row">
+            {% if r.product_image %}<img class="thumb" src="{{ r.product_image }}">{% else %}<div class="thumb"></div>{% endif %}
+            <div>
+              <div style="font-weight:900;">{{ r.product_title or r.product_id }}</div>
+              <div class="mini">ID: {{ r.product_id }} • Stock: {{ r.product_stock }}</div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div style="font-weight:900;">{{ r.seller_name or ('Seller #' ~ r.seller_id) }}</div>
+          <div class="mini">{{ r.seller_email or '' }}</div>
+        </td>
+        <td>
+          <div style="font-weight:900;">${{ '%.2f'|format(r.requested_price_usd) }} <span style="color:#94a3b8; font-weight:800; text-decoration:line-through;">${{ '%.2f'|format(r.requested_compare_at_usd) }}</span></div>
+          {% if r.seller_note %}<div class="mini" style="margin-top:6px;"><b>Seller:</b> {{ r.seller_note }}</div>{% endif %}
+        </td>
+        <td class="mini">{{ r.requested_end_at }}</td>
+        <td><span class="tag {{ r.status }}">{{ r.status }}</span></td>
+        <td>
+          {% if r.status=='pending' %}
+          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-start;">
+            <form method="post" action="/admin/flash-requests/{{ r.id }}/approve" style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-start;">
+              <div class="note"><input name="admin_note" placeholder="Optional note (e.g. discount cap ok)"></div>
+              <button class="btn btn-approve" type="submit"><i data-lucide="badge-check"></i>Approve</button>
+            </form>
+            <form method="post" action="/admin/flash-requests/{{ r.id }}/reject" style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-start;">
+              <div class="note"><input name="admin_note" placeholder="Rejection reason"></div>
+              <button class="btn btn-reject" type="submit"><i data-lucide="ban"></i>Reject</button>
+            </form>
+          </div>
+          {% else %}
+            <div class="mini">
+              {% if r.admin_note %}<b>Admin:</b> {{ r.admin_note }}{% else %}—{% endif %}
+            </div>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="mini" style="padding:22px;">No flash requests found for this filter.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script>lucide.createIcons();</script>
+{% endblock %}

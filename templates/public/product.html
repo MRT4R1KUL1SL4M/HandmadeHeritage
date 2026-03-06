@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<style>
+  /* ================================================================
+     THE ARTISAN GALLERY: PRODUCT MASTERPIECE (v8.6)
+     LAYOUT: Editorial Grid | PHYSICS: Boutique Glass | TYPO: Compact
+     REFINEMENT: Verified Purchase Review System & Anchor Support
+     ================================================================ */
+
+  :root {
+    --p-green: #004d39;
+    --p-gold: #b28e45;
+    --p-dark: #1a202c;
+    --p-silk: #f7f0e8;
+    --p-surface: #fdfaf7;
+    --p-glass: rgba(255, 255, 255, 0.96);
+    --p-border: rgba(172, 186, 196, 0.25);
+    --p-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  .product-master-wrap {
+    background-color: var(--p-silk);
+    min-height: 100vh;
+    padding: 60px 0 120px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .p-container { max-width: 1250px; margin: 0 auto; padding: 0 40px; }
+
+  /* --- Navigation Meta --- */
+  .p-nav-meta {
+    margin-bottom: 30px; display: flex; align-items: center; gap: 10px;
+    font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #94a3b8;
+  }
+
+  /* --- Grid Architecture --- */
+  .editorial-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: start; }
+
+  .p-showcase {
+    position: sticky; top: 120px; border-radius: 40px; overflow: hidden;
+    background: #fff; border: 1.5px solid var(--p-border);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.05); aspect-ratio: 1/1;
+  }
+  .p-img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.5s var(--p-ease); }
+  .p-showcase:hover .p-img { transform: scale(1.08); }
+
+  .p-content { padding-top: 20px; }
+  .p-maker-badge { font-weight: 950; font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: var(--p-gold); margin-bottom: 15px; display: block; }
+  .p-title { font-family: 'Playfair Display', serif; font-size: clamp(34px, 4vw, 52px); font-weight: 900; line-height: 1.1; color: var(--p-dark); letter-spacing: -2px; margin-bottom: 15px; }
+  .p-category { font-size: 13px; font-weight: 700; color: #94a3b8; margin-bottom: 30px; display: flex; align-items: center; gap: 8px; }
+
+  .p-price-row { margin-bottom: 40px; padding: 25px 0; border-top: 1.5px solid var(--p-border); border-bottom: 1.5px solid var(--p-border); }
+  .p-price { font-size: 36px; font-weight: 900; color: var(--p-dark); letter-spacing: -1.5px; }
+
+  /* --- Action Stack --- */
+  .action-stack { display: grid; gap: 15px; margin-bottom: 40px; }
+  .btn-p-main {
+    height: 65px; border-radius: 20px; background: var(--p-dark); color: #fff; border: none;
+    font-weight: 900; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;
+    cursor: pointer; transition: 0.4s var(--p-ease); display: flex; align-items: center; justify-content: center; gap: 12px;
+  }
+  .btn-p-main:hover { background: var(--p-green); transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0, 77, 57, 0.2); }
+
+  .btn-p-alt-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+  .btn-p-alt {
+    height: 60px; border-radius: 18px; background: #fff; color: var(--p-dark); border: 1.5px solid var(--p-border);
+    font-weight: 800; font-size: 13px; text-transform: uppercase; letter-spacing: 1px;
+    cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none;
+  }
+
+  /* --- Journal (Reviews) Section --- */
+  .journal-section { margin-top: 80px; padding-top: 60px; border-top: 2.5px solid var(--p-border); }
+  .journal-title { font-family: 'Playfair Display'; font-size: 32px; font-weight: 900; margin-bottom: 40px; color: var(--p-dark); }
+  
+  .review-card {
+    background: var(--p-surface); border-radius: 24px; padding: 30px; margin-bottom: 20px;
+    border: 1px solid var(--p-border); box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+  }
+  .rev-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+  .rev-user { font-weight: 900; font-size: 14px; color: var(--p-dark); }
+  .rev-date { font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+  .rev-stars { color: #f59e0b; font-size: 14px; margin-top: 4px; }
+  .rev-text { font-size: 15px; line-height: 1.7; color: #4a5568; font-weight: 500; }
+
+  /* Submission Surface */
+  .submission-surface {
+    background: #fff; border-radius: 32px; padding: 45px; border: 1px solid var(--p-border);
+    margin-bottom: 50px; box-shadow: 0 30px 60px rgba(0,0,0,0.04);
+  }
+  .in-lux {
+    width: 100%; border: 1.5px solid #eef2f6; border-radius: 16px; padding: 15px 20px;
+    font-size: 15px; font-weight: 600; outline: none; transition: 0.3s; background: var(--p-surface);
+  }
+  .in-lux:focus { border-color: var(--p-green); background: #fff; }
+
+  .verified-badge {
+    display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
+    background: rgba(0, 106, 78, 0.08); color: var(--p-green); border-radius: 100px;
+    font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 20px;
+  }
+</style>
+
+<div class="product-master-wrap">
+  <div class="p-container">
+    
+    <nav class="p-nav-meta">
+      <a href="/shop" style="color:inherit; text-decoration:none;">Registry</a>
+      <i data-lucide="chevron-right" size="12"></i>
+      <span>{{ product.category_slug }}</span>
+    </nav>
+
+    <div class="editorial-grid">
+      <div class="p-showcase">
+        <img src="{{ product.image_url }}" alt="{{ product.title }}" class="p-img" />
+      </div>
+
+      <div class="p-content">
+        <span class="p-maker-badge">{{ product.maker }}</span>
+        <h1 class="p-title">{{ product.title }}</h1>
+        <div class="p-category"><i data-lucide="layers" size="14"></i> Curated Series: {{ product.category_slug }}</div>
+
+        <div class="p-price-row">
+          <span class="p-price" data-usd="{{ product.price_usd }}">{{ product.price_usd|money }}</span>
+          <span style="font-size: 11px; font-weight: 900; color:#94a3b8; margin-left:12px; text-transform:uppercase; letter-spacing:2px;">Global Valuation</span>
+        </div>
+
+
+        {% if specs and specs|length > 0 %}
+        <div style="margin-top:18px; background: #fff; border: 1.5px solid var(--p-border); border-radius: 22px; padding: 16px 18px; box-shadow: 0 20px 50px rgba(0,0,0,0.04);">
+          <div style="font-weight: 950; letter-spacing: 1px; text-transform: uppercase; font-size: 11px; color:#0f172a; display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+            <i data-lucide="ruler" size="14"></i> Craft Specifications
+          </div>
+          <div style="display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px;">
+            {% for k,v in specs.items() %}
+              <div style="border:1px solid rgba(15,23,42,0.08); border-radius:16px; padding:10px 12px; background: rgba(250,250,250,0.6);">
+                <div style="font-size:10px; font-weight:950; letter-spacing:1.6px; text-transform:uppercase; color:#64748b;">{{ k.replace('_',' ') }}</div>
+                <div style="font-size:13px; font-weight:850; color:#0f172a; margin-top:4px;">{{ v }}</div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+
+        <div class="action-stack">
+          <button class="btn-p-main" id="addToCart">
+            Acquire Masterpiece <i data-lucide="shopping-bag" size="18"></i>
+          </button>
+          
+          <div class="btn-p-alt-row">
+            <button class="btn-p-alt" id="toggleWish">
+              <i data-lucide="heart" id="wishIcon" size="16"></i> <span id="wishLabel">Add to Vault</span>
+            </button>
+            {% if session.get('role') == 'buyer' %}
+              <a class="btn-p-alt" href="/messages?start=seller&seller_id={{ product.seller_id }}">
+                <i data-lucide="message-square" size="16"></i> Artisan Inquiry
+              </a>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Verification Section -->
+        {% if has_purchased %}
+        <section class="submission-surface" id="leave-review">
+          <div class="verified-badge"><i data-lucide="check-circle" size="12"></i> Verified Collector Authorization</div>
+          <h3 style="font-family:'Playfair Display'; font-size:24px; font-weight:900; margin-bottom:25px;">Document Your Experience</h3>
+          
+          <div style="display:grid; gap:20px;">
+            <div style="display:flex; gap:15px; align-items:center;">
+              <select id="revRating" class="in-lux" style="width:160px; height:55px;">
+                <option value="5">★ ★ ★ ★ ★</option>
+                <option value="4">★ ★ ★ ★</option>
+                <option value="3">★ ★ ★</option>
+                <option value="2">★ ★</option>
+                <option value="1">★</option>
+              </select>
+              <input id="revTitle" class="in-lux" style="height:55px;" placeholder="Journal Headline">
+            </div>
+            <textarea id="revBody" class="in-lux" rows="4" placeholder="Share your observations on craftsmanship, quality, and legacy..."></textarea>
+            <button id="revSubmit" class="btn-p-main" style="height:55px; background:var(--p-green);">Authorize Journal Entry</button>
+            <div id="revMsg" style="font-size:12px; font-weight:800; text-transform:uppercase; text-align:center;"></div>
+          </div>
+        </section>
+        {% endif %}
+
+        <!-- Journal Display: Visible to All -->
+        <section class="journal-section">
+          <h2 class="journal-title">Collectors' Journal</h2>
+          {% if reviews %}
+            {% for r in reviews %}
+            <div class="review-card">
+              <div class="rev-header">
+                <div>
+                  <div class="rev-user">{{ r.user_name }}</div>
+                  <div class="rev-stars">
+                    {% for i in range(r.rating|int) %}★{% endfor %}
+                    <span style="color:#e2e8f0;">{% for i in range(5 - r.rating|int) %}★{% endfor %}</span>
+                  </div>
+                </div>
+                <span class="rev-date">{{ r.created_at }}</span>
+              </div>
+              <div style="font-weight:800; font-size:16px; color:var(--p-dark); margin-bottom:10px;">{{ r.title }}</div>
+              <p class="rev-text">{{ r.body }}</p>
+            </div>
+            {% endfor %}
+          {% else %}
+            <div style="text-align:center; padding:60px 40px; background:var(--p-surface); border-radius:30px; border:1.5px dashed var(--p-border);">
+              <i data-lucide="edit-3" size="32" style="opacity:0.2; margin-bottom:15px;"></i>
+              <div style="font-weight:900; color:#cbd5e1; text-transform:uppercase; letter-spacing:3px; font-size:12px;">Awaiting the first acquisition manifest.</div>
+            </div>
+          {% endif %}
+        </section>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Logical Handlers
+  document.addEventListener('DOMContentLoaded', () => {
+    if(window.lucide) lucide.createIcons();
+
+    // Review Submit Logic
+    const revBtn = document.getElementById('revSubmit');
+    if(revBtn) {
+      revBtn.onclick = async () => {
+        const msg = document.getElementById('revMsg');
+        const payload = {
+          product_id: "{{ product.id }}",
+          rating: document.getElementById('revRating').value,
+          title: document.getElementById('revTitle').value,
+          body: document.getElementById('revBody').value
+        };
+        
+        msg.textContent = "TRANSMITTING...";
+        try {
+          const res = await fetch("/api/reviews/create", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+          if(res.ok) {
+            msg.style.color = "var(--p-green)";
+            msg.textContent = "SUCCESS: Journal entry pending registry approval.";
+            setTimeout(() => location.reload(), 2000);
+          } else {
+            const err = await res.json();
+            msg.style.color = "#ef4444";
+            msg.textContent = "ERROR: " + (err.error || "Execution failed.");
+          }
+        } catch(e) { msg.textContent = "CONNECTION_FAIL"; }
+      };
+    }
+  });
+</script>
+
+{% endblock %}

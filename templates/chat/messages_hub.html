@@ -1,0 +1,270 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<div class="hub-page-wrapper">
+
+<style>
+  /* ================================================================
+     OMNI-CHANNEL HUB: DISPATCH CENTER (v2.4 FINAL)
+     THEME: #f7f0e8 (Luxury Cream) | TEXTURE: Film Grain
+     PALETTE: #ACBAC4 (Slate Blue) | #9CAB84 (Sage Green)
+     ================================================================ */
+
+  :root {
+    --h-bg: #f7f0e8;
+    --h-surface: #fdfaf7;   /* Muted Surface instead of pure white */
+    --h-card: #fefcfb;      /* Distinct card surface */
+    --h-slate: #ACBAC4;
+    --h-sage: #9CAB84;
+    --h-dark: #1a202c;
+    --h-border: rgba(172, 186, 196, 0.3);
+    --h-muted: #64748b;
+    --h-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  .hub-page-wrapper {
+    background-color: var(--h-bg);
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    padding: 40px 0;
+    overflow: hidden;
+  }
+
+  /* --- Premium Grain Architecture (Matches Home) --- */
+  .hub-page-wrapper::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.06'/%3E%3C/svg%3E");
+    opacity: 0.25; mix-blend-mode: multiply;
+  }
+
+  .hub-page-wrapper > * { position: relative; z-index: 2; }
+
+  /* --- Cinematic Header --- */
+  .hub-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 30px; max-width: 1200px; margin-left: auto; margin-right: auto;
+    padding: 0 20px;
+  }
+  .hub-h1 { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 900; letter-spacing: -1px; color: var(--h-dark); }
+  .hub-sub { font-size: 10px; font-weight: 950; text-transform: uppercase; letter-spacing: 3px; color: var(--h-slate); display: block; margin-bottom: 5px; }
+
+  /* --- Layout Architecture (Separated Panels) --- */
+  .hh-msg-shell {
+    display: grid; grid-template-columns: 380px 1fr; 
+    gap: 25px; /* Gap between Registry and Chat */
+    background: transparent; 
+    max-width: 1200px; margin: 0 auto; height: 80vh; min-height: 650px;
+  }
+
+  /* --- Left Panel: Thread Registry --- */
+  .hh-msg-panel:first-child { 
+    display: flex; flex-direction: column;
+    background: transparent;
+  }
+  
+  .hh-tabs { 
+    padding: 25px 30px; border: 1px solid var(--h-border); 
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--h-surface);
+    border-radius: 30px 30px 0 0;
+    border-bottom: none;
+  }
+  .tab-label { font-size: 11px; font-weight: 950; text-transform: uppercase; letter-spacing: 2.5px; color: var(--h-dark); }
+
+  .hh-msg-list { 
+    flex: 1; overflow-y: auto; scroll-behavior: smooth; 
+    padding: 20px; 
+    background: var(--h-surface);
+    border: 1px solid var(--h-border);
+    border-radius: 0 0 30px 30px;
+    /* Soft mesh inside the panel */
+    background-image: radial-gradient(at 0% 0%, rgba(172, 186, 196, 0.05) 0px, transparent 50%);
+  }
+  
+  /* --- Individual Thread Cards (Seller cards separated) --- */
+  .hh-thread-node {
+    background: var(--h-card);
+    margin-bottom: 15px; /* Space between cards */
+    padding: 22px 25px; 
+    border-radius: 20px;
+    border: 1px solid rgba(0,0,0,0.04);
+    cursor: pointer; 
+    transition: 0.4s var(--h-ease);
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+  }
+  .hh-thread-node:hover { 
+    transform: translateY(-4px); 
+    border-color: var(--h-slate);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+    background: #ffffff;
+  }
+  .hh-thread-node.active { 
+    background: var(--h-dark);
+    border-color: var(--h-dark);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+  }
+  .hh-thread-node.active .thread-name { color: #ffffff; }
+  .hh-thread-node.active .thread-preview, 
+  .hh-thread-node.active .thread-date { color: rgba(255,255,255,0.6); }
+
+  .thread-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .thread-name { font-weight: 800; font-size: 15px; color: var(--h-dark); }
+  .thread-date { font-size: 10px; font-weight: 800; color: var(--h-muted); text-transform: uppercase; }
+  .thread-preview { font-size: 13px; color: var(--h-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+
+  /* --- Right Panel: Interaction Terminal --- */
+  .hh-msg-panel:last-child { 
+    background: #ffffff; 
+    border: 1px solid var(--h-border); 
+    border-radius: 40px;
+    display: flex; flex-direction: column; 
+    box-shadow: 0 30px 80px -20px rgba(0,0,0,0.06);
+    overflow: hidden;
+  }
+  
+  .hh-chat-head {
+    padding: 25px 40px; border-bottom: 1px solid rgba(0,0,0,0.04);
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--h-surface);
+  }
+
+  .hh-chat-body { 
+    flex: 1; overflow-y: auto; padding: 40px; background: #ffffff; 
+    background-image: radial-gradient(rgba(172, 186, 196, 0.1) 1.5px, transparent 1.5px);
+    background-size: 32px 32px;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+
+  /* Bubble Styles */
+  .msg-bubble {
+    max-width: 70%; padding: 16px 24px; border-radius: 24px; font-size: 14.5px; line-height: 1.6; font-weight: 600;
+    position: relative;
+  }
+  .msg-bubble.sent {
+    align-self: flex-end; background: var(--h-dark); color: #fff;
+    border-bottom-right-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
+  .msg-bubble.received {
+    align-self: flex-start; background: var(--h-surface); color: var(--h-dark);
+    border-bottom-left-radius: 4px; border: 1px solid var(--h-border);
+  }
+
+  /* --- Messaging Haptics --- */
+  .hh-chat-foot { 
+    padding: 30px 40px; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.04); 
+    display: flex; gap: 15px; align-items: center;
+  }
+  
+  .hh-input {
+    flex: 1; height: 58px; border: 1.5px solid rgba(0,0,0,0.06); border-radius: 20px;
+    padding: 0 25px; font-size: 15px; font-weight: 600; outline: none; transition: 0.4s var(--h-ease); background: var(--h-bg);
+  }
+  .hh-input:focus { border-color: var(--h-sage); background: #ffffff; box-shadow: 0 15px 35px rgba(0,0,0,0.04); transform: translateY(-2px); }
+
+  .hh-btn {
+    height: 58px; padding: 0 32px; border-radius: 20px; background: var(--h-dark);
+    color: #fff; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; border: none; cursor: pointer; transition: 0.3s;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .hh-btn:hover { background: #000; transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+
+  /* Scrollbar Customization */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-thumb { background: var(--h-slate); border-radius: 10px; }
+
+  @media (max-width: 950px) {
+    .hh-msg-shell { grid-template-columns: 1fr; border-radius: 0; height: 100vh; gap: 0; }
+    .hh-msg-panel { border-radius: 0 !important; }
+    .hh-msg-panel:first-child { display: none; }
+    .hub-header { padding: 0 25px; }
+  }
+</style>
+
+<div class="hh-msg-hub" 
+     data-hh-messages-hub="1" 
+     data-start="{{ start|default('') }}" 
+     data-seller-id="{{ seller_id|default(0) }}" 
+     data-order-code="{{ order_code|default('') }}" 
+     data-open-conv-id="{{ open_conv_id|default(0) }}">
+  
+  <header class="hub-header">
+    <div>
+      <span class="hub-sub">Communications Portal</span>
+      <h1 class="hub-h1">Registry Threads <span style="font-family:'Inter'; font-weight:400; opacity:0.3; font-size:20px; margin-left:10px;">/ বার্তা আদান-প্রদান</span></h1>
+    </div>
+    <div style="text-align:right;">
+      <div id="hhThreadStatus" style="font-size:12px; font-weight:900; color:var(--h-sage); letter-spacing:1px;">● SECURE_ACTIVE</div>
+    </div>
+  </header>
+
+  <div class="hh-msg-shell">
+    <!-- Registry (Thread List) -->
+    <div class="hh-msg-panel">
+      <div class="hh-tabs">
+        <span class="tab-label">Manifest Ledger</span>
+        <i data-lucide="book-open" width="14" style="opacity:0.4;"></i>
+      </div>
+      <div class="hh-msg-list" id="hhThreads">
+        <!-- Thread Cards render here -->
+        <div style="padding:60px; text-align:center; opacity:0.2;">
+          <div style="width:24px; height:24px; border:2px solid var(--h-slate); border-top-color:var(--h-dark); border-radius:50%; animation:spin 1s linear infinite; margin:0 auto;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Terminal (Chat Area) -->
+    <div class="hh-msg-panel">
+      <div class="hh-chat">
+        <div class="hh-chat-head">
+          <div>
+            <div id="hhChatTitle" style="font-family:'Playfair Display'; font-size:22px; font-weight:900; color:var(--h-dark);">Direct Manifest</div>
+            <div id="hhChatSub" style="font-size:11px; font-weight:700; color:var(--h-muted); margin-top:3px; text-transform:uppercase; letter-spacing:1px;">Select a thread to engage</div>
+          </div>
+          <div id="hhReadOnly" style="display:none;">
+            <span style="background:rgba(239, 68, 68, 0.05); color:#ef4444; font-size:10px; font-weight:900; padding:6px 15px; border-radius:100px; border: 1px solid rgba(239, 68, 68, 0.1);">ARCHIVED_LOG</span>
+          </div>
+        </div>
+
+        <div class="hh-chat-body" id="hhChatBody">
+          <div style="margin:auto; text-align:center; opacity:0.15;">
+            <i data-lucide="message-square" width="54" height="54"></i>
+            <div style="font-weight:900; letter-spacing:3px; margin-top:20px; font-size:10px; text-transform:uppercase;">Select a ledger entry to view communications</div>
+          </div>
+        </div>
+
+        <div class="hh-chat-foot">
+          <input class="hh-input" id="hhMsgInput" placeholder="Transmit your message..." autocomplete="off"/>
+          <button class="hh-btn" id="hhSendBtn" type="button">
+            <span>Transmit</span>
+            <i data-lucide="send" width="16"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  /* Jinja-to-JS Bridge 
+     The red marks in the editor are normal linter behaviors for Jinja tags.
+  */
+  window.__HH_VIEWER_ROLE = "{{ hub_role|default('') }}";
+  window.__HH_VIEWER_ID = "{{ session.get('user_id')|default(0) }}";
+  window.__HH_START = "{{ start|default('') }}";
+  window.__HH_SELLER_ID = "{{ seller_id|default(0) }}";
+  window.__HH_ORDER_CODE = "{{ order_code|default('') }}";
+  window.__HH_OPEN_CONV = "{{ open_conv_id|default(0) }}";
+
+  window.addEventListener('DOMContentLoaded', () => {
+    if(window.lucide && typeof window.lucide.createIcons === 'function') {
+        window.lucide.createIcons();
+    }
+  });
+</script>
+<script src="/static/js/messages_hub.js"></script>
+{% endblock %}

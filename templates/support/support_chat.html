@@ -1,0 +1,370 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<div class="chat-page-wrapper">
+
+<style>
+  /* ================================================================
+     SOVEREIGN CONCIERGE: BALANCED SUPPORT TERMINAL (v3.2.0)
+     THEME: #f7f0e8 (Luxury Cream) | TEXTURE: Film Grain
+     PALETTE: #ACBAC4 (Slate Blue) | #9CAB84 (Sage Green)
+     ADJUSTMENT: Balanced dimensions to reduce excessive empty space.
+     ================================================================ */
+
+  :root {
+    --bg-chat: #f7f0e8;
+    --glass-card: #fdfaf7; 
+    --p-dark: #1a202c;
+    --p-slate: #ACBAC4;
+    --p-sage: #9CAB84;
+    --bubble-me: #1a202c; 
+    --bubble-other: #efe7dd;
+    --text-dark: #1a202c;
+    --text-muted: #64748b;
+    --p-border: rgba(172, 186, 196, 0.35);
+    --p-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  .chat-page-wrapper {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-chat);
+    padding: 20px; /* Reduced padding to allow card more room */
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* --- Premium Grain & Mesh Overlays --- */
+  .chat-page-wrapper::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.07'/%3E%3C/svg%3E");
+    opacity: 0.25; mix-blend-mode: multiply;
+  }
+
+  .chat-page-wrapper::after {
+    content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at 10% 10%, rgba(172, 186, 196, 0.1), transparent 40%);
+    pointer-events: none; z-index: 1;
+  }
+
+  .chat-page-wrapper > * { position: relative; z-index: 2; }
+
+  /* --- Optimized Master Chat Shell --- */
+  .chat-card-master {
+    background: var(--glass-card);
+    border: 1px solid var(--p-border);
+    border-radius: 32px;
+    box-shadow: 0 40px 100px -40px rgba(0, 0, 0, 0.1);
+    max-width: 1000px; /* Increased to fill more horizontal space */
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    height: 85vh; /* Increased to fill vertical gap */
+    min-height: 600px;
+    overflow: hidden;
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+  }
+
+  /* Chat Box - Responsive Interior */
+  .chat-box-master {
+    flex: 1;
+    padding: 30px 45px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    background-color: #fff;
+    background-image: radial-gradient(rgba(172, 186, 196, 0.1) 1.5px, transparent 1.5px);
+    background-size: 32px 32px;
+    scroll-behavior: smooth;
+  }
+
+  .msg-node { 
+    max-width: 70%; 
+    display: flex; 
+    flex-direction: column;
+    animation: msgEntry 0.5s var(--p-ease) forwards;
+  }
+
+  @keyframes msgEntry { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .msg-node.me { align-self: flex-end; align-items: flex-end; }
+  .msg-node.them { align-self: flex-start; align-items: flex-start; }
+
+  .bubble {
+    padding: 14px 22px;
+    font-size: 14.5px;
+    font-weight: 500;
+    line-height: 1.65;
+    position: relative;
+  }
+
+  .me .bubble {
+    background: var(--bubble-me);
+    color: #FFFFFF;
+    border-radius: 20px 20px 4px 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .them .bubble {
+    background: var(--bubble-other);
+    color: var(--text-dark);
+    border: 1px solid rgba(172, 186, 196, 0.18);
+    border-radius: 20px 20px 20px 4px;
+  }
+
+  .meta-node {
+    margin-top: 6px;
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--text-muted);
+    display: flex;
+    gap: 6px;
+  }
+
+  /* --- Header Section --- */
+  .chat-header {
+    padding: 24px 40px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--glass-card);
+  }
+
+  .status-block { display: flex; align-items: center; gap: 12px; }
+  .online-indicator {
+    width: 10px; height: 10px;
+    background: var(--p-sage);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--p-sage);
+    position: relative;
+  }
+  .online-indicator::after {
+    content: ''; position: absolute; inset: 0; border-radius: 50%;
+    background: var(--p-sage); animation: pulse 2.5s infinite;
+  }
+
+  /* --- Input Area --- */
+  .chat-input-area {
+    padding: 24px 40px;
+    background: #FFF;
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+
+  .input-field {
+    flex: 1; height: 56px;
+    background: var(--bg-chat);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 18px;
+    padding: 0 25px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-dark);
+    transition: 0.4s var(--p-ease);
+  }
+  .input-field:focus { 
+    border-color: var(--p-sage); 
+    background: #FFF; 
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.04); 
+    transform: translateY(-2px);
+  }
+
+  .btn-send {
+    background: var(--text-dark);
+    color: #FFF;
+    border: none;
+    height: 56px;
+    padding: 0 32px;
+    border-radius: 18px;
+    cursor: pointer;
+    font-weight: 800;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: 0.3s var(--p-ease);
+  }
+  .btn-send:hover { background: #000; transform: translateY(-2px) scale(1.02); }
+
+  @keyframes pulse { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(2.5); opacity: 0; } }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-thumb { background: var(--p-slate); border-radius: 10px; }
+
+  @media (max-width: 850px) {
+    .chat-card-master { height: 90vh; border-radius: 0; }
+    .chat-header, .chat-input-area { padding: 20px; }
+    .chat-box-master { padding: 25px; }
+    .msg-node { max-width: 85%; }
+  }
+</style>
+
+<div class="chat-page-wrapper">
+  <div class="chat-card-master">
+    <!-- Sovereign Header -->
+    <div class="chat-header">
+      <div class="status-block">
+        <div class="online-indicator"></div>
+        <div>
+          <h3 style="margin:0; font-family: 'Playfair Display'; font-size: 22px; font-weight: 800; color: var(--text-dark);">Concierge Hub</h3>
+          <p style="margin:2px 0 0; font-size: 9px; color: var(--p-sage); font-weight: 900; letter-spacing: 2px; text-transform: uppercase;">Authenticated Session</p>
+        </div>
+      </div>
+      <a href="javascript:history.back()" style="text-decoration: none; color: var(--p-slate); font-size: 11px; font-weight: 900; letter-spacing: 1.5px; display: flex; align-items: center; gap: 8px;">
+        <i data-lucide="x-circle" size="18"></i> DISMISS
+      </a>
+    </div>
+
+    <!-- Communication Vessel -->
+    <div id="chatLog" class="chat-box-master">
+      <div class="msg-node them">
+        <div class="bubble">Greetings. Welcome to the Sovereign Concierge. How may we guide your heritage journey today?</div>
+        <div class="meta-node"><span>SECURE_LINK</span></div>
+      </div>
+    </div>
+
+    <!-- Transmission Terminal -->
+    <form id="chatForm" class="chat-input-area">
+      <input id="chatText" class="input-field" placeholder="Type your message..." autocomplete="off" />
+      <button id="sendBtn" class="btn-send" type="submit">
+        <span>Transmit</span>
+        <i data-lucide="send" size="16"></i>
+      </button>
+    </form>
+    
+    <div id="statusInfo" style="padding: 0 40px 15px; font-size: 10px; color: #EF4444; text-align: right; font-weight: 800; letter-spacing: 1px; min-height: 25px; background: #fff;"></div>
+  </div>
+</div>
+
+<script>
+  /**
+   * ================================================================
+   * HANDMADE HERITAGE: CONCIERGE SYNC ENGINE (BALANCED)
+   * ================================================================
+   */
+  (function(){
+    const cfg = {
+      meId: "{{ session.get('user_id')|default(0) }}",
+      meRole: "buyer", 
+      convId: "support_active" 
+    };
+
+    const log = document.getElementById('chatLog');
+    const form = document.getElementById('chatForm');
+    const input = document.getElementById('chatText');
+    const status = document.getElementById('statusInfo');
+    let afterId = 0;
+    let isSyncing = false;
+
+    function scrollBottom(){
+      if(log) {
+        log.scrollTo({
+          top: log.scrollHeight,
+          behavior: 'smooth'
+        });
+      }
+    }
+
+    function escapeHtml(str){
+      return (str||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]));
+    }
+
+    function addMsg(role, body, statusText = 'delivered', timestamp = null) {
+      const isMe = (role === 'buyer' || role === 'me');
+      const node = document.createElement('div');
+      node.className = `msg-node ${isMe ? 'me' : 'them'}`;
+      
+      const timeStr = timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      node.innerHTML = `
+        <div class="bubble">${escapeHtml(body)}</div>
+        <div class="meta-node">
+          <span>${timeStr}</span>
+          <span style="color:var(--p-sage);">•</span>
+          <span>${statusText.toUpperCase()}</span>
+        </div>
+      `;
+      
+      log.appendChild(node);
+      scrollBottom();
+    }
+
+    async function poll(){
+      if(isSyncing) return;
+      isSyncing = true;
+      
+      try {
+        const res = await fetch(`/api/support/chat/messages?after_id=${afterId}`);
+        if(!res.ok) throw new Error();
+        const data = await res.json();
+        const msgs = data.messages || [];
+        
+        if (msgs.length > 0) {
+          msgs.forEach(m => {
+            afterId = Math.max(afterId, m.id || 0);
+            addMsg(m.role, m.body, m.status, m.created_at);
+          });
+        }
+      } catch(e) {
+      } finally {
+        isSyncing = false;
+        setTimeout(poll, 3000);
+      }
+    }
+
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const body = input.value.trim();
+      if(!body) return;
+      
+      const sendBtn = document.getElementById('sendBtn');
+      sendBtn.disabled = true;
+      input.value = '';
+      status.textContent = '';
+
+      try {
+        const res = await fetch('/api/support/chat/send', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ body })
+        });
+        
+        if (!res.ok) {
+          const errorData = await res.json();
+          status.textContent = errorData.message || "TRANSMISSION_ERROR";
+        } else {
+          poll(); 
+        }
+      } catch(e) {
+        status.textContent = "LINK_TIMEOUT";
+      } finally {
+        sendBtn.disabled = false;
+        input.focus();
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if(window.lucide) lucide.createIcons();
+      scrollBottom();
+      poll();
+    });
+  })();
+</script>
+
+</div>
+
+{% endblock %}
